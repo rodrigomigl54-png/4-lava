@@ -1,15 +1,31 @@
 {
   "updated": "2026-11-08",
   "currency": "RSD",
-  "source": "SEED – menu photos were 112 px thumbnails, too small to transcribe. Replace after bigger photos arrive (see MENU-REVIEW.md).",
+  "source": "Transcribed from Google Maps photos of the printed menu (desserts Jun 2023, others Jul 2023 – Mar 2024). Prices may have changed since – confirm with the owner before launch. See MENU-REVIEW.md.",
   "subcategories": {
     "topli": {
       "sr": "Топли напици",
       "en": "Hot drinks"
     },
+    "vode": {
+      "sr": "Воде",
+      "en": "Water"
+    },
     "bezalkoholna": {
-      "sr": "Безалкохолна пића",
+      "sr": "Безалкохолно",
       "en": "Soft drinks"
+    },
+    "prirodni": {
+      "sr": "Природни сокови",
+      "en": "Natural juices"
+    },
+    "kiselo-slatko": {
+      "sr": "Кисело и слатко — 100% природно",
+      "en": "Sweet & sour — 100% natural"
+    },
+    "dunst": {
+      "sr": "Дунст — 100% природно",
+      "en": "Dunst — 100% natural"
     },
     "pivo": {
       "sr": "Пиво",
@@ -31,23 +47,23 @@
         "sr": "Доручак",
         "en": "Breakfast"
       },
-      "order": 1
-    },
-    {
-      "id": "corbe",
-      "name": {
-        "sr": "Чорбе",
-        "en": "Soups"
-      },
-      "order": 2
+      "order": 1,
+      "kicker": {
+        "sr": "Добро јутро",
+        "en": "Good morning"
+      }
     },
     {
       "id": "kuvana",
       "name": {
-        "sr": "Кувана јела",
-        "en": "Cooked dishes"
+        "sr": "Ручак — готова јела",
+        "en": "Lunch — ready dishes"
       },
-      "order": 3
+      "order": 2,
+      "kicker": {
+        "sr": "Готова јела",
+        "en": "Ready dishes"
+      }
     },
     {
       "id": "po-porudzbini",
@@ -55,7 +71,7 @@
         "sr": "Јела по поруџбини",
         "en": "Made to order"
       },
-      "order": 4
+      "order": 3
     },
     {
       "id": "specijaliteti",
@@ -63,7 +79,11 @@
         "sr": "Специјалитети куће",
         "en": "House specialities"
       },
-      "order": 5
+      "order": 4,
+      "kicker": {
+        "sr": "Несвакидашњи ручак",
+        "en": "An uncommon lunch"
+      }
     },
     {
       "id": "rostilj",
@@ -71,15 +91,11 @@
         "sr": "Роштиљ",
         "en": "Grill"
       },
-      "order": 6
-    },
-    {
-      "id": "riba",
-      "name": {
-        "sr": "Риба",
-        "en": "Fish"
-      },
-      "order": 7
+      "order": 5,
+      "kicker": {
+        "sr": "Специјалитети са роштиља",
+        "en": "Grill specialities"
+      }
     },
     {
       "id": "paste",
@@ -87,20 +103,44 @@
         "sr": "Пасте",
         "en": "Pasta"
       },
-      "order": 8
+      "order": 6,
+      "kicker": {
+        "sr": "Ручно рађене тестенине",
+        "en": "Handmade pasta"
+      }
     },
     {
       "id": "salate",
       "name": {
-        "sr": "Оброк салате и прилози",
-        "en": "Salads & sides"
+        "sr": "Оброк салате",
+        "en": "Meal salads"
+      },
+      "order": 7,
+      "kicker": {
+        "sr": "Нешто лагано",
+        "en": "Something light"
+      }
+    },
+    {
+      "id": "corbe",
+      "name": {
+        "sr": "Чорбе",
+        "en": "Soups"
+      },
+      "order": 8
+    },
+    {
+      "id": "riba",
+      "name": {
+        "sr": "Риба",
+        "en": "Fish"
       },
       "order": 9
     },
     {
       "id": "dezerti",
       "name": {
-        "sr": "Десерти",
+        "sr": "Посластице",
         "en": "Desserts"
       },
       "order": 10
@@ -111,10 +151,202 @@
         "sr": "Карта пића",
         "en": "Drinks"
       },
-      "order": 11
+      "order": 11,
+      "kicker": {
+        "sr": "Почнимо јутро добром кафицом и ракијицом",
+        "en": "Start the morning with a good coffee and a little rakija"
+      }
     }
   ],
   "items": [
+    {
+      "id": "leba-i",
+      "category": "dorucak",
+      "name": {
+        "sr": "Леба и…",
+        "en": "Bread and…"
+      },
+      "desc": {
+        "sr": "По два парчета: масти, паприке и соли · масти и шећера · пекмез (шљива, кајсија)",
+        "en": "Two slices each: lard, paprika & salt · lard & sugar · plum or apricot jam"
+      },
+      "price": 160,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [
+        "breakfast"
+      ],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "02-dorucak.jpg"
+    },
+    {
+      "id": "palenta",
+      "category": "dorucak",
+      "name": {
+        "sr": "Палента са домаћим киселим млеком",
+        "en": "Polenta with homemade sour milk"
+      },
+      "desc": {
+        "sr": "",
+        "en": ""
+      },
+      "price": 240,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [
+        "breakfast",
+        "vegetarian"
+      ],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "02-dorucak.jpg"
+    },
+    {
+      "id": "zdrav-slatki-dorucak",
+      "category": "dorucak",
+      "name": {
+        "sr": "Здрав слатки доручак",
+        "en": "Healthy sweet breakfast"
+      },
+      "desc": {
+        "sr": "Гершла (јечам), цимет, мед, какао…",
+        "en": "Pearl barley, cinnamon, honey, cocoa…"
+      },
+      "price": 340,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [
+        "breakfast",
+        "vegetarian"
+      ],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "02-dorucak.jpg"
+    },
+    {
+      "id": "zapeceni-sendvic",
+      "category": "dorucak",
+      "name": {
+        "sr": "Запечени домаћински сендвич",
+        "en": "Toasted farmhouse sandwich"
+      },
+      "desc": {
+        "sr": "Баш баш богат сендвич",
+        "en": "A really, really generous sandwich"
+      },
+      "price": 300,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [
+        "breakfast"
+      ],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "02-dorucak.jpg"
+    },
+    {
+      "id": "jaja-na-oko",
+      "category": "dorucak",
+      "name": {
+        "sr": "Јаја на око",
+        "en": "Fried eggs"
+      },
+      "desc": {
+        "sr": "Три јаја на око, хрскава сланина/шунка, млади сир, парадајз и све што иде прида. Са домаћом шунком: три јаја, шунка…",
+        "en": "Three fried eggs, crispy bacon or ham, fresh cheese, tomato and all the trimmings. With homemade ham: three eggs, ham…"
+      },
+      "price": 370,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [
+        "breakfast"
+      ],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "02-dorucak.jpg",
+      "note": "Description ends with \"…\" on the printed menu."
+    },
+    {
+      "id": "omlet-sa-sirom",
+      "category": "dorucak",
+      "name": {
+        "sr": "Омлет са сиром",
+        "en": "Cheese omelette"
+      },
+      "desc": {
+        "sr": "Три јаја, домаћи сир, парадајз, краставац",
+        "en": "Three eggs, homemade cheese, tomato, cucumber"
+      },
+      "price": 350,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [
+        "breakfast",
+        "vegetarian"
+      ],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "02-dorucak.jpg"
+    },
+    {
+      "id": "pofezne",
+      "category": "dorucak",
+      "name": {
+        "sr": "Пофезне са домаћим киселим млеком",
+        "en": "Pofezne (French toast) with homemade sour milk"
+      },
+      "desc": {
+        "sr": "Златне моче, {=bundás kenyér=}",
+        "en": "“Golden dips” — bundás kenyér, as the Hungarians say"
+      },
+      "price": 300,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "vienna",
+      "tags": [
+        "breakfast",
+        "vegetarian"
+      ],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "02-dorucak.jpg",
+      "note": "Printed as \"bundas kenyer\" (Hungarian bundás kenyér)."
+    },
     {
       "id": "karlovacki-dorucak",
       "category": "dorucak",
@@ -123,10 +355,10 @@
         "en": "Karlovci breakfast"
       },
       "desc": {
-        "sr": "",
-        "en": ""
+        "sr": "Три јаја, домаћа кобасица, ајвар, млади сир, чварци, парадајз и чашица лозе",
+        "en": "Three eggs, homemade sausage, ajvar, fresh cheese, crackling, tomato and a small glass of grape rakija"
       },
-      "price": null,
+      "price": 720,
       "priceAlt": null,
       "unit": null,
       "origin": "home",
@@ -139,14 +371,1903 @@
       "preorderHours": null,
       "pairing": null,
       "image": null,
-      "verify": true
+      "verify": false,
+      "source": "02-dorucak.jpg"
+    },
+    {
+      "id": "juneci-gulas",
+      "category": "kuvana",
+      "name": {
+        "sr": "Добар јунећи гулаш",
+        "en": "A good beef goulash"
+      },
+      "desc": {
+        "sr": "Са Бубином тестенином или са кромпиром",
+        "en": "With Buba’s pasta or with potatoes"
+      },
+      "price": 1300,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "vienna",
+      "tags": [],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "05-rucak.jpg",
+      "note": "Printed \"1 300,00\"."
+    },
+    {
+      "id": "prebranac",
+      "category": "kuvana",
+      "name": {
+        "sr": "Запечени пребранац",
+        "en": "Baked prebranac (white beans)"
+      },
+      "desc": {
+        "sr": "Постан",
+        "en": "Fasting (vegan)"
+      },
+      "price": 420,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [
+        "fasting",
+        "vegetarian"
+      ],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "05-rucak.jpg"
+    },
+    {
+      "id": "prebranac-kobaja",
+      "category": "kuvana",
+      "name": {
+        "sr": "Запечени пребранац са кобајом",
+        "en": "Baked prebranac with sausage"
+      },
+      "desc": {
+        "sr": "Домаћа сремачка кобасица",
+        "en": "Homemade Srem sausage"
+      },
+      "price": 860,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "05-rucak.jpg"
+    },
+    {
+      "id": "becka-snicla",
+      "category": "po-porudzbini",
+      "name": {
+        "sr": "Бечка шницла са кромпиром",
+        "en": "Wiener schnitzel with potatoes"
+      },
+      "desc": {
+        "sr": "За Беч људи кажу љубав, вино, жене ал’, Карловци мали освојише мене",
+        "en": "They say Vienna means love, wine and women — but little Karlovci won my heart"
+      },
+      "price": 1050,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "vienna",
+      "tags": [],
+      "featured": false,
+      "preorder": true,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "05-rucak.jpg"
+    },
+    {
+      "id": "kolenica-sos-od-rena",
+      "category": "po-porudzbini",
+      "name": {
+        "sr": "Коленица запечена у сосу од рена",
+        "en": "Pork knuckle baked in horseradish sauce"
+      },
+      "desc": {
+        "sr": "Цирка 600 гр",
+        "en": "Approx. 600 g"
+      },
+      "price": 2100,
+      "priceAlt": null,
+      "unit": "kg",
+      "origin": "vienna",
+      "tags": [
+        "house"
+      ],
+      "featured": false,
+      "preorder": true,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "05-rucak.jpg",
+      "note": "Price is per kg (2100,00/kg)."
+    },
+    {
+      "id": "svinjska-rebra",
+      "category": "po-porudzbini",
+      "name": {
+        "sr": "Свињска ребра у меденом пацу",
+        "en": "Pork ribs in honey marinade"
+      },
+      "desc": {
+        "sr": "Цирка 400 гр",
+        "en": "Approx. 400 g"
+      },
+      "price": 1400,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [],
+      "featured": false,
+      "preorder": true,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "05-rucak.jpg"
+    },
+    {
+      "id": "karlovacka-snicla",
+      "category": "po-porudzbini",
+      "name": {
+        "sr": "Карловачка шницла",
+        "en": "Karlovci schnitzel"
+      },
+      "desc": {
+        "sr": "Поховани лакс каре пуњен домаћом шунком и домаћим кајмаком",
+        "en": "Breaded pork loin stuffed with homemade ham and kajmak"
+      },
+      "price": 1280,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "both",
+      "tags": [
+        "house"
+      ],
+      "featured": false,
+      "preorder": true,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "05-rucak.jpg"
+    },
+    {
+      "id": "pileci-file-menta",
+      "category": "po-porudzbini",
+      "name": {
+        "sr": "Пилећи филе у сосу од менте",
+        "en": "Chicken fillet in mint sauce"
+      },
+      "desc": {
+        "sr": "Прилог: вариво од гершле",
+        "en": "With a pearl-barley stew"
+      },
+      "price": 1150,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [],
+      "featured": false,
+      "preorder": true,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "05-rucak.jpg",
+      "note": "Printed \"Prilog varivo od geršle\"."
+    },
+    {
+      "id": "ramstek-bermet",
+      "category": "po-porudzbini",
+      "name": {
+        "sr": "Рамстек јунећи са бермет сосом",
+        "en": "Beef rump steak with bermet sauce"
+      },
+      "desc": {
+        "sr": "И прилозима",
+        "en": "With sides"
+      },
+      "price": 1800,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "vienna",
+      "tags": [
+        "house"
+      ],
+      "featured": false,
+      "preorder": true,
+      "preorderHours": null,
+      "pairing": "bermet",
+      "image": null,
+      "verify": false,
+      "source": "05-rucak.jpg",
+      "pairingSource": "site",
+      "note": "Page may continue below the photo – check for more items."
+    },
+    {
+      "id": "skembici",
+      "category": "specijaliteti",
+      "name": {
+        "sr": "Шкембићи јунећи",
+        "en": "Beef tripe (škembići)"
+      },
+      "desc": {
+        "sr": "Уторак: могу и запечени са сиром",
+        "en": "Tuesdays: also baked with cheese"
+      },
+      "price": 850,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "istanbul",
+      "tags": [
+        "house"
+      ],
+      "featured": true,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "07-specijaliteti.jpg"
+    },
+    {
+      "id": "rozin-paprikas",
+      "category": "specijaliteti",
+      "name": {
+        "sr": "Рожин овчји паприкаш",
+        "en": "Roža’s mutton paprikash"
+      },
+      "desc": {
+        "sr": "Четвртак: рецепт Роже Попов (Форум), дивна жена из озбиљне кухиње.",
+        "en": "Thursdays: Roža Popov’s recipe (Forum) — a wonderful woman from a serious kitchen."
+      },
+      "price": 1250,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "vienna",
+      "tags": [
+        "house"
+      ],
+      "featured": true,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": "probus",
+      "image": null,
+      "verify": false,
+      "source": "07-specijaliteti.jpg",
+      "pairingSource": "menu",
+      "note": "Probus recommendation sits between Škembići and this dish – assigned here, verify."
+    },
+    {
+      "id": "zuza-paprikas",
+      "category": "specijaliteti",
+      "name": {
+        "sr": "Зуза паприкаш",
+        "en": "Zuza paprikash"
+      },
+      "desc": {
+        "sr": "Пилећи бубац паприкаш",
+        "en": "Chicken “bubac” paprikash"
+      },
+      "price": 750,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "vienna",
+      "tags": [
+        "house"
+      ],
+      "featured": true,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": "roze",
+      "image": null,
+      "verify": false,
+      "source": "07-specijaliteti.jpg",
+      "pairingSource": "menu"
+    },
+    {
+      "id": "juneci-repovi",
+      "category": "specijaliteti",
+      "name": {
+        "sr": "Јунећи репови у вину (ако имате среће)",
+        "en": "Oxtail in wine (if you’re lucky)"
+      },
+      "desc": {
+        "sr": "Лагано крчкани уз мало паленте — савршени спој",
+        "en": "Slowly simmered, with a little polenta — a perfect match"
+      },
+      "price": 1750,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [
+        "house"
+      ],
+      "featured": true,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": "portugizer",
+      "image": null,
+      "verify": false,
+      "source": "07-specijaliteti.jpg",
+      "pairingSource": "menu"
+    },
+    {
+      "id": "vojvodjanski-rucak",
+      "category": "specijaliteti",
+      "name": {
+        "sr": "Војвођански ручак",
+        "en": "Vojvodina Sunday lunch"
+      },
+      "desc": {
+        "sr": "Увек недељом: супе, соса, меса",
+        "en": "Always on Sundays: soup, sauce, meat"
+      },
+      "price": 1200,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [
+        "house"
+      ],
+      "featured": true,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": "portugizer",
+      "image": null,
+      "verify": false,
+      "source": "07-specijaliteti.jpg",
+      "pairingSource": "menu"
+    },
+    {
+      "id": "cevapi",
+      "category": "rostilj",
+      "name": {
+        "sr": "Ћевапи",
+        "en": "Ćevapi"
+      },
+      "desc": {
+        "sr": "По нашој рецептури, цирка 300 гр.",
+        "en": "Our own recipe, approx. 300 g"
+      },
+      "price": 940,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "istanbul",
+      "tags": [],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "06-rostilj.jpg"
+    },
+    {
+      "id": "sremacka-kobaja",
+      "category": "rostilj",
+      "name": {
+        "sr": "Домаћа кобаја — сремачка",
+        "en": "Homemade Srem sausage"
+      },
+      "desc": {
+        "sr": "Цирка 300 гр.",
+        "en": "Approx. 300 g"
+      },
+      "price": 980,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "06-rostilj.jpg"
+    },
+    {
+      "id": "mesni-ustipci",
+      "category": "rostilj",
+      "name": {
+        "sr": "Пикантни месни уштипци",
+        "en": "Spicy meat patties (uštipci)"
+      },
+      "desc": {
+        "sr": "Са домаћим качкаваљем и сланином",
+        "en": "With homemade kashkaval cheese and bacon"
+      },
+      "price": 1150,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [
+        "spicy"
+      ],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "06-rostilj.jpg"
+    },
+    {
+      "id": "svinjski-vrat",
+      "category": "rostilj",
+      "name": {
+        "sr": "Печени свињски врат са грилованим поврћем",
+        "en": "Roast pork neck with grilled vegetables"
+      },
+      "desc": {
+        "sr": "",
+        "en": ""
+      },
+      "price": 1120,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "06-rostilj.jpg"
+    },
+    {
+      "id": "pileci-batak",
+      "category": "rostilj",
+      "name": {
+        "sr": "Пилећи батак са грилованим поврћем",
+        "en": "Chicken drumstick with grilled vegetables"
+      },
+      "desc": {
+        "sr": "",
+        "en": ""
+      },
+      "price": 920,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "06-rostilj.jpg"
+    },
+    {
+      "id": "vinogradarska-pljeskavica",
+      "category": "rostilj",
+      "name": {
+        "sr": "Виноградарска пљескавица",
+        "en": "Wine country burger (vinogradarska pljeskavica)"
+      },
+      "desc": {
+        "sr": "Јунећа/овчија, 300 гр. са кајмаком и грилованим поврћем",
+        "en": "Beef or mutton, 300 g, with kajmak and grilled vegetables"
+      },
+      "price": 1350,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "istanbul",
+      "tags": [
+        "house"
+      ],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "06-rostilj.jpg",
+      "note": "Printed \"Vinogradarska pljeskavica\". English name matches the guest review \"wine country burger\" – verify it is the same dish."
+    },
+    {
+      "id": "lavlji-zalogaj",
+      "category": "rostilj",
+      "name": {
+        "sr": "Лављи залогај",
+        "en": "The lion’s bite — mixed grill"
+      },
+      "desc": {
+        "sr": "Роштиљ за две и по особе: ребарца, врат, пилећи батак, кобасица, ћевапи, уштипци, кромпир",
+        "en": "Grill for two and a half: ribs, pork neck, chicken drumstick, sausage, ćevapi, uštipci, potatoes"
+      },
+      "price": 2820,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [
+        "house"
+      ],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "06-rostilj.jpg"
+    },
+    {
+      "id": "taljatele-spanac",
+      "category": "paste",
+      "name": {
+        "sr": "Широки дебели резанци — таљателе од спанаћа",
+        "en": "Wide spinach tagliatelle"
+      },
+      "desc": {
+        "sr": "Са грилованим поврћем и маслиновим уљем…",
+        "en": "With grilled vegetables and olive oil…"
+      },
+      "price": 920,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [
+        "vegetarian"
+      ],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": "sila",
+      "image": null,
+      "verify": false,
+      "source": "03-paste.jpg",
+      "pairingSource": "menu"
+    },
+    {
+      "id": "taljatele-piletina",
+      "category": "paste",
+      "name": {
+        "sr": "Широки дебели резанци — таљателе са пилетином",
+        "en": "Wide tagliatelle with chicken"
+      },
+      "desc": {
+        "sr": "У белом сосу са пармезаном",
+        "en": "In a white sauce with parmesan"
+      },
+      "price": 980,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": "roze",
+      "image": null,
+      "verify": false,
+      "source": "03-paste.jpg",
+      "pairingSource": "menu"
+    },
+    {
+      "id": "tasci",
+      "category": "paste",
+      "name": {
+        "sr": "Ташци — равиоли са надевом од сунцокрета",
+        "en": "Tašci — sunflower-seed ravioli"
+      },
+      "desc": {
+        "sr": "Ручно рађене равиоле пуњене надевом од сунцокрета у сосу од семена бундеве.",
+        "en": "Handmade ravioli filled with sunflower seeds, in a pumpkin-seed sauce."
+      },
+      "price": 1200,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [
+        "vegetarian"
+      ],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "03-paste.jpg"
+    },
+    {
+      "id": "lavica",
+      "category": "salate",
+      "name": {
+        "sr": "Лавица",
+        "en": "Lavica — the lioness salad"
+      },
+      "desc": {
+        "sr": "Пилећи филе, црвени лук, купус, парадајз, паприка, целер, шаргарепа и дресинг…",
+        "en": "Chicken fillet, red onion, cabbage, tomato, pepper, celery, carrot and dressing…"
+      },
+      "price": 920,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [
+        "house"
+      ],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "04-salate.jpg"
+    },
+    {
+      "id": "lavica-bez-mesa",
+      "category": "salate",
+      "name": {
+        "sr": "Лавица без меса",
+        "en": "Lavica without meat"
+      },
+      "desc": {
+        "sr": "Ораси крупни, црвени лук, купус, парадајз, паприка, целер, шаргарепа и дресинг…",
+        "en": "Walnuts, red onion, cabbage, tomato, pepper, celery, carrot and dressing…"
+      },
+      "price": 920,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [
+        "vegetarian"
+      ],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "04-salate.jpg"
+    },
+    {
+      "id": "salata-spanac-leblebije",
+      "category": "salate",
+      "name": {
+        "sr": "Салата са спанаћем и леблебијама",
+        "en": "Spinach and chickpea salad"
+      },
+      "desc": {
+        "sr": "Леблебије, спанаћ, сушени парадајз, сезонско поврће, листићи свеже нане, козји сир, љубичасти лук, дресинг…",
+        "en": "Chickpeas, spinach, sun-dried tomato, seasonal vegetables, fresh mint, goat’s cheese, red onion, dressing…"
+      },
+      "price": 920,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "istanbul",
+      "tags": [
+        "vegetarian"
+      ],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "04-salate.jpg"
+    },
+    {
+      "id": "vitaminska-salata",
+      "category": "salate",
+      "name": {
+        "sr": "Витаминска салата",
+        "en": "Vitamin salad"
+      },
+      "desc": {
+        "sr": "Јабука или крушка, келераба, целер, шаргарепа, ораси, козји сир, љубичасти лук и дресинг…",
+        "en": "Apple or pear, kohlrabi, celery, carrot, walnuts, goat’s cheese, red onion and dressing…"
+      },
+      "price": 850,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [
+        "vegetarian"
+      ],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "04-salate.jpg"
+    },
+    {
+      "id": "koh",
+      "category": "dezerti",
+      "name": {
+        "sr": "Кох са кремом од ваниле и преливом од малине",
+        "en": "Koch (semolina soufflé) with vanilla cream and raspberry sauce"
+      },
+      "desc": {
+        "sr": "",
+        "en": ""
+      },
+      "price": 380,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "vienna",
+      "tags": [],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": "bermet",
+      "image": null,
+      "verify": false,
+      "source": "01-poslastice.jpg",
+      "pairingSource": "site"
+    },
+    {
+      "id": "rogac-kolac",
+      "category": "dezerti",
+      "name": {
+        "sr": "Рогач колач са чоколадом и преливом од вишње",
+        "en": "Carob cake with chocolate and sour-cherry sauce"
+      },
+      "desc": {
+        "sr": "",
+        "en": ""
+      },
+      "price": 350,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": "bermet",
+      "image": null,
+      "verify": false,
+      "source": "01-poslastice.jpg",
+      "pairingSource": "site"
+    },
+    {
+      "id": "cokoladna-torta",
+      "category": "dezerti",
+      "name": {
+        "sr": "Чоколадна торта са бадемима и малинама",
+        "en": "Chocolate cake with almonds and raspberries"
+      },
+      "desc": {
+        "sr": "",
+        "en": ""
+      },
+      "price": 420,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "vienna",
+      "tags": [],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": "bermet",
+      "image": null,
+      "verify": false,
+      "source": "01-poslastice.jpg",
+      "pairingSource": "site"
+    },
+    {
+      "id": "komisbrot",
+      "category": "dezerti",
+      "name": {
+        "sr": "Комизброт",
+        "en": "Kommissbrot — nut & dried-fruit loaf"
+      },
+      "desc": {
+        "sr": "Орашасти плодови и суво воће — за уз кафицу боље нема",
+        "en": "Nuts and dried fruit — nothing better with a coffee"
+      },
+      "price": 320,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "vienna",
+      "tags": [],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "01-poslastice.jpg"
+    },
+    {
+      "id": "snenokle",
+      "category": "dezerti",
+      "name": {
+        "sr": "Шненокле по поруџбини",
+        "en": "Šnenokle (snow dumplings), to order"
+      },
+      "desc": {
+        "sr": "И само барем дан унапред",
+        "en": "Order at least one day ahead"
+      },
+      "price": 360,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "vienna",
+      "tags": [],
+      "featured": false,
+      "preorder": true,
+      "preorderHours": 24,
+      "pairing": "bermet",
+      "image": null,
+      "verify": false,
+      "source": "01-poslastice.jpg",
+      "pairingSource": "site"
+    },
+    {
+      "id": "palacinke",
+      "category": "dezerti",
+      "name": {
+        "sr": "Палачинке",
+        "en": "Pancakes (crêpes)"
+      },
+      "desc": {
+        "sr": "Џем или еурокрем и плазма",
+        "en": "Jam, or Eurokrem with Plazma biscuits"
+      },
+      "price": 290,
+      "priceAlt": 360,
+      "unit": null,
+      "origin": "vienna",
+      "tags": [],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "01-poslastice.jpg",
+      "note": "Two prices 290 / 360 – presumably jam vs. Eurokrem & Plazma; verify."
+    },
+    {
+      "id": "katina-strudla",
+      "category": "dezerti",
+      "name": {
+        "sr": "Катина штрудла с маком",
+        "en": "Kata’s poppy-seed strudel"
+      },
+      "desc": {
+        "sr": "",
+        "en": ""
+      },
+      "price": 310,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "vienna",
+      "tags": [
+        "house"
+      ],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": "bermet",
+      "image": null,
+      "verify": false,
+      "source": "01-poslastice.jpg",
+      "pairingSource": "site"
+    },
+    {
+      "id": "katin-kuglof",
+      "category": "dezerti",
+      "name": {
+        "sr": "Катин куглоф",
+        "en": "Kata’s Gugelhupf"
+      },
+      "desc": {
+        "sr": "Бермет, цимет, бадеми",
+        "en": "Bermet, cinnamon, almonds"
+      },
+      "price": 310,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "vienna",
+      "tags": [
+        "house"
+      ],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": "bermet",
+      "image": null,
+      "verify": false,
+      "source": "01-poslastice.jpg",
+      "pairingSource": "site"
+    },
+    {
+      "id": "domaca-kafa",
+      "category": "pica",
+      "name": {
+        "sr": "Домаћа кафа",
+        "en": "Turkish coffee (domaća kafa)"
+      },
+      "desc": {
+        "sr": "",
+        "en": ""
+      },
+      "price": 120,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "istanbul",
+      "tags": [],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "09-pica.jpg",
+      "subcategory": "topli",
+      "easterEgg": "coffee-cup",
+      "note": "Price handwritten on a sticker."
+    },
+    {
+      "id": "espreso",
+      "category": "pica",
+      "name": {
+        "sr": "Еспресо",
+        "en": "Espresso"
+      },
+      "desc": {
+        "sr": "",
+        "en": ""
+      },
+      "price": 150,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "vienna",
+      "tags": [],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "09-pica.jpg",
+      "subcategory": "topli"
+    },
+    {
+      "id": "espreso-mleko",
+      "category": "pica",
+      "name": {
+        "sr": "Еспресо са млеком",
+        "en": "Espresso with milk"
+      },
+      "desc": {
+        "sr": "",
+        "en": ""
+      },
+      "price": 170,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "vienna",
+      "tags": [],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "09-pica.jpg",
+      "subcategory": "topli"
+    },
+    {
+      "id": "makijato",
+      "category": "pica",
+      "name": {
+        "sr": "Макијато",
+        "en": "Macchiato"
+      },
+      "desc": {
+        "sr": "",
+        "en": ""
+      },
+      "price": 180,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "vienna",
+      "tags": [],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "09-pica.jpg",
+      "subcategory": "topli"
+    },
+    {
+      "id": "kapucino",
+      "category": "pica",
+      "name": {
+        "sr": "Капучино",
+        "en": "Cappuccino"
+      },
+      "desc": {
+        "sr": "",
+        "en": ""
+      },
+      "price": 180,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "vienna",
+      "tags": [],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "09-pica.jpg",
+      "subcategory": "topli",
+      "note": "Printed \"Kappuccino\"."
+    },
+    {
+      "id": "nes-kafa",
+      "category": "pica",
+      "name": {
+        "sr": "Нес кафа",
+        "en": "Instant coffee (Nescafé)"
+      },
+      "desc": {
+        "sr": "",
+        "en": ""
+      },
+      "price": 180,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "09-pica.jpg",
+      "subcategory": "topli"
+    },
+    {
+      "id": "topla-cokolada",
+      "category": "pica",
+      "name": {
+        "sr": "Топла чоколада",
+        "en": "Hot chocolate"
+      },
+      "desc": {
+        "sr": "",
+        "en": ""
+      },
+      "price": 220,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "09-pica.jpg",
+      "subcategory": "topli",
+      "note": "Price handwritten on a sticker."
+    },
+    {
+      "id": "caj-med",
+      "category": "pica",
+      "name": {
+        "sr": "Чај и мед",
+        "en": "Tea with honey"
+      },
+      "desc": {
+        "sr": "",
+        "en": ""
+      },
+      "price": 185,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "09-pica.jpg",
+      "subcategory": "topli"
+    },
+    {
+      "id": "soda-02",
+      "category": "pica",
+      "name": {
+        "sr": "Сода",
+        "en": "Soda water"
+      },
+      "desc": {
+        "sr": "",
+        "en": ""
+      },
+      "price": 60,
+      "priceAlt": null,
+      "unit": "0,2 l",
+      "origin": "home",
+      "tags": [],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "09-pica.jpg",
+      "subcategory": "vode"
+    },
+    {
+      "id": "soda-1",
+      "category": "pica",
+      "name": {
+        "sr": "Сода",
+        "en": "Soda water"
+      },
+      "desc": {
+        "sr": "",
+        "en": ""
+      },
+      "price": 300,
+      "priceAlt": null,
+      "unit": "1 l",
+      "origin": "home",
+      "tags": [],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "09-pica.jpg",
+      "subcategory": "vode"
+    },
+    {
+      "id": "knjaz-025",
+      "category": "pica",
+      "name": {
+        "sr": "Књаз",
+        "en": "Knjaz (sparkling mineral water)"
+      },
+      "desc": {
+        "sr": "",
+        "en": ""
+      },
+      "price": 140,
+      "priceAlt": null,
+      "unit": "0,25 l",
+      "origin": "home",
+      "tags": [],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "09-pica.jpg",
+      "subcategory": "vode"
+    },
+    {
+      "id": "knjaz-1",
+      "category": "pica",
+      "name": {
+        "sr": "Књаз",
+        "en": "Knjaz (sparkling mineral water)"
+      },
+      "desc": {
+        "sr": "",
+        "en": ""
+      },
+      "price": 300,
+      "priceAlt": null,
+      "unit": "1 l",
+      "origin": "home",
+      "tags": [],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "09-pica.jpg",
+      "subcategory": "vode"
+    },
+    {
+      "id": "aqua-viva-033",
+      "category": "pica",
+      "name": {
+        "sr": "{=Aqua Viva=}",
+        "en": "Aqua Viva (still water)"
+      },
+      "desc": {
+        "sr": "",
+        "en": ""
+      },
+      "price": 140,
+      "priceAlt": null,
+      "unit": "0,33 l",
+      "origin": "home",
+      "tags": [],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "09-pica.jpg",
+      "subcategory": "vode"
+    },
+    {
+      "id": "aqua-viva-1",
+      "category": "pica",
+      "name": {
+        "sr": "{=Aqua Viva=}",
+        "en": "Aqua Viva (still water)"
+      },
+      "desc": {
+        "sr": "",
+        "en": ""
+      },
+      "price": 300,
+      "priceAlt": null,
+      "unit": "1 l",
+      "origin": "home",
+      "tags": [],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "09-pica.jpg",
+      "subcategory": "vode"
+    },
+    {
+      "id": "pepsi",
+      "category": "pica",
+      "name": {
+        "sr": "Пепси",
+        "en": "Pepsi"
+      },
+      "desc": {
+        "sr": "",
+        "en": ""
+      },
+      "price": 190,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "09-pica.jpg",
+      "subcategory": "bezalkoholna"
+    },
+    {
+      "id": "biter-lemon",
+      "category": "pica",
+      "name": {
+        "sr": "Битер лемон",
+        "en": "Bitter lemon"
+      },
+      "desc": {
+        "sr": "",
+        "en": ""
+      },
+      "price": 190,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "09-pica.jpg",
+      "subcategory": "bezalkoholna"
+    },
+    {
+      "id": "tonik",
+      "category": "pica",
+      "name": {
+        "sr": "Тоник",
+        "en": "Tonic"
+      },
+      "desc": {
+        "sr": "",
+        "en": ""
+      },
+      "price": 190,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "09-pica.jpg",
+      "subcategory": "bezalkoholna"
+    },
+    {
+      "id": "cockta",
+      "category": "pica",
+      "name": {
+        "sr": "Кокта",
+        "en": "Cockta"
+      },
+      "desc": {
+        "sr": "",
+        "en": ""
+      },
+      "price": 170,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "09-pica.jpg",
+      "subcategory": "bezalkoholna"
+    },
+    {
+      "id": "borovnica",
+      "category": "pica",
+      "name": {
+        "sr": "Боровница",
+        "en": "Blueberry juice"
+      },
+      "desc": {
+        "sr": "",
+        "en": ""
+      },
+      "price": 150,
+      "priceAlt": null,
+      "unit": "0,2 l",
+      "origin": "home",
+      "tags": [],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "09-pica.jpg",
+      "subcategory": "bezalkoholna"
+    },
+    {
+      "id": "pomorandza",
+      "category": "pica",
+      "name": {
+        "sr": "Поморанџа",
+        "en": "Orange juice"
+      },
+      "desc": {
+        "sr": "",
+        "en": ""
+      },
+      "price": 150,
+      "priceAlt": null,
+      "unit": "0,2 l",
+      "origin": "home",
+      "tags": [],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "09-pica.jpg",
+      "subcategory": "bezalkoholna"
+    },
+    {
+      "id": "zova",
+      "category": "pica",
+      "name": {
+        "sr": "Зова (домаћи)",
+        "en": "Elderflower (homemade)"
+      },
+      "desc": {
+        "sr": "",
+        "en": ""
+      },
+      "price": 120,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "09-pica.jpg",
+      "subcategory": "prirodni"
+    },
+    {
+      "id": "nana",
+      "category": "pica",
+      "name": {
+        "sr": "Нана (домаћи)",
+        "en": "Mint (homemade)"
+      },
+      "desc": {
+        "sr": "",
+        "en": ""
+      },
+      "price": 120,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "09-pica.jpg",
+      "subcategory": "prirodni"
+    },
+    {
+      "id": "limunada",
+      "category": "pica",
+      "name": {
+        "sr": "Лимунада",
+        "en": "Lemonade"
+      },
+      "desc": {
+        "sr": "",
+        "en": ""
+      },
+      "price": 150,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "09-pica.jpg",
+      "subcategory": "prirodni"
+    },
+    {
+      "id": "cedjena-pomorandza",
+      "category": "pica",
+      "name": {
+        "sr": "Цеђена поморанџа",
+        "en": "Fresh orange juice"
+      },
+      "desc": {
+        "sr": "",
+        "en": ""
+      },
+      "price": 250,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "09-pica.jpg",
+      "subcategory": "prirodni",
+      "note": "Price handwritten on a sticker."
+    },
+    {
+      "id": "ledeni-caj",
+      "category": "pica",
+      "name": {
+        "sr": "Домаћи ледени чај",
+        "en": "Homemade iced tea"
+      },
+      "desc": {
+        "sr": "",
+        "en": ""
+      },
+      "price": 190,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "09-pica.jpg",
+      "subcategory": "prirodni"
+    },
+    {
+      "id": "sok-jabuka",
+      "category": "pica",
+      "name": {
+        "sr": "Јабука",
+        "en": "Apple"
+      },
+      "desc": {
+        "sr": "",
+        "en": ""
+      },
+      "price": 250,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "09-pica.jpg",
+      "subcategory": "kiselo-slatko"
+    },
+    {
+      "id": "sok-kruska",
+      "category": "pica",
+      "name": {
+        "sr": "Крушка",
+        "en": "Pear"
+      },
+      "desc": {
+        "sr": "",
+        "en": ""
+      },
+      "price": 300,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "09-pica.jpg",
+      "subcategory": "kiselo-slatko"
+    },
+    {
+      "id": "sok-visnja",
+      "category": "pica",
+      "name": {
+        "sr": "Вишња",
+        "en": "Sour cherry"
+      },
+      "desc": {
+        "sr": "",
+        "en": ""
+      },
+      "price": 260,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "09-pica.jpg",
+      "subcategory": "kiselo-slatko"
+    },
+    {
+      "id": "dunst-malina",
+      "category": "pica",
+      "name": {
+        "sr": "Малина",
+        "en": "Raspberry"
+      },
+      "desc": {
+        "sr": "",
+        "en": ""
+      },
+      "price": 300,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "09-pica.jpg",
+      "subcategory": "dunst"
+    },
+    {
+      "id": "dunst-kajsija",
+      "category": "pica",
+      "name": {
+        "sr": "Кајсија",
+        "en": "Apricot"
+      },
+      "desc": {
+        "sr": "",
+        "en": ""
+      },
+      "price": 300,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "09-pica.jpg",
+      "subcategory": "dunst"
+    },
+    {
+      "id": "dunst-crna-zova",
+      "category": "pica",
+      "name": {
+        "sr": "Црна зова",
+        "en": "Black elderberry"
+      },
+      "desc": {
+        "sr": "",
+        "en": ""
+      },
+      "price": 300,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "09-pica.jpg",
+      "subcategory": "dunst"
+    },
+    {
+      "id": "dunst-jagoda",
+      "category": "pica",
+      "name": {
+        "sr": "Јагода",
+        "en": "Strawberry"
+      },
+      "desc": {
+        "sr": "",
+        "en": ""
+      },
+      "price": 300,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "09-pica.jpg",
+      "subcategory": "dunst"
+    },
+    {
+      "id": "dunst-crni-mix",
+      "category": "pica",
+      "name": {
+        "sr": "Црни микс",
+        "en": "Dark-berry mix"
+      },
+      "desc": {
+        "sr": "",
+        "en": ""
+      },
+      "price": 300,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": null,
+      "image": null,
+      "verify": false,
+      "source": "09-pica.jpg",
+      "subcategory": "dunst"
+    },
+    {
+      "id": "bermet",
+      "category": "pica",
+      "name": {
+        "sr": "Бермет",
+        "en": "Bermet — the Karlovci dessert wine"
+      },
+      "desc": {
+        "sr": "",
+        "en": ""
+      },
+      "price": null,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [
+        "house"
+      ],
+      "featured": false,
+      "preorder": false,
+      "preorderHours": null,
+      "pairing": "bermet",
+      "image": null,
+      "verify": true,
+      "source": null,
+      "subcategory": "vino",
+      "wineId": "bermet",
+      "note": "Second drinks page (beer, wine, spirits) not photographed yet."
+    },
+    {
+      "id": "teletina-ispod-saca",
+      "category": "po-porudzbini",
+      "name": {
+        "sr": "Телетина испод сача",
+        "en": "Veal baked under the sač"
+      },
+      "desc": {
+        "sr": "",
+        "en": ""
+      },
+      "price": null,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [],
+      "featured": false,
+      "preorder": true,
+      "preorderHours": 24,
+      "pairing": null,
+      "image": null,
+      "verify": true,
+      "source": null,
+      "hidden": true,
+      "note": "Seed item from the brief – NOT on the photographed menu pages. Hidden until the owner confirms."
+    },
+    {
+      "id": "jagnjetina-ispod-saca",
+      "category": "po-porudzbini",
+      "name": {
+        "sr": "Јагњетина испод сача",
+        "en": "Lamb baked under the sač"
+      },
+      "desc": {
+        "sr": "",
+        "en": ""
+      },
+      "price": null,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [],
+      "featured": false,
+      "preorder": true,
+      "preorderHours": 24,
+      "pairing": null,
+      "image": null,
+      "verify": true,
+      "source": null,
+      "hidden": true,
+      "note": "Seed item from the brief – NOT on the photographed menu pages. Hidden until the owner confirms."
+    },
+    {
+      "id": "pecenje",
+      "category": "po-porudzbini",
+      "name": {
+        "sr": "Печење",
+        "en": "Roast"
+      },
+      "desc": {
+        "sr": "",
+        "en": ""
+      },
+      "price": null,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [],
+      "featured": false,
+      "preorder": true,
+      "preorderHours": 24,
+      "pairing": null,
+      "image": null,
+      "verify": true,
+      "source": null,
+      "hidden": true,
+      "note": "Seed item from the brief – NOT on the photographed menu pages. Hidden until the owner confirms."
+    },
+    {
+      "id": "divljac",
+      "category": "po-porudzbini",
+      "name": {
+        "sr": "Дивљач",
+        "en": "Game"
+      },
+      "desc": {
+        "sr": "",
+        "en": ""
+      },
+      "price": null,
+      "priceAlt": null,
+      "unit": null,
+      "origin": "home",
+      "tags": [],
+      "featured": false,
+      "preorder": true,
+      "preorderHours": 24,
+      "pairing": null,
+      "image": null,
+      "verify": true,
+      "source": null,
+      "hidden": true,
+      "note": "Seed item from the brief – NOT on the photographed menu pages. Hidden until the owner confirms."
     },
     {
       "id": "gibanica",
       "category": "dorucak",
       "name": {
         "sr": "Гибаница са киселим млеком",
-        "en": "Gibanica (cheese pie) with sour milk"
+        "en": "Gibanica with sour milk"
       },
       "desc": {
         "sr": "",
@@ -160,12 +2281,15 @@
         "breakfast",
         "vegetarian"
       ],
-      "featured": true,
+      "featured": false,
       "preorder": false,
       "preorderHours": null,
       "pairing": null,
       "image": null,
-      "verify": true
+      "verify": true,
+      "source": null,
+      "hidden": true,
+      "note": "Seed item from the brief – NOT on the photographed menu pages. Hidden until the owner confirms."
     },
     {
       "id": "ustipci",
@@ -186,12 +2310,15 @@
         "breakfast",
         "vegetarian"
       ],
-      "featured": true,
+      "featured": false,
       "preorder": false,
       "preorderHours": null,
       "pairing": null,
       "image": null,
-      "verify": true
+      "verify": true,
+      "source": null,
+      "hidden": true,
+      "note": "Seed item from the brief – NOT on the photographed menu pages. Hidden until the owner confirms."
     },
     {
       "id": "riblja-corba",
@@ -215,206 +2342,12 @@
       "featured": false,
       "preorder": false,
       "preorderHours": null,
-      "pairing": "lokalno-belo",
-      "image": null,
-      "verify": true
-    },
-    {
-      "id": "juneci-gulas",
-      "category": "kuvana",
-      "name": {
-        "sr": "Јунећи гулаш",
-        "en": "Beef goulash"
-      },
-      "desc": {
-        "sr": "",
-        "en": ""
-      },
-      "price": null,
-      "priceAlt": null,
-      "unit": null,
-      "origin": "vienna",
-      "tags": [],
-      "featured": true,
-      "preorder": false,
-      "preorderHours": null,
-      "pairing": "lokalno-crveno",
-      "image": null,
-      "verify": true
-    },
-    {
-      "id": "ovciji-gulas",
-      "category": "kuvana",
-      "name": {
-        "sr": "Овчији гулаш",
-        "en": "Mutton goulash"
-      },
-      "desc": {
-        "sr": "",
-        "en": ""
-      },
-      "price": null,
-      "priceAlt": null,
-      "unit": null,
-      "origin": "home",
-      "tags": [],
-      "featured": true,
-      "preorder": false,
-      "preorderHours": null,
-      "pairing": "lokalno-crveno",
-      "image": null,
-      "verify": true
-    },
-    {
-      "id": "teletina-ispod-saca",
-      "category": "po-porudzbini",
-      "name": {
-        "sr": "Телетина испод сача",
-        "en": "Veal baked under the sač"
-      },
-      "desc": {
-        "sr": "",
-        "en": ""
-      },
-      "price": null,
-      "priceAlt": null,
-      "unit": null,
-      "origin": "home",
-      "tags": [
-        "house"
-      ],
-      "featured": true,
-      "preorder": true,
-      "preorderHours": 24,
-      "pairing": "lokalno-crveno",
+      "pairing": null,
       "image": null,
       "verify": true,
-      "note": "preorderHours (24 h) is an assumption – TODO_VERIFY with the owner."
-    },
-    {
-      "id": "jagnjetina-ispod-saca",
-      "category": "po-porudzbini",
-      "name": {
-        "sr": "Јагњетина испод сача",
-        "en": "Lamb baked under the sač"
-      },
-      "desc": {
-        "sr": "",
-        "en": ""
-      },
-      "price": null,
-      "priceAlt": null,
-      "unit": null,
-      "origin": "home",
-      "tags": [
-        "house"
-      ],
-      "featured": true,
-      "preorder": true,
-      "preorderHours": 24,
-      "pairing": "lokalno-crveno",
-      "image": null,
-      "verify": true,
-      "note": "preorderHours (24 h) is an assumption – TODO_VERIFY with the owner."
-    },
-    {
-      "id": "pecenje",
-      "category": "po-porudzbini",
-      "name": {
-        "sr": "Печење",
-        "en": "Roast"
-      },
-      "desc": {
-        "sr": "",
-        "en": ""
-      },
-      "price": null,
-      "priceAlt": null,
-      "unit": null,
-      "origin": "home",
-      "tags": [],
-      "featured": false,
-      "preorder": true,
-      "preorderHours": 24,
-      "pairing": "lokalno-crveno",
-      "image": null,
-      "verify": true,
-      "note": "Type of roast and preorderHours TODO_VERIFY."
-    },
-    {
-      "id": "divljac",
-      "category": "po-porudzbini",
-      "name": {
-        "sr": "Дивљач",
-        "en": "Game"
-      },
-      "desc": {
-        "sr": "",
-        "en": ""
-      },
-      "price": null,
-      "priceAlt": null,
-      "unit": null,
-      "origin": "home",
-      "tags": [],
-      "featured": false,
-      "preorder": true,
-      "preorderHours": 24,
-      "pairing": "lokalno-crveno",
-      "image": null,
-      "verify": true,
-      "note": "Which game dish and preorderHours TODO_VERIFY."
-    },
-    {
-      "id": "kolenica-sos-od-rena",
-      "category": "specijaliteti",
-      "name": {
-        "sr": "Коленица у сосу од рена",
-        "en": "Pork knuckle in horseradish sauce"
-      },
-      "desc": {
-        "sr": "",
-        "en": ""
-      },
-      "price": null,
-      "priceAlt": null,
-      "unit": null,
-      "origin": "vienna",
-      "tags": [
-        "house"
-      ],
-      "featured": true,
-      "preorder": false,
-      "preorderHours": null,
-      "pairing": "lokalno-crveno",
-      "image": null,
-      "verify": true
-    },
-    {
-      "id": "wine-country-burger",
-      "category": "rostilj",
-      "name": {
-        "sr": "{=Wine country burger=}",
-        "en": "Wine country burger"
-      },
-      "desc": {
-        "sr": "",
-        "en": ""
-      },
-      "price": null,
-      "priceAlt": null,
-      "unit": null,
-      "origin": "home",
-      "tags": [
-        "house"
-      ],
-      "featured": false,
-      "preorder": false,
-      "preorderHours": null,
-      "pairing": "lokalno-crveno",
-      "image": null,
-      "verify": true,
-      "note": "Category (grill vs. specialities) TODO_VERIFY."
+      "source": null,
+      "hidden": true,
+      "note": "Seed item from the brief – NOT on the photographed menu pages. Hidden until the owner confirms."
     },
     {
       "id": "saran",
@@ -438,39 +2371,19 @@
       "featured": false,
       "preorder": false,
       "preorderHours": null,
-      "pairing": "lokalno-belo",
+      "pairing": null,
       "image": null,
-      "verify": true
-    },
-    {
-      "id": "taljatele-piletina",
-      "category": "paste",
-      "name": {
-        "sr": "Таљателе са пилетином и пармезаном",
-        "en": "Tagliatelle with chicken and parmesan"
-      },
-      "desc": {
-        "sr": "",
-        "en": ""
-      },
-      "price": null,
-      "priceAlt": null,
-      "unit": null,
-      "origin": "home",
-      "tags": [],
-      "featured": false,
-      "preorder": false,
-      "preorderHours": null,
-      "pairing": "lokalno-belo",
-      "image": null,
-      "verify": true
+      "verify": true,
+      "source": null,
+      "hidden": true,
+      "note": "Seed item from the brief – NOT on the photographed menu pages. Hidden until the owner confirms."
     },
     {
       "id": "ajvar",
       "category": "salate",
       "name": {
         "sr": "Ајвар",
-        "en": "Ajvar — roasted red pepper relish"
+        "en": "Ajvar"
       },
       "desc": {
         "sr": "",
@@ -489,207 +2402,10 @@
       "preorderHours": null,
       "pairing": null,
       "image": null,
-      "verify": true
-    },
-    {
-      "id": "cokoladna-torta",
-      "category": "dezerti",
-      "name": {
-        "sr": "Чоколадна торта са бадемима и малинама",
-        "en": "Chocolate cake with almonds and raspberries"
-      },
-      "desc": {
-        "sr": "",
-        "en": ""
-      },
-      "price": 420,
-      "priceAlt": null,
-      "unit": null,
-      "origin": "vienna",
-      "tags": [],
-      "featured": false,
-      "preorder": false,
-      "preorderHours": null,
-      "pairing": "bermet",
-      "image": null,
       "verify": true,
-      "note": "Price read from a 112 px photo (page-09) – verify."
-    },
-    {
-      "id": "snenokle",
-      "category": "dezerti",
-      "name": {
-        "sr": "Шненокле",
-        "en": "Šnenokle — snow dumplings in vanilla custard"
-      },
-      "desc": {
-        "sr": "",
-        "en": ""
-      },
-      "price": 360,
-      "priceAlt": null,
-      "unit": null,
-      "origin": "vienna",
-      "tags": [],
-      "featured": false,
-      "preorder": false,
-      "preorderHours": null,
-      "pairing": "bermet",
-      "image": null,
-      "verify": true,
-      "note": "Price read from a 112 px photo (page-09) – verify; printed name may include extra words."
-    },
-    {
-      "id": "palacinke",
-      "category": "dezerti",
-      "name": {
-        "sr": "Палачинке",
-        "en": "Pancakes (crêpes)"
-      },
-      "desc": {
-        "sr": "",
-        "en": ""
-      },
-      "price": 290,
-      "priceAlt": 380,
-      "unit": null,
-      "origin": "vienna",
-      "tags": [],
-      "featured": false,
-      "preorder": false,
-      "preorderHours": null,
-      "pairing": "bermet",
-      "image": null,
-      "verify": true,
-      "note": "Two prices 290 / 380 – meaning (size/filling) unreadable, verify."
-    },
-    {
-      "id": "katina-strudla",
-      "category": "dezerti",
-      "name": {
-        "sr": "Катина штрудла с маком",
-        "en": "Kata's poppy-seed strudel"
-      },
-      "desc": {
-        "sr": "",
-        "en": ""
-      },
-      "price": 310,
-      "priceAlt": null,
-      "unit": null,
-      "origin": "vienna",
-      "tags": [
-        "house"
-      ],
-      "featured": false,
-      "preorder": false,
-      "preorderHours": null,
-      "pairing": "bermet",
-      "image": null,
-      "verify": true,
-      "note": "Price read from a 112 px photo (page-09) – verify."
-    },
-    {
-      "id": "katin-kuglof",
-      "category": "dezerti",
-      "name": {
-        "sr": "Катин куглоф",
-        "en": "Kata's Gugelhupf"
-      },
-      "desc": {
-        "sr": "",
-        "en": ""
-      },
-      "price": 310,
-      "priceAlt": null,
-      "unit": null,
-      "origin": "vienna",
-      "tags": [
-        "house"
-      ],
-      "featured": false,
-      "preorder": false,
-      "preorderHours": null,
-      "pairing": "bermet",
-      "image": null,
-      "verify": true,
-      "note": "Price read from a 112 px photo (page-09) – verify."
-    },
-    {
-      "id": "turska-kafa",
-      "category": "pica",
-      "name": {
-        "sr": "Турска кафа",
-        "en": "Turkish coffee"
-      },
-      "desc": {
-        "sr": "",
-        "en": ""
-      },
-      "price": null,
-      "priceAlt": null,
-      "unit": null,
-      "origin": "istanbul",
-      "tags": [],
-      "featured": false,
-      "preorder": false,
-      "preorderHours": null,
-      "pairing": null,
-      "image": null,
-      "verify": true,
-      "easterEgg": "coffee-cup",
-      "subcategory": "topli"
-    },
-    {
-      "id": "espreso",
-      "category": "pica",
-      "name": {
-        "sr": "Еспресо",
-        "en": "Espresso"
-      },
-      "desc": {
-        "sr": "",
-        "en": ""
-      },
-      "price": null,
-      "priceAlt": null,
-      "unit": null,
-      "origin": "vienna",
-      "tags": [],
-      "featured": false,
-      "preorder": false,
-      "preorderHours": null,
-      "pairing": null,
-      "image": null,
-      "verify": true,
-      "subcategory": "topli"
-    },
-    {
-      "id": "bermet",
-      "category": "pica",
-      "name": {
-        "sr": "Бермет",
-        "en": "Bermet — Karlovci dessert wine"
-      },
-      "desc": {
-        "sr": "",
-        "en": ""
-      },
-      "price": null,
-      "priceAlt": null,
-      "unit": null,
-      "origin": "home",
-      "tags": [
-        "house"
-      ],
-      "featured": false,
-      "preorder": false,
-      "preorderHours": null,
-      "pairing": "bermet",
-      "image": null,
-      "verify": true,
-      "subcategory": "vino",
-      "wineId": "bermet"
+      "source": null,
+      "hidden": true,
+      "note": "Seed item from the brief – NOT on the photographed menu pages. Hidden until the owner confirms."
     }
   ]
 }

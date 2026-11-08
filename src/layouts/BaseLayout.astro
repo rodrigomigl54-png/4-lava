@@ -47,6 +47,18 @@ const preload = locale === 'sr'
     <meta name="twitter:card" content="summary_large_image" />
     <slot name="head" />
     <script is:inline>
+      // Time-of-day mode (Europe/Belgrade) before first paint; demo override from the footer.
+      (function () {
+        var m = null;
+        try { m = localStorage.getItem('k4l-time'); } catch (e) {}
+        if (!/^(jutro|podne|vece)$/.test(m || '')) {
+          var h = Number(new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Belgrade', hour: 'numeric', hourCycle: 'h23' }).format(new Date()));
+          m = h >= 6 && h < 11 ? 'jutro' : h >= 11 && h < 17 ? 'podne' : 'vece';
+        }
+        document.documentElement.dataset.time = m;
+      })();
+    </script>
+    <script is:inline>
       // Remembered language: redirect only when arriving from outside the site.
       (function () {
         try {
@@ -69,6 +81,7 @@ const preload = locale === 'sr'
       <slot />
     </main>
     <Footer locale={locale} />
+    <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
 
     <script>
       // Ornaments draw themselves (stroke-dashoffset) when they enter the viewport

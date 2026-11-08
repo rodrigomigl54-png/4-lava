@@ -1,10 +1,92 @@
 {
   "events": [
-    { "year": "1699", "title": { "sr": "Карловачки мир", "en": "The Treaty of Karlowitz" }, "text": { "sr": "Две царевине, један град — у Карловцима је потписан мир између Хабзбуршке и Османске царевине.", "en": "Two empires, one town — peace between the Habsburg and Ottoman empires was signed here in Karlovci." } },
-    { "year": { "sr": "18. век", "en": "18th c." }, "title": { "sr": "Настаје наша кућа", "en": "Our house is built" }, "text": { "sr": "Мала кућа у којој је данас гостиона.", "en": "The small house that is home to the inn today." }, "TODO_VERIFY": "Exact year of the house." },
-    { "year": "1799", "title": { "sr": "Чесма „Четири лава“", "en": "The Four Lions Fountain" }, "text": { "sr": "Ђузепе Априли, црвени мермер, круна првог градског водовода.", "en": "Giuseppe Aprili, red marble, the crown of the town’s first waterworks." } },
-    { "year": "2007", "title": { "sr": "Чесма обновљена", "en": "Fountain restored" }, "text": { "sr": "Чесма је у потпуности обновљена.", "en": "The fountain is fully restored." } },
-    { "year": { "sr": "Данас", "en": "Today" }, "title": { "sr": "Гостиона Код 4 Лава", "en": "Gostiona Kod 4 Lava" }, "text": { "sr": "Домаћа кухиња преко пута чесме.", "en": "Home cooking across from the fountain." } },
-    { "year": null, "hidden": true, "title": { "sr": "", "en": "" }, "text": { "sr": "", "en": "" }, "TODO_VERIFY": "Restaurant's own founding year / story from the owner. Set hidden:false when filled." }
+    {
+      "year": "1699",
+      "title": {
+        "sr": "Карловачки мир",
+        "en": "The Treaty of Karlowitz"
+      },
+      "text": {
+        "sr": "Две царевине, један град — у Карловцима је потписан мир између Хабзбуршке и Османске царевине.",
+        "en": "Two empires, one town — peace between the Habsburg and Ottoman empires was signed here in Karlovci."
+      }
+    },
+    {
+      "year": {
+        "sr": "18. век",
+        "en": "18th c."
+      },
+      "title": {
+        "sr": "Настаје наша кућа",
+        "en": "Our house is built"
+      },
+      "text": {
+        "sr": "Мала кућа у којој је данас гостиона.",
+        "en": "The small house that is home to the inn today."
+      },
+      "TODO_VERIFY": "Exact year of the house."
+    },
+    {
+      "year": "1799",
+      "title": {
+        "sr": "Чесма „Четири лава“",
+        "en": "The Four Lions Fountain"
+      },
+      "text": {
+        "sr": "Ђузепе Априли, црвени мермер, круна првог градског водовода.",
+        "en": "Giuseppe Aprili, red marble, the crown of the town’s first waterworks."
+      }
+    },
+    {
+      "year": "1811",
+      "title": {
+        "sr": "Дуга традиција гостионе",
+        "en": "A long tradition"
+      },
+      "text": {
+        "sr": "Гостиона са традицијом од 1811. На овом месту гостили су се Бранко Радичевић, Вук Стефановић Караџић, Урош Предић, Доситеј Обрадовић и многи други.",
+        "en": "An inn with a tradition dating back to 1811. Branko Radičević, Vuk Stefanović Karadžić, Uroš Predić, Dositej Obradović and many others were guests here."
+      },
+      "source": "Printed menu, first page (Google Maps photo, Jul 2023)",
+      "TODO_VERIFY": "Restaurant's own claim from its menu – confirm wording with the owner."
+    },
+    {
+      "year": "2007",
+      "title": {
+        "sr": "Чесма обновљена",
+        "en": "Fountain restored"
+      },
+      "text": {
+        "sr": "Чесма је у потпуности обновљена.",
+        "en": "The fountain is fully restored."
+      }
+    },
+    {
+      "year": {
+        "sr": "Данас",
+        "en": "Today"
+      },
+      "title": {
+        "sr": "Гостиона Код 4 Лава",
+        "en": "Gostiona Kod 4 Lava"
+      },
+      "text": {
+        "sr": "Домаћа кухиња преко пута чесме.",
+        "en": "Home cooking across from the fountain."
+      }
+    },
+    {
+      "year": null,
+      "hidden": true,
+      "title": {
+        "sr": "",
+        "en": ""
+      },
+      "text": {
+        "sr": "",
+        "en": ""
+      },
+      "TODO_VERIFY": "Restaurant's own founding year / story from the owner. Set hidden:false when filled."
+    }
   ]
 }

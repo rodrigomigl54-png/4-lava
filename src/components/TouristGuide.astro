@@ -1,0 +1,52 @@
+---
+import guide from '../data/guide.json';
+import { t, pick, type Locale } from '../lib/i18n';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const ICONS: Record<string, string> = {
+  fountain: 'M24 6v4M20 10h8l-1 10h-6zM16 20h16v10H16zM22 25a2 2 0 1 0 4 0 2 2 0 1 0-4 0M8 34c0-3 32-3 32 0v6H8zM20 26c-3 2-6 5-8 8M28 26c3 2 6 5 8 8',
+  church: 'M24 4v6M21 7h6M18 18c0-5 3-8 6-8s6 3 6 8M16 18h16v24H16zM8 42V26h8M40 42V26h-8M21 42v-8a3 3 0 0 1 6 0v8M6 42h36',
+  palace: 'M6 42V20h36v22M4 20l20-12 20 12M10 26v10M17 26v10M24 26v10M31 26v10M38 26v10M4 42h40M20 14h8',
+  school: 'M8 42V18l16-8 16 8v24M4 42h40M14 24h6v6h-6zM28 24h6v6h-6zM20 42v-8h8v8M24 10V4l6 2-6 2',
+  book: 'M24 12c-5-4-12-4-18-2v28c6-2 13-2 18 2 5-4 12-4 18-2V10c-6-2-13-2-18 2zM24 12v28M10 18h8M10 24h8M30 18h8M30 24h8',
+  hill: 'M2 40l14-18 8 8 8-12 14 22zM14 40v-6M30 40v-8M36 12a4 4 0 1 0 8 0 4 4 0 1 0-8 0',
+  view: 'M4 24s8-12 20-12 20 12 20 12-8 12-20 12S4 24 4 24zM18 24a6 6 0 1 0 12 0 6 6 0 1 0-12 0M24 4v4M10 8l2 3M38 8l-2 3',
+};
+---
+<div class="guide">
+  <header class="guide__head">
+    <h3>{t(locale, 'guide.title')}</h3>
+    <p>{t(locale, 'guide.lead')}</p>
+  </header>
+  <ul class="guide__grid" role="list">
+    {guide.places.map((p) => (
+      <li class="guide__card" data-reveal>
+        <svg class="guide__icon" viewBox="0 0 48 48" aria-hidden="true"><path d={ICONS[p.icon]} /></svg>
+        <div>
+          <h4>{pick(locale, p.name)}</h4>
+          <p>{pick(locale, p.text)}</p>
+          <span class="guide__dist">{pick(locale, p.distance)}</span>
+        </div>
+      </li>
+    ))}
+  </ul>
+  <p class="guide__cta italic-display">{t(locale, 'guide.cta')}</p>
+</div>
+<style>
+  .guide { margin-top: var(--space-9); }
+  .guide__head { text-align: center; margin-bottom: var(--space-6); }
+  .guide__head p { color: var(--fg-muted); }
+  .guide__grid { list-style: none; padding: 0; margin: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr)); }
+  .guide__card {
+    display: grid; grid-template-columns: 3rem 1fr; gap: 1rem; align-items: start;
+    padding: 1.1rem 1.2rem; border: 1px solid var(--line);
+    background: color-mix(in srgb, var(--cream) 60%, white);
+    transition: transform var(--dur-3) var(--ease-out), box-shadow var(--dur-3) var(--ease-out);
+  }
+  .guide__card:hover { transform: translateY(-3px); box-shadow: var(--shadow-soft); }
+  .guide__icon { width: 3rem; height: 3rem; fill: none; stroke: var(--gold); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+  .guide__card h4 { font-size: var(--step-1); margin-bottom: 0.25rem; }
+  .guide__card p { margin: 0 0 0.4rem; font-size: 0.92rem; color: var(--fg-muted); }
+  .guide__dist { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--label); }
+  .guide__cta { text-align: center; font-size: var(--step-2); color: var(--heading); margin-top: var(--space-6); }
+</style>

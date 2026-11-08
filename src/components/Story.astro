@@ -1,0 +1,78 @@
+---
+import LionIcon from './LionIcon.astro';
+import OrnamentRule from './OrnamentRule.astro';
+import OrnamentCorner from './OrnamentCorner.astro';
+import FountainArt from './FountainArt.astro';
+import Emblem from './Emblem.astro';
+import Timeline from './Timeline.astro';
+import TouristGuide from './TouristGuide.astro';
+import { t, type Locale } from '../lib/i18n';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+---
+<section id="kuca" class="section story" aria-labelledby="kuca-title">
+  <span class="story__lion" aria-hidden="true"><LionIcon variant="half" /></span>
+  <div class="container">
+    <header class="section-head">
+      <span class="section-lion" aria-hidden="true"><LionIcon variant="kuca" /></span>
+      <span class="label">{t(locale, 'story.kicker')}</span>
+      <h2 id="kuca-title">{t(locale, 'story.title')}</h2>
+      <OrnamentRule />
+      <p class="story__lead">{t(locale, 'story.lead')}</p>
+    </header>
+
+    <div class="story__grid">
+      <figure class="story__fountain" data-reveal>
+        <FountainArt title={t(locale, 'story.fountainTitle')} />
+      </figure>
+      <div class="story__text" data-reveal>
+        <h3>{t(locale, 'story.fountainTitle')}</h3>
+        <p>{t(locale, 'story.fountainText')}</p>
+        <blockquote class="story__legend">
+          <p class="italic-display">{t(locale, 'story.legend')}</p>
+          <footer>{t(locale, 'story.legendNote')}</footer>
+        </blockquote>
+      </div>
+    </div>
+
+    <article class="border-card" data-reveal>
+      <OrnamentCorner position="tl" size="2.5rem" />
+      <OrnamentCorner position="br" size="2.5rem" />
+      <Emblem kind="vienna" size="3.5rem" />
+      <div>
+        <p class="label">1699</p>
+        <h3>{t(locale, 'story.borderTitle')}</h3>
+        <p>{t(locale, 'story.borderText')}</p>
+      </div>
+      <Emblem kind="istanbul" size="3.5rem" class="border-card__right" />
+    </article>
+
+    <Timeline locale={locale} />
+    <TouristGuide locale={locale} />
+  </div>
+</section>
+
+<style>
+  .story { overflow: hidden; }
+  .story__lion { position: absolute; left: 0; top: 4rem; width: clamp(5rem, 12vw, 10rem); color: color-mix(in srgb, var(--taupe) 22%, transparent); pointer-events: none; }
+  .story__lead { max-width: 38rem; margin: 1.25rem auto 0; font-size: var(--step-1); font-family: var(--font-display); font-style: italic; color: var(--fg); line-height: 1.4; }
+  .story__grid { display: grid; gap: 2.5rem; align-items: center; margin-bottom: var(--space-8); }
+  .story__fountain { margin: 0 auto; width: min(100%, 22rem); }
+  .story__text h3 { font-size: var(--step-3); }
+  .story__legend { margin: 1.75rem 0 0; padding: 1.25rem 1.5rem; border-left: 2px solid var(--marble-red); background: color-mix(in srgb, var(--marble-red) 6%, transparent); }
+  .story__legend p { font-size: var(--step-2); color: var(--bordeaux); margin: 0 0 0.4rem; line-height: 1.25; }
+  .story__legend footer { font-size: 0.92rem; color: var(--fg-muted); font-style: italic; }
+  .border-card {
+    position: relative; display: grid; gap: 1.25rem; justify-items: center; text-align: center;
+    padding: 2.5rem 1.5rem; border: 1px solid var(--line); background: color-mix(in srgb, var(--cream) 50%, white);
+    max-width: 52rem; margin: 0 auto;
+  }
+  .border-card h3 { font-size: var(--step-3); }
+  .border-card p:last-child { margin: 0; color: var(--fg-muted); }
+  .border-card :global(.emblem) { color: var(--gold-ink); }
+  .border-card :global(.border-card__right) { color: var(--istanbul); }
+  @media (min-width: 48rem) {
+    .story__grid { grid-template-columns: 1fr 1.2fr; gap: 4rem; }
+    .border-card { grid-template-columns: auto 1fr auto; padding: 2.5rem 3rem; }
+  }
+</style>

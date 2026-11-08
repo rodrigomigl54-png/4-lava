@@ -4,6 +4,7 @@ import LangSwitch from './LangSwitch.astro';
 import OpenStatus from './OpenStatus.astro';
 import KilimBand from './KilimBand.astro';
 import OrnamentRule from './OrnamentRule.astro';
+import TimeToggle from './TimeToggle.astro';
 import info from '../data/info.json';
 import { t, pick, localePath, type Locale } from '../lib/i18n';
 interface Props { locale: Locale }
@@ -76,7 +77,7 @@ const social = [
       ))}
     </ul>
     <LangSwitch locale={locale} />
-    <slot name="extra" />
+    <TimeToggle locale={locale} />
   </div>
   {demo && <p class="site-footer__demo">{t(locale, 'footer.demo')}</p>}
 </footer>

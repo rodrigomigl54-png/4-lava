@@ -1,0 +1,87 @@
+---
+import menu from '../data/menu.json';
+import wines from '../data/wines.json';
+import { t, pick, type Locale } from '../lib/i18n';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+
+const drinks = wines.wines.map((w) => ({ id: w.id, name: pick(locale, w.name), why: pick(locale, (wines.pairingReasons as Record<string, { sr: string; en: string }>)[w.id]) }));
+const dishes = menu.items.filter((i) => i.pairing && i.category !== 'pica').map((i) => ({ id: i.id, name: pick(locale, i.name), pairing: i.pairing as string }));
+const n = drinks.length;
+const R = 150, C = 160;
+const seg = 360 / n;
+const pt = (deg: number, r: number) => {
+  const a = ((deg - 90) * Math.PI) / 180;
+  return [C + r * Math.cos(a), C + r * Math.sin(a)];
+};
+const fills = ['#5E1A1F', '#2F3B2C', '#7A3A12', '#1F5C5C', '#3a2a1a'];
+const sectors = drinks.map((d, i) => {
+  const a0 = i * seg - seg / 2, a1 = a0 + seg;
+  const [x0, y0] = pt(a0, R), [x1, y1] = pt(a1, R);
+  return { ...d, path: `M${C} ${C}L${x0} ${y0}A${R} ${R} 0 ${seg > 180 ? 1 : 0} 1 ${x1} ${y1}Z`, angle: i * seg, fill: fills[i % fills.length] };
+});
+---
+<div class="wheel" data-wheel data-drinks={JSON.stringify(drinks.map((d, i) => ({ id: d.id, angle: i * seg, name: d.name, why: d.why })))} data-result-tpl={t(locale, 'pairing.result')}>
+  <h3 class="wheel__title">{t(locale, 'pairing.title')}</h3>
+  <div class="field wheel__field">
+    <label for="wheel-dish">{t(locale, 'pairing.choose')}</label>
+    <select id="wheel-dish" class="input" data-wheel-select>
+      <option value="">{t(locale, 'pairing.pick')}</option>
+      {dishes.map((d) => <option value={d.pairing}>{d.name}</option>)}
+    </select>
+  </div>
+  <div class="wheel__stage">
+    <svg class="wheel__pointer" viewBox="0 0 30 34" aria-hidden="true"><path d="M15 34 2 6a14 14 0 1 1 26 0Z" fill="#B08D57" /><circle cx="15" cy="12" r="5" fill="#2A1E17" /></svg>
+    <svg class="wheel__disc" viewBox="0 0 320 320" aria-hidden="true" data-wheel-disc>
+      <circle cx={C} cy={C} r={R + 8} fill="#2A1E17" stroke="#B08D57" stroke-width="1.5" />
+      {sectors.map((s) => (
+        <g>
+          <path d={s.path} fill={s.fill} stroke="#B08D57" stroke-width="1" />
+          <text transform={`rotate(${s.angle} ${C} ${C})`} x={C} y={C - R + 34} text-anchor="middle" font-family="Cormorant Garamond, serif" font-weight="700" font-size="17" fill="#F3EBDD">{s.name.split(' — ')[0]}</text>
+          {s.name.includes(' — ') && <text transform={`rotate(${s.angle} ${C} ${C})`} x={C} y={C - R + 54} text-anchor="middle" font-family="Cormorant Garamond, serif" font-style="italic" font-size="15" fill="#C9A66B">{s.name.split(' — ')[1]}</text>}
+        </g>
+      ))}
+      {Array.from({ length: 36 }, (_, i) => { const [x0, y0] = pt(i * 10, R + 2); const [x1, y1] = pt(i * 10, R + (i % 3 ? 6 : 8)); return <line x1={x0} y1={y0} x2={x1} y2={y1} stroke="#B08D57" stroke-width="1" />; })}
+      <circle cx={C} cy={C} r="38" fill="#2A1E17" stroke="#B08D57" stroke-width="1.5" />
+      <circle cx={C} cy={C} r="31" fill="none" stroke="#B08D57" stroke-width=".6" />
+      <use href="#lion" x={C - 26} y={C - 30} width="60" height="60" fill="#B08D57" color="#B08D57" />
+    </svg>
+  </div>
+  <p class="wheel__result" aria-live="polite" data-wheel-result>{t(locale, 'pairing.hint')}</p>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-wheel]').forEach((w) => {
+    const drinks = JSON.parse(w.dataset.drinks || '[]') as { id: string; angle: number; name: string; why: string }[];
+    const disc = w.querySelector<SVGElement>('[data-wheel-disc]')!;
+    const out = w.querySelector<HTMLElement>('[data-wheel-result]')!;
+    let rot = 0;
+    w.querySelector<HTMLSelectElement>('[data-wheel-select]')!.addEventListener('change', (e) => {
+      const d = drinks.find((x) => x.id === (e.target as HTMLSelectElement).value);
+      if (!d) return;
+      // spin forward: at least one full turn, ending with the drink under the pointer
+      const target = -d.angle;
+      const cur = ((rot % 360) + 360) % 360;
+      let delta = ((target - cur) % 360 + 360) % 360;
+      rot += 360 + delta;
+      disc.style.transform = `rotate(${rot}deg)`;
+      out.innerHTML = '';
+      const strong = document.createElement('strong');
+      strong.textContent = (w.dataset.resultTpl || '{drink}').replace('{drink}', d.name);
+      const span = document.createElement('span');
+      span.textContent = d.why;
+      window.setTimeout(() => out.append(strong, document.createElement('br'), span), matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 1300);
+    });
+  });
+</script>
+
+<style>
+  .wheel { display: grid; gap: 1.25rem; justify-items: center; text-align: center; }
+  .wheel__title { color: var(--cream); margin: 0; }
+  .wheel__field { width: min(100%, 22rem); text-align: left; }
+  .wheel__stage { position: relative; width: min(100%, 20rem); aspect-ratio: 1; }
+  .wheel__pointer { position: absolute; z-index: 1; top: -0.6rem; left: 50%; width: 1.8rem; transform: translateX(-50%); filter: drop-shadow(0 3px 3px rgb(0 0 0 / 0.5)); }
+  .wheel__disc { width: 100%; height: 100%; transition: transform 1.6s cubic-bezier(0.17, 0.84, 0.32, 1); filter: drop-shadow(0 14px 22px rgb(0 0 0 / 0.5)); }
+  .wheel__result { min-height: 3.5em; max-width: 26rem; margin: 0; color: var(--cream-dim); }
+  .wheel__result :global(strong) { font-family: var(--font-display); font-size: var(--step-1); color: var(--gold-light); }
+</style>

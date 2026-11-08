@@ -1,6 +1,8 @@
 @import './fonts.css';
 @import './tokens.css';
 @import './textures.css';
+@import './forms.css';
+@import './timemode.css';
 
 *, *::before, *::after { box-sizing: border-box; }
 html {
@@ -148,3 +150,32 @@ p { margin: 0 0 var(--space-4); text-wrap: pretty; }
     scroll-behavior: auto !important;
   }
 }
+
+/* Toast (aria-live) */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(var(--bottom-bar-h) + 1rem + env(safe-area-inset-bottom, 0px));
+  z-index: 200;
+  max-width: min(32rem, calc(100% - 2rem));
+  padding: 0.85rem 1.2rem;
+  border: 1px solid var(--gold);
+  background: var(--wood);
+  color: var(--cream);
+  box-shadow: var(--shadow-soft);
+  transform: translate(-50%, 150%);
+  opacity: 0;
+  transition: transform var(--dur-2) var(--ease-out), opacity var(--dur-2) var(--ease);
+  pointer-events: none;
+}
+.toast.is-on { transform: translate(-50%, 0); opacity: 1; }
+.toast:empty { visibility: hidden; }
+
+/* Medallion with a lion above section headings */
+.section-lion {
+  display: block; width: 4.25rem; height: 4.25rem; margin: 0 auto 1rem; padding: 0.3rem; border-radius: 50%; overflow: hidden;
+  color: var(--ink); background: color-mix(in srgb, var(--taupe) 55%, transparent);
+  box-shadow: 0 0 0 1px var(--gold), 0 0 0 5px var(--bg), 0 0 0 6px color-mix(in srgb, var(--gold) 50%, transparent);
+}
+.section-lion svg { width: 100%; height: 100%; }
+.dark .section-lion { color: var(--gold); background: var(--wood); }

@@ -1,0 +1,29 @@
+---
+import { t, type Locale } from '../lib/i18n';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const channels = [
+  { v: 'whatsapp', icon: 'M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.4 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-3.3-.8-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.3 0 .5l-.4.5-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.5.3.1.2.1.6-.1 1.2Z' },
+  { v: 'viber', icon: 'M12 2C6.9 2 3 5.4 3 10.3c0 2.6 1.1 4.6 3 5.9V21l3.4-2.6c.8.2 1.7.3 2.6.3 5.1 0 9-3.4 9-8.4S17.1 2 12 2Zm4.7 11.6c-.3.6-1.1 1.2-1.8 1.1-2.9-.4-6.2-3.6-6.7-6.5-.1-.7.4-1.5 1-1.8.3-.2.7-.1.9.2l1 1.4c.2.3.2.7-.1 1l-.4.4c.4 1.3 1.6 2.5 2.9 2.9l.4-.4c.3-.3.7-.3 1-.1l1.4 1c.4.2.5.5.4.8Z' },
+  { v: 'sms', icon: 'M4 4h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H9l-5 4v-4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Zm3 6.5a1.5 1.5 0 1 0 0 .01Zm5 0a1.5 1.5 0 1 0 0 .01Zm5 0a1.5 1.5 0 1 0 0 .01Z' },
+  { v: 'call', icon: 'M6.6 10.8a15.2 15.2 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2Z' },
+];
+---
+<fieldset class="send">
+  <legend class="label">{t(locale, 'form.via')}</legend>
+  <div class="send__row">
+    {channels.map((c, i) => (
+      <button class:list={['btn', 'send__btn', `send__btn--${c.v}`, { 'btn--ghost': i > 0 }]} type="submit" name="channel" value={c.v} formnovalidate>
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="currentColor"><path d={c.icon} /></svg>
+        {t(locale, `form.${c.v}`)}
+      </button>
+    ))}
+  </div>
+</fieldset>
+<style>
+  .send { border: 0; padding: 0; margin: 0; min-width: 0; }
+  .send legend { margin-bottom: 0.6rem; font-size: 0.72rem; }
+  .send__row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.6rem; }
+  .send__btn { padding-inline: 0.8rem; letter-spacing: 0.08em; }
+  @media (min-width: 40rem) { .send__row { grid-template-columns: repeat(4, auto); justify-content: start; } }
+</style>
