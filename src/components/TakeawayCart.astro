@@ -1,0 +1,158 @@
+---
+import info from '../data/info.json';
+import SendButtons from './SendButtons.astro';
+import { t, type Locale } from '../lib/i18n';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const cfg = {
+  template: t(locale, 'cart.msg'),
+  phone: { intl: info.phone.intl, whatsapp: info.phone.whatsapp },
+  weekdays: ['7', '1', '2', '3', '4', '5', '6'].map((d) => t(locale, `days.${d}`)),
+  lang: locale,
+  s: { required: t(locale, 'form.err.required'), date: t(locale, 'form.err.date'), check: t(locale, 'form.err.check'), ok: t(locale, 'form.ok'), viberCopied: t(locale, 'form.viberCopied') },
+};
+const s = { added: t(locale, 'cart.added'), currency: t(locale, 'price.currency'), remove: t(locale, 'cart.remove'), minus: t(locale, 'form.minus'), plus: t(locale, 'form.plus') };
+---
+<div class="cart" data-cart data-s={JSON.stringify(s)} hidden>
+  <button type="button" class="cart__fab" data-cart-open aria-haspopup="dialog" aria-controls="cart-dlg">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1.2 12H6.2zM9 8V6a3 3 0 0 1 6 0v2" fill="none" stroke="currentColor" stroke-width="1.6" /></svg>
+    <span>{t(locale, 'cart.open')}</span>
+    <span class="cart__count" data-cart-count>0</span>
+  </button>
+  <dialog class="cart__dlg" id="cart-dlg" aria-labelledby="cart-title">
+    <div class="cart__head">
+      <h2 id="cart-title">{t(locale, 'cart.title')}</h2>
+      <button type="button" class="cart__x" data-cart-close aria-label={t(locale, 'cart.close')}>✕</button>
+    </div>
+    <ul class="cart__list" role="list" data-cart-list></ul>
+    <p class="cart__empty" data-cart-empty>{t(locale, 'cart.empty')}</p>
+    <p class="cart__total"><span>{t(locale, 'cart.total')}</span> <b data-cart-total>0</b></p>
+    <form class="form" data-msg-form data-cfg={JSON.stringify(cfg)} novalidate>
+      <input type="hidden" name="items" data-cart-items />
+      <input type="hidden" name="total" data-cart-total-input />
+      <fieldset class="choices">
+        <legend>{t(locale, 'cart.mode')}</legend>
+        <label class="choice"><input type="radio" name="mode" value="takeaway" data-text={t(locale, 'cart.takeaway')} checked /><span>{t(locale, 'cart.takeaway')}</span></label>
+        <label class="choice"><input type="radio" name="mode" value="delivery" data-text={t(locale, 'cart.delivery')} /><span>{t(locale, 'cart.delivery')}</span></label>
+      </fieldset>
+      <div class="form__row form__row--2">
+        <div class="field">
+          <label for="cart-name">{t(locale, 'form.name')}</label>
+          <input class="input" id="cart-name" name="name" autocomplete="name" required aria-describedby="cart-name-err" />
+          <p class="field__err" id="cart-name-err" data-err-for="name"></p>
+        </div>
+        <div class="field">
+          <label for="cart-when">{t(locale, 'cart.when')}</label>
+          <input class="input" id="cart-when" name="when" type="time" step="900" />
+        </div>
+      </div>
+      <div class="field" data-cart-address hidden>
+        <label for="cart-address">{t(locale, 'cart.address')}</label>
+        <input class="input" id="cart-address" name="address" autocomplete="street-address" />
+      </div>
+      <div class="field">
+        <label for="cart-note">{t(locale, 'form.note')} <small>({t(locale, 'form.optional')})</small></label>
+        <input class="input" id="cart-note" name="note" />
+      </div>
+      <details class="preview-wrap"><summary>{t(locale, 'form.preview')}</summary><pre class="preview" data-preview></pre></details>
+      <SendButtons locale={locale} />
+      <p class="form__note">{t(locale, 'cart.noPay')} <button type="button" class="cart__clear" data-cart-clear>{t(locale, 'cart.clear')}</button></p>
+    </form>
+  </dialog>
+</div>
+
+<script>
+  import { toast } from '../scripts/toast';
+  import { initMessageForms } from '../scripts/message-forms';
+  type Line = { id: string; name: string; price: number; qty: number };
+  const root = document.querySelector<HTMLElement>('[data-cart]');
+  if (root) {
+    const s = JSON.parse(root.dataset.s || '{}');
+    const KEY = 'k4l-cart';
+    let cart: Line[] = [];
+    try { cart = JSON.parse(localStorage.getItem(KEY) || '[]'); } catch {}
+    const fmt = (n: number) => `${new Intl.NumberFormat('de-DE').format(n)} ${s.currency}`;
+    const dlg = root.querySelector<HTMLDialogElement>('dialog')!;
+    const list = root.querySelector<HTMLElement>('[data-cart-list]')!;
+    const itemsInput = root.querySelector<HTMLInputElement>('[data-cart-items]')!;
+    const totalInput = root.querySelector<HTMLInputElement>('[data-cart-total-input]')!;
+
+    function save() { try { localStorage.setItem(KEY, JSON.stringify(cart)); } catch {} }
+    function render() {
+      const count = cart.reduce((a, l) => a + l.qty, 0);
+      const total = cart.reduce((a, l) => a + l.qty * l.price, 0);
+      root!.hidden = count === 0 && !dlg.open;
+      root!.querySelector('[data-cart-count]')!.textContent = String(count);
+      root!.querySelector('[data-cart-total]')!.textContent = fmt(total);
+      root!.querySelector<HTMLElement>('[data-cart-empty]')!.hidden = count > 0;
+      list.replaceChildren(...cart.map((l) => {
+        const li = document.createElement('li');
+        li.className = 'cart__line';
+        li.innerHTML = `<span class="cart__name"></span><span class="cart__qty"><button type="button" data-d="-1" aria-label="${s.minus}">−</button><b>${l.qty}</b><button type="button" data-d="1" aria-label="${s.plus}">+</button></span><span class="cart__price">${fmt(l.qty * l.price)}</span>`;
+        li.querySelector('.cart__name')!.textContent = l.name;
+        li.querySelectorAll<HTMLButtonElement>('[data-d]').forEach((b) => b.addEventListener('click', () => {
+          l.qty += Number(b.dataset.d);
+          cart = cart.filter((x) => x.qty > 0);
+          save(); render();
+        }));
+        return li;
+      }));
+      itemsInput.value = cart.map((l) => `• ${l.qty} × ${l.name}`).join('\n');
+      totalInput.value = fmt(total);
+      itemsInput.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+
+    document.addEventListener('click', (e) => {
+      const b = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-cart-add]');
+      if (!b) return;
+      const id = b.dataset.cartAdd!;
+      const line = cart.find((l) => l.id === id);
+      if (line) line.qty++; else cart.push({ id, name: b.dataset.name || id, price: Number(b.dataset.price || 0), qty: 1 });
+      save(); render();
+      b.classList.add('is-bump'); setTimeout(() => b.classList.remove('is-bump'), 250);
+      toast(s.added.replace('{name}', b.dataset.name || ''), 2000);
+    });
+    root.querySelector('[data-cart-open]')!.addEventListener('click', () => dlg.showModal());
+    root.querySelector('[data-cart-close]')!.addEventListener('click', () => dlg.close());
+    dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); });
+    dlg.addEventListener('close', render);
+    root.querySelector('[data-cart-clear]')!.addEventListener('click', () => { cart = []; save(); render(); });
+    root.querySelectorAll<HTMLInputElement>('input[name=mode]').forEach((r) => r.addEventListener('change', () => {
+      root!.querySelector<HTMLElement>('[data-cart-address]')!.hidden = r.value !== 'delivery' || !r.checked;
+    }));
+    initMessageForms(root);
+    // total placeholder is not a form field name the template knows by default; map it
+    render();
+  }
+</script>
+
+<style>
+  .cart { position: fixed; right: 1rem; bottom: calc(var(--bottom-bar-h) + 1rem + env(safe-area-inset-bottom, 0px)); z-index: 70; }
+  .cart[hidden] { display: none; }
+  .cart__fab {
+    display: inline-flex; align-items: center; gap: 0.5rem; min-height: 3.2rem; padding: 0.5rem 0.9rem 0.5rem 1rem; border-radius: 999px;
+    border: 1px solid var(--gold); background: var(--wood); color: var(--cream); cursor: pointer; box-shadow: 0 12px 30px -10px rgb(0 0 0 / 0.6);
+    font-size: 0.85rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .cart__fab svg { width: 1.3rem; height: 1.3rem; color: var(--gold-light); }
+  .cart__count { min-width: 1.6rem; height: 1.6rem; display: grid; place-items: center; border-radius: 999px; background: var(--gold); color: var(--wood); font-size: 0.8rem; }
+  .cart__dlg {
+    width: min(36rem, 100%); max-height: min(92vh, 100%); margin: auto auto 0; padding: 1.25rem 1.25rem 1.5rem; border: 1px solid var(--gold);
+    background: var(--cream); background-image: var(--grain); color: var(--ink); overflow-y: auto;
+  }
+  .cart__dlg::backdrop { background: rgb(20 14 10 / 0.55); }
+  @media (min-width: 40rem) { .cart__dlg { margin: auto; } }
+  .cart__head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 0.75rem; }
+  .cart__head h2 { font-size: var(--step-2); margin: 0; }
+  .cart__x { width: 2.75rem; height: 2.75rem; border-radius: 50%; border: 1px solid var(--line); background: transparent; cursor: pointer; }
+  .cart__list { list-style: none; margin: 0; padding: 0; }
+  .cart__list :global(.cart__line) { display: grid; grid-template-columns: 1fr auto auto; gap: 0.75rem; align-items: center; padding: 0.5rem 0; border-bottom: 1px dotted var(--line); }
+  .cart__list :global(.cart__qty) { display: inline-flex; align-items: center; gap: 0.4rem; }
+  .cart__list :global(.cart__qty button) { width: 2.2rem; height: 2.2rem; border-radius: 50%; border: 1px solid var(--line); background: transparent; cursor: pointer; }
+  .cart__list :global(.cart__price) { font-family: var(--font-display); font-weight: 600; color: var(--bordeaux); white-space: nowrap; }
+  .cart__empty { color: var(--fg-muted); font-style: italic; }
+  .cart__empty[hidden] { display: none; }
+  .cart__total { display: flex; justify-content: space-between; font-size: 1.05rem; margin: 0.75rem 0 1rem; }
+  .cart__total b { font-family: var(--font-display); font-size: var(--step-1); color: var(--bordeaux); }
+  .cart__clear { border: 0; background: none; color: var(--marble-red); text-decoration: underline; cursor: pointer; padding: 0.4rem; }
+</style>

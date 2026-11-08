@@ -1,0 +1,23 @@
+---
+/** Baroque corner flourish. position: tl | tr | bl | br. */
+interface Props { position?: 'tl' | 'tr' | 'bl' | 'br'; class?: string; size?: string }
+const { position = 'tl', class: cls = '', size = '3.5rem' } = Astro.props;
+const flip = { tl: '', tr: 'scale(-1,1)', bl: 'scale(1,-1)', br: 'scale(-1,-1)' }[position];
+---
+<svg class:list={['orn-corner', `orn-corner--${position}`, cls]} viewBox="0 0 64 64" style={`width:${size};height:${size}`} aria-hidden="true" focusable="false" data-draw>
+  <g transform-origin="32 32" transform={flip || undefined} fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round">
+    <path pathLength="1" d="M2 62 V14 C2 7 7 2 14 2 H62" />
+    <path pathLength="1" d="M8 62 V20 C8 13 13 8 20 8 H62" />
+    <path pathLength="1" d="M8 20 C14 20 20 16 20 8" />
+    <path pathLength="1" d="M20 20 C26 14 34 16 33 23 C32 29 24 28 25 23 C26 19 30 20 30 22" />
+    <path pathLength="1" d="M14 34 C18 30 18 26 14 26" />
+    <path pathLength="1" d="M34 14 C30 18 26 18 26 14" />
+  </g>
+</svg>
+<style>
+  .orn-corner { position: absolute; color: var(--gold); pointer-events: none; }
+  .orn-corner--tl { top: 0.75rem; left: 0.75rem; }
+  .orn-corner--tr { top: 0.75rem; right: 0.75rem; }
+  .orn-corner--bl { bottom: 0.75rem; left: 0.75rem; }
+  .orn-corner--br { bottom: 0.75rem; right: 0.75rem; }
+</style>

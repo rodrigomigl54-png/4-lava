@@ -1,0 +1,48 @@
+{
+  "TODO_VERIFY": "Review dates unknown – add from Google. Only real reviews may be added here.",
+  "reviews": [
+    {
+      "id": "r1",
+      "author": null,
+      "authorLabel": { "sr": "посетилац", "en": "a guest" },
+      "date": null,
+      "source": "Google",
+      "lang": "en",
+      "text": "Very good people, welcoming and great service, excellent ☕️ The best food, bravo 💝",
+      "translation": { "sr": "Веома добри људи, гостољубиви и одлична услуга, одлична ☕️ Најбоља храна, браво 💝" },
+      "translated": ["sr"]
+    },
+    {
+      "id": "r2",
+      "author": "Велибор В",
+      "authorLatin": "Velibor V",
+      "date": null,
+      "source": "Google",
+      "lang": "sr",
+      "text": "Право место да у пријатној атмосфери уживате у одличном еспресу... Лепо уређено и чисто, тоалет чист и уредан. Особље је професионално и услужно 😊 Све похвале за Гостиону Код 4 Лава и видимо се поново кад дођемо у Сремске Карловце!!!",
+      "translation": { "en": "The right place to enjoy an excellent espresso in a pleasant atmosphere... Nicely decorated and clean, the toilet clean and tidy. The staff are professional and helpful 😊 All praise to Gostiona Kod 4 Lava — see you again when we come back to Sremski Karlovci!!!" },
+      "translated": ["en"]
+    },
+    {
+      "id": "r3",
+      "author": "Meghan Pierson",
+      "date": null,
+      "source": "Google",
+      "lang": "en",
+      "text": "A perfect last meal in Serbia! I had the \"wine country burger\" and lovely local wine pairings. The service was quick and kind. Absolutely delicious",
+      "translation": { "sr": "Савршен последњи оброк у Србији! Јела сам „wine country burger“ уз дивна локална вина. Услуга је била брза и љубазна. Изузетно укусно." },
+      "translated": ["sr"]
+    },
+    {
+      "id": "r4",
+      "author": "Isuru Dissanayake",
+      "date": null,
+      "source": "Google",
+      "lang": "en",
+      "shortened": true,
+      "text": "We had our lunch from this great restaurant when we were on our way to a winery in Novi Sad. This is a hidden gem in the area it was quite hard to find as the entrance to the restaurant was quite small.",
+      "translation": { "sr": "Ручали смо у овом одличном ресторану на путу до винарије код Новог Сада. Ово је скривени драгуљ у крају — било га је прилично тешко наћи јер је улаз у ресторан прилично мали." },
+      "translated": ["sr"]
+    }
+  ]
+}

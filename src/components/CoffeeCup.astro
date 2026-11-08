@@ -1,0 +1,152 @@
+---
+import fortunes from '../data/fortunes.json';
+import { t, sr2, localePath, type Locale } from '../lib/i18n';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const list = (locale === 'en' ? fortunes.en : fortunes.sr).map((f) => (locale === 'en' ? f.text : sr2(locale, f.text)));
+const s = { copied: t(locale, 'coffee.copied'), title: t(locale, 'coffee.read') };
+---
+<div class="cup" data-cup data-fortunes={JSON.stringify(list)} data-s={JSON.stringify(s)}>
+  <button class="cup__trigger" type="button" data-cup-open aria-expanded="false" aria-controls="cup-stage">
+    <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M9 18h26v6a13 13 0 0 1-26 0zM35 20h3a4 4 0 0 1 0 8h-4M5 40h34M17 6c-2 3 2 5 0 8M23 6c-2 3 2 5 0 8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
+    <span>{t(locale, 'coffee.read')}</span>
+  </button>
+
+  <div class="cup__stage" id="cup-stage" hidden data-cup-stage>
+    <p class="cup__intro">{t(locale, 'coffee.intro')}</p>
+    <div class="cup__scene" data-cup-scene>
+      <!-- side view: cup that flips onto the saucer -->
+      <svg class="cup__side" viewBox="0 0 200 160" aria-hidden="true">
+        <ellipse cx="100" cy="140" rx="80" ry="12" fill="#e9dcc4" stroke="#B08D57" stroke-width="1.5" />
+        <ellipse cx="100" cy="137" rx="50" ry="6" fill="none" stroke="#B08D57" stroke-width=".8" />
+        <g class="cup__body">
+          <path d="M60 60h80l-8 62a12 12 0 0 1-12 10H80a12 12 0 0 1-12-10z" fill="#F3EBDD" stroke="#B08D57" stroke-width="1.6" />
+          <path d="M66 74h68M68 88h64" stroke="#8E2A2A" stroke-width="2" />
+          <path d="M72 81l6-5 6 5 6-5 6 5 6-5 6 5 6-5 6 5 6-5 6 5" fill="none" stroke="#B08D57" stroke-width="1" />
+          <ellipse cx="100" cy="60" rx="40" ry="6" fill="#3b2416" stroke="#B08D57" stroke-width="1.2" />
+        </g>
+      </svg>
+      <!-- top view: the grounds -->
+      <svg class="cup__top" viewBox="0 0 200 200" aria-hidden="true">
+        <circle cx="100" cy="100" r="94" fill="#efe3cc" stroke="#B08D57" stroke-width="2" />
+        <circle cx="100" cy="100" r="82" fill="#f7efe0" stroke="#B08D57" stroke-width=".8" />
+        <g data-grounds></g>
+      </svg>
+    </div>
+    <p class="cup__fortune" aria-live="polite" data-cup-fortune></p>
+    <p class="cup__disclaimer">{t(locale, 'coffee.disclaimer')}</p>
+    <div class="cup__btns">
+      <button class="btn btn--ghost" type="button" data-cup-again>{t(locale, 'coffee.again')}</button>
+      <button class="btn btn--ghost" type="button" data-cup-share data-url={localePath(locale, '/') + '#jelovnik'}>{t(locale, 'coffee.share')}</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { toast, copyText } from '../scripts/toast';
+
+  function blob(cx: number, cy: number, r: number) {
+    const n = 7 + Math.floor(Math.random() * 5);
+    const pts = Array.from({ length: n }, (_, i) => {
+      const a = (i / n) * Math.PI * 2;
+      const rr = r * (0.55 + Math.random() * 0.75);
+      return [cx + Math.cos(a) * rr, cy + Math.sin(a) * rr];
+    });
+    let d = '';
+    for (let i = 0; i < n; i++) {
+      const p = pts[i], q = pts[(i + 1) % n];
+      const m = [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2];
+      d += i === 0 ? `M${m[0].toFixed(1)} ${m[1].toFixed(1)}` : '';
+      const nn = pts[(i + 1) % n], m2 = [(nn[0] + pts[(i + 2) % n][0]) / 2, (nn[1] + pts[(i + 2) % n][1]) / 2];
+      d += `Q${nn[0].toFixed(1)} ${nn[1].toFixed(1)} ${m2[0].toFixed(1)} ${m2[1].toFixed(1)}`;
+    }
+    return d + 'Z';
+  }
+
+  function grounds(g: SVGGElement) {
+    const NS = 'http://www.w3.org/2000/svg';
+    g.replaceChildren();
+    const count = 5 + Math.floor(Math.random() * 5);
+    for (let i = 0; i < count; i++) {
+      const a = Math.random() * Math.PI * 2, dist = Math.random() * 52;
+      const p = document.createElementNS(NS, 'path');
+      p.setAttribute('d', blob(100 + Math.cos(a) * dist, 100 + Math.sin(a) * dist, 6 + Math.random() * 16));
+      p.setAttribute('fill', `rgba(${50 + Math.random() * 20},${30 + Math.random() * 10},18,${0.55 + Math.random() * 0.4})`);
+      p.style.animationDelay = `${i * 90}ms`;
+      g.appendChild(p);
+    }
+    for (let i = 0; i < 40; i++) {
+      const a = Math.random() * Math.PI * 2, dist = Math.random() * 76;
+      const c = document.createElementNS(NS, 'circle');
+      c.setAttribute('cx', String(100 + Math.cos(a) * dist));
+      c.setAttribute('cy', String(100 + Math.sin(a) * dist));
+      c.setAttribute('r', String(0.6 + Math.random() * 1.8));
+      c.setAttribute('fill', 'rgba(60,36,20,.7)');
+      g.appendChild(c);
+    }
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-cup]').forEach((root) => {
+    const list = JSON.parse(root.dataset.fortunes || '[]') as string[];
+    const s = JSON.parse(root.dataset.s || '{}') as Record<string, string>;
+    const stage = root.querySelector<HTMLElement>('[data-cup-stage]')!;
+    const scene = root.querySelector<HTMLElement>('[data-cup-scene]')!;
+    const out = root.querySelector<HTMLElement>('[data-cup-fortune]')!;
+    const g = root.querySelector<SVGGElement>('[data-grounds]')!;
+    const trigger = root.querySelector<HTMLButtonElement>('[data-cup-open]')!;
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let last = -1;
+    const read = () => {
+      let i = Math.floor(Math.random() * list.length);
+      if (i === last) i = (i + 1) % list.length;
+      last = i;
+      out.textContent = '';
+      scene.classList.remove('is-flipped', 'is-read');
+      void scene.offsetWidth;
+      scene.classList.add('is-flipped');
+      grounds(g);
+      setTimeout(() => { scene.classList.add('is-read'); out.textContent = list[i]; }, reduce ? 0 : 1500);
+    };
+    trigger.addEventListener('click', () => {
+      stage.hidden = false;
+      trigger.setAttribute('aria-expanded', 'true');
+      read();
+    });
+    root.querySelector('[data-cup-again]')!.addEventListener('click', read);
+    root.querySelector<HTMLButtonElement>('[data-cup-share]')!.addEventListener('click', async (e) => {
+      const url = new URL((e.currentTarget as HTMLElement).dataset.url || '/', location.href).href;
+      const text = `☕ ${out.textContent}`;
+      if (navigator.share) { try { await navigator.share({ title: s.title, text, url }); return; } catch { return; } }
+      if (await copyText(`${text} ${url}`)) toast(s.copied);
+    });
+  });
+</script>
+
+<style>
+  .cup__trigger {
+    display: inline-flex; align-items: center; gap: 0.55rem; min-height: 2.75rem; padding: 0.35rem 0.9rem 0.35rem 0.5rem;
+    border: 1px solid var(--line); border-radius: 999px; background: transparent; cursor: pointer; color: var(--heading);
+    font-family: var(--font-display); font-style: italic; font-size: 1.15rem;
+  }
+  .cup__trigger svg { width: 2rem; height: 2rem; color: var(--gold-ink); transition: transform var(--dur-3) var(--ease-out); }
+  .cup__trigger:hover svg { transform: rotate(-12deg); }
+  .cup__stage { margin-top: 1.25rem; text-align: center; }
+  .cup__intro { color: var(--fg-muted); font-style: italic; font-size: 0.95rem; }
+  .cup__scene { position: relative; width: min(100%, 15rem); aspect-ratio: 1; margin: 0 auto; }
+  .cup__side, .cup__top { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .cup__body { transform-box: view-box; transform-origin: 100px 100px; }
+  .cup__top { opacity: 0; transform: scale(0.85); transition: opacity 0.7s var(--ease), transform 0.9s var(--ease-out); }
+  .is-flipped .cup__body { animation: cup-flip 1.3s var(--ease) forwards; }
+  .is-read .cup__side { opacity: 0; transition: opacity 0.4s var(--ease); }
+  .is-read .cup__top { opacity: 1; transform: none; }
+  .cup__top :global(path) { animation: grounds-in 0.9s var(--ease-out) both; transform-box: fill-box; transform-origin: center; }
+  @keyframes cup-flip {
+    0% { transform: none; }
+    45% { transform: translateY(-30px) rotate(100deg); }
+    100% { transform: translateY(18px) rotate(180deg); }
+  }
+  @keyframes grounds-in { from { transform: scale(0.2); opacity: 0; } to { transform: none; opacity: 1; } }
+  .cup__fortune { min-height: 3.2em; max-width: 26rem; margin: 1rem auto 0.25rem; font-family: var(--font-display); font-style: italic; font-size: var(--step-1); color: var(--bordeaux); line-height: 1.35; }
+  .cup__disclaimer { font-size: 0.8rem; color: var(--fg-muted); }
+  .cup__btns { display: flex; justify-content: center; gap: 0.6rem; flex-wrap: wrap; }
+</style>

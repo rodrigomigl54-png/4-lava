@@ -1,0 +1,54 @@
+/* Shared form styles (reservation, events, pre-order, voucher) */
+.form { display: grid; gap: 1.1rem; }
+.form__row { display: grid; gap: 1.1rem; }
+@media (min-width: 40rem) { .form__row--2 { grid-template-columns: 1fr 1fr; } .form__row--3 { grid-template-columns: repeat(3, 1fr); } }
+.field { display: grid; gap: 0.35rem; min-width: 0; }
+.field > label, .field > .field__label {
+  font-size: 0.74rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--label);
+}
+.field small { font-size: 0.8em; text-transform: none; letter-spacing: 0; font-weight: 400; color: var(--fg-muted); }
+.input {
+  width: 100%;
+  min-height: 2.9rem;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid color-mix(in srgb, var(--fg) 30%, transparent);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--cream) 70%, white);
+  color: var(--ink);
+  font-size: 1rem;
+  transition: border-color var(--dur-1) var(--ease), box-shadow var(--dur-1) var(--ease);
+}
+.dark .input { background: color-mix(in srgb, var(--wood) 55%, transparent); color: var(--cream); border-color: color-mix(in srgb, var(--gold) 45%, transparent); color-scheme: dark; }
+.input:focus-visible { border-color: var(--gold); outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--gold) 35%, transparent); }
+.input[aria-invalid='true'] { border-color: var(--marble-red); }
+.dark .input[aria-invalid='true'] { border-color: #e07a6e; }
+textarea.input { min-height: 5.5rem; resize: vertical; }
+.field__err { min-height: 1em; font-size: 0.85rem; color: var(--marble-red); margin: 0; }
+.dark .field__err { color: #f0a499; }
+.stepper { display: flex; align-items: stretch; }
+.stepper .input { text-align: center; border-radius: 0; width: 4.5rem; -moz-appearance: textfield; }
+.stepper .input::-webkit-inner-spin-button { -webkit-appearance: none; }
+.stepper button {
+  width: 2.9rem; min-height: 2.9rem; border: 1px solid color-mix(in srgb, var(--fg) 30%, transparent);
+  background: transparent; cursor: pointer; font-size: 1.25rem; line-height: 1; color: inherit;
+}
+.stepper button:first-child { border-right: 0; }
+.stepper button:last-child { border-left: 0; }
+.dark .stepper button { border-color: color-mix(in srgb, var(--gold) 45%, transparent); }
+.choices { display: flex; flex-wrap: wrap; gap: 0.5rem; border: 0; padding: 0; margin: 0; }
+.choices legend { padding: 0; margin-bottom: 0.4rem; font-size: 0.74rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--label); }
+.choice { position: relative; }
+.choice input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.choice span {
+  display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0.4rem 1rem;
+  border: 1px solid color-mix(in srgb, var(--fg) 30%, transparent); border-radius: 999px; transition: all var(--dur-1) var(--ease);
+}
+.choice input:checked + span { background: var(--bordeaux); border-color: var(--bordeaux); color: var(--cream); }
+.dark .choice input:checked + span { background: var(--gold); border-color: var(--gold); color: var(--wood); }
+.choice input:focus-visible + span { outline: 2px solid var(--gold); outline-offset: 2px; }
+.preview {
+  margin: 0; padding: 0.9rem 1rem; white-space: pre-wrap; font-family: var(--font-body); font-size: 0.92rem;
+  border-left: 2px solid var(--gold); background: color-mix(in srgb, var(--gold) 8%, transparent); color: var(--fg);
+}
+.preview-wrap summary { cursor: pointer; font-size: 0.85rem; color: var(--fg-muted); min-height: 2.75rem; display: flex; align-items: center; }
+.form__note { font-size: 0.85rem; color: var(--fg-muted); margin: 0; }

@@ -1,0 +1,113 @@
+---
+import MenuItemRow from './MenuItemRow.astro';
+import OrnamentRule from './OrnamentRule.astro';
+import Emblem from './Emblem.astro';
+import { ITEMS, CATEGORIES, CHIPS, SUBCATS, MENU_UPDATED } from '../lib/menu';
+import { t, pick, type Locale } from '../lib/i18n';
+import '../styles/menu.css';
+interface Props { locale: Locale; lite?: boolean }
+const { locale, lite = false } = Astro.props;
+const groups = CATEGORIES.map((c) => ({ c, items: ITEMS.filter((i) => i.category === c.id) })).filter((g) => g.items.length);
+const subOrder = Object.keys(SUBCATS);
+// heading levels: homepage (inside h2 section > h3 block) vs. /meni/ (h1 page)
+const H = lite ? 'h2' : 'h3';
+const HS = lite ? 'h3' : 'h4';
+const [y, m, d] = MENU_UPDATED.split('-');
+---
+<div class:list={['menu', { 'menu--lite': lite }]} data-menu data-empire="all">
+  {!lite && (
+    <div class="menu__empire">
+      <div class="empire" role="group" aria-label={t(locale, 'empire.label')}>
+        <button type="button" data-empire-set="vienna" aria-pressed="false"><Emblem kind="vienna" size="1.4rem" />{t(locale, 'empire.vienna')}</button>
+        <button type="button" data-empire-set="all" aria-pressed="true">{t(locale, 'empire.all')}</button>
+        <button type="button" data-empire-set="istanbul" aria-pressed="false"><Emblem kind="istanbul" size="1.4rem" />{t(locale, 'empire.istanbul')}</button>
+      </div>
+      <p class="empire__caption italic-display">{t(locale, 'empire.caption')}</p>
+    </div>
+  )}
+  <div class="menu__tools">
+    {lite && (
+      <div class="menu__search">
+        <label class="visually-hidden" for="menu-search">{t(locale, 'menu.search')}</label>
+        <input class="input" id="menu-search" type="search" data-menu-search placeholder={t(locale, 'menu.searchPh')} autocomplete="off" />
+      </div>
+    )}
+    <div class="chips" role="group" aria-label={t(locale, 'filter.label')}>
+      {CHIPS.map((c) => <button type="button" class={`chip chip--${c.id}`} data-chip={c.id} aria-pressed="false">{t(locale, `filter.${c.id}`)}</button>)}
+    </div>
+    {!lite && <button type="button" class="btn btn--ghost menu__first" data-first-btn>★ {t(locale, 'first.btn')}</button>}
+  </div>
+
+  <div class="menu__body">
+    {groups.map(({ c, items }) => (
+      <section class="menu-cat" data-menu-cat={c.id} id={lite ? `cat-${c.id}` : undefined} aria-labelledby={`mc-${c.id}${lite ? '-l' : ''}`}>
+        {c.kicker && <span class="menu-cat__kicker">{pick(locale, c.kicker)}</span>}
+        <H class="menu-cat__title" id={`mc-${c.id}${lite ? '-l' : ''}`}>{pick(locale, c.name)}</H>
+        {!lite && <OrnamentRule width="9rem" class="menu-cat__rule" />}
+        {c.id === 'pica'
+          ? subOrder.filter((s) => items.some((i) => i.subcategory === s)).map((s) => (
+              <>
+                <HS class="menu-sub" data-menu-sub>{pick(locale, SUBCATS[s])}</HS>
+                <ul class="mi-list mi-list--2" role="list">
+                  {items.filter((i) => i.subcategory === s).map((i) => <MenuItemRow item={i} locale={locale} lite={lite} />)}
+                </ul>
+              </>
+            ))
+          : (
+            <ul class="mi-list mi-list--2" role="list">
+              {items.map((i) => <MenuItemRow item={i} locale={locale} lite={lite} />)}
+            </ul>
+          )}
+      </section>
+    ))}
+    <p class="menu__empty" data-menu-empty hidden>{t(locale, 'menu.noResults')}</p>
+    <p class="menu__note">{t(locale, 'menu.updated', { date: locale === 'en' ? `${Number(d)}/${Number(m)}/${y}` : `${Number(d)}. ${Number(m)}. ${y}.` })} {t(locale, 'menu.priceNote')}</p>
+  </div>
+</div>
+
+<script>
+  import { initMenu } from '../scripts/menu-filter';
+  document.querySelectorAll<HTMLElement>('[data-menu]').forEach(initMenu);
+</script>
+
+<style>
+  .menu { position: relative; padding: clamp(1.25rem, 4vw, 3rem) clamp(1rem, 4vw, 3rem); transition: background-color 1s var(--ease); }
+  .menu:not(.menu--lite) { border: 1px solid var(--line); background: color-mix(in srgb, var(--cream) 50%, white); }
+  /* Vienna: baroque gold scrolls on cream */
+  .menu[data-empire='vienna'] {
+    background-color: #fbf6ec;
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cg fill='none' stroke='%23B08D57' stroke-width='.8' opacity='.35'%3E%3Cpath d='M0 80c20 0 30-20 50-20s20 20 10 26-18-4-12-8M160 80c-20 0-30 20-50 20s-20-20-10-26 18 4 12 8M80 0c0 20 20 30 20 50s-20 20-26 10 4-18 8-12'/%3E%3C/g%3E%3C/svg%3E");
+  }
+  /* Istanbul: deep teal + geometric eight-point star tiling */
+  .menu[data-empire='istanbul'] {
+    background-color: #eef3f0;
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cg fill='none' stroke='%231F5C5C' stroke-width='.8' opacity='.28'%3E%3Cpath d='M30 8l6 16 16 6-16 6-6 16-6-16-16-6 16-6z'/%3E%3Cpath d='M14 14h32v32H14z' transform='rotate(45 30 30)'/%3E%3Cpath d='M14 14h32v32H14z'/%3E%3C/g%3E%3C/svg%3E");
+    border-color: color-mix(in srgb, var(--istanbul) 45%, transparent);
+  }
+  .menu__empire { text-align: center; margin-bottom: 1.5rem; }
+  .empire { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 0.25rem; background: var(--cream); }
+  .empire button {
+    display: inline-flex; align-items: center; gap: 0.4rem; min-height: 2.75rem; padding: 0.3rem 1.1rem; border: 0; border-radius: 999px;
+    background: transparent; cursor: pointer; font-family: var(--font-display); font-size: 1.15rem; font-weight: 600; color: var(--ink);
+    transition: background-color var(--dur-2) var(--ease), color var(--dur-2) var(--ease);
+  }
+  .empire button[aria-pressed='true'] { background: var(--bordeaux); color: var(--cream); }
+  .empire button[data-empire-set='istanbul'][aria-pressed='true'] { background: var(--istanbul); }
+  .empire button[data-empire-set='vienna'][aria-pressed='true'] { background: var(--gold-ink); }
+  .empire button[aria-pressed='true'] :global(.emblem) { color: currentColor; }
+  .empire__caption { max-width: 34rem; margin: 0.9rem auto 0; color: var(--fg-muted); font-size: var(--step-1); line-height: 1.35; }
+  .menu__tools { display: grid; gap: 0.6rem; justify-items: center; margin-bottom: var(--space-6); }
+  .menu__tools .chips { max-width: 100%; }
+  .menu__first { font-size: 0.8rem; }
+  .menu__search { width: 100%; }
+  .menu__empty, .menu__note { text-align: center; color: var(--fg-muted); font-size: 0.85rem; font-style: italic; }
+  .menu :global(.menu-cat__rule) { margin: 0.5rem auto 1.5rem; }
+  .menu--lite .menu__tools {
+    position: sticky; top: 0; z-index: 5; margin-inline: calc(-1 * clamp(1rem, 4vw, 3rem)); padding: 0.6rem clamp(1rem, 4vw, 3rem) 0.2rem;
+    background: color-mix(in srgb, var(--cream) 94%, transparent); backdrop-filter: blur(6px); border-bottom: 1px solid var(--line); justify-items: stretch;
+  }
+  .menu--lite .chips { justify-content: flex-start; }
+  .menu--lite .menu-cat { scroll-margin-top: 8rem; }
+</style>

@@ -1,0 +1,66 @@
+---
+/**
+ * Horizontal "film roll" gallery. Reads src/data/gallery.json; images live in
+ * src/assets/gallery/ (so Astro can make AVIF/WebP). Not rendered while empty.
+ */
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import gallery from '../data/gallery.json';
+import { t, pick, type Locale } from '../lib/i18n';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const files = import.meta.glob<{ default: ImageMetadata }>('../assets/gallery/*.{jpg,jpeg,png,webp,avif}', { eager: true });
+type Entry = { file: string; alt?: { sr?: string; en?: string } };
+const entries = (gallery.images as Entry[])
+  .map((e) => ({ ...e, img: files[`../assets/gallery/${e.file}`]?.default }))
+  .filter((e) => e.img);
+---
+{entries.length > 0 && (
+  <section class="roll" aria-labelledby="roll-title">
+    <h2 id="roll-title" class="roll__title container">{t(locale, 'roll.title')}</h2>
+    <ul class="roll__strip" role="list">
+      {entries.map((e, i) => (
+        <li>
+          <button type="button" class="roll__frame" data-roll-open={i}>
+            <Image src={e.img!} alt={pick(locale, e.alt ?? '')} widths={[320, 640]} sizes="(min-width: 48rem) 320px, 70vw" formats={['avif', 'webp']} loading="lazy" />
+          </button>
+        </li>
+      ))}
+    </ul>
+    <dialog class="roll__box" data-roll-box>
+      <button type="button" class="roll__close" data-roll-close aria-label={t(locale, 'roll.close')}>✕</button>
+      {entries.map((e, i) => (
+        <Image src={e.img!} alt={pick(locale, e.alt ?? '')} widths={[960, 1600]} sizes="90vw" formats={['avif', 'webp']} loading="lazy" data-roll-img={i} hidden />
+      ))}
+    </dialog>
+  </section>
+)}
+<script>
+  const box = document.querySelector<HTMLDialogElement>('[data-roll-box]');
+  document.querySelectorAll<HTMLElement>('[data-roll-open]').forEach((b) => b.addEventListener('click', () => {
+    box?.querySelectorAll<HTMLElement>('[data-roll-img]').forEach((img) => { img.hidden = img.dataset.rollImg !== b.dataset.rollOpen; });
+    box?.showModal();
+  }));
+  box?.querySelector('[data-roll-close]')?.addEventListener('click', () => box.close());
+  box?.addEventListener('click', (e) => { if (e.target === box) box.close(); });
+</script>
+<style>
+  .roll { padding-block: var(--space-8); background: var(--wood); color: var(--cream); }
+  .roll__title { color: var(--cream); }
+  .roll__strip {
+    list-style: none; margin: 0; padding: 1.4rem var(--gutter); display: flex; gap: 0.9rem; overflow-x: auto; scroll-snap-type: x mandatory;
+    background:
+      radial-gradient(circle, var(--wood) 3px, transparent 3.5px) 0 0.45rem / 1.2rem 100% repeat-x,
+      radial-gradient(circle, var(--wood) 3px, transparent 3.5px) 0 calc(100% - 0.45rem) / 1.2rem 100% repeat-x,
+      #120c08;
+    background-repeat: repeat-x;
+  }
+  .roll__strip li { flex: none; scroll-snap-align: center; }
+  .roll__frame { display: block; padding: 0; border: 0; cursor: zoom-in; background: none; }
+  .roll__frame :global(img) { width: min(70vw, 20rem); aspect-ratio: 4/3; object-fit: cover; filter: sepia(0.15); transition: filter var(--dur-2); }
+  .roll__frame:hover :global(img) { filter: none; }
+  .roll__box { max-width: 92vw; max-height: 92vh; padding: 0; border: 1px solid var(--gold); background: var(--wood); }
+  .roll__box::backdrop { background: rgb(0 0 0 / 0.8); }
+  .roll__box :global(img) { max-height: 88vh; width: auto; }
+  .roll__close { position: absolute; top: 0.5rem; right: 0.5rem; width: 2.75rem; height: 2.75rem; border-radius: 50%; border: 1px solid var(--gold); background: var(--wood); color: var(--cream); cursor: pointer; }
+</style>

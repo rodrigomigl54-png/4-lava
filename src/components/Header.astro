@@ -1,0 +1,269 @@
+---
+import LionIcon from './LionIcon.astro';
+import LionNav from './LionNav.astro';
+import LangSwitch from './LangSwitch.astro';
+import OpenStatus from './OpenStatus.astro';
+import OrnamentRule from './OrnamentRule.astro';
+import info from '../data/info.json';
+import { t, localePath, type Locale } from '../lib/i18n';
+interface Props { locale: Locale; onHome?: boolean }
+const { locale, onHome = true } = Astro.props;
+const home = localePath(locale, '/');
+const reserveHref = onHome ? '#kapija' : `${home}#kapija`;
+---
+<header class="site-header" data-header>
+  <div class="site-header__bar container">
+    <a class="brand" href={home} aria-label={t(locale, 'brand.name')}>
+      <span class="brand__mark"><LionIcon variant="half" /></span>
+      <span class="brand__text" aria-hidden="true">
+        <span class="brand__small">{t(locale, 'brand.name').split(' ')[0]}</span>
+        <span class="brand__big">{t(locale, 'brand.short')}</span>
+      </span>
+    </a>
+
+    <nav class="site-header__nav" aria-label={t(locale, 'nav.label')}>
+      <LionNav locale={locale} onHome={onHome} layout="row" />
+    </nav>
+
+    <div class="site-header__actions">
+      <OpenStatus locale={locale} class="site-header__status" />
+      <LangSwitch locale={locale} class="site-header__lang" />
+      <a class="btn site-header__cta" href={reserveHref}>{t(locale, 'cta.reserve')}</a>
+      <button class="menu-btn" type="button" aria-haspopup="dialog" aria-controls="site-menu" data-menu-open>
+        <span class="menu-btn__lines" aria-hidden="true"><span></span><span></span></span>
+        <span class="visually-hidden">{t(locale, 'nav.openMenu')}</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile bottom bar: the four lions within thumb reach -->
+<nav class="bottom-bar dark wood" aria-label={t(locale, 'nav.label')}>
+  <LionNav locale={locale} onHome={onHome} layout="bar" />
+</nav>
+
+<!-- Full-screen menu -->
+<dialog id="site-menu" class="menu-overlay dark wood marble-veins" aria-label={t(locale, 'nav.menu')}>
+  <div class="menu-overlay__inner">
+    <div class="menu-overlay__top">
+      <span class="label">{t(locale, 'nav.menu')}</span>
+      <button class="menu-close" type="button" data-menu-close>
+        <span aria-hidden="true">✕</span><span class="visually-hidden">{t(locale, 'nav.close')}</span>
+      </button>
+    </div>
+    <LionNav locale={locale} onHome={onHome} layout="overlay" />
+    <OrnamentRule class="menu-overlay__rule" width="14rem" />
+    <div class="menu-overlay__meta">
+      <OpenStatus locale={locale} tone="dark" />
+      <a class="menu-overlay__phone" href={`tel:${info.phone.intl}`}>{info.phone.display}</a>
+      <LangSwitch locale={locale} label={t(locale, 'lang.labelMenu')} />
+    </div>
+    <span class="menu-overlay__lion" aria-hidden="true"><LionIcon variant="half" /></span>
+  </div>
+</dialog>
+
+<script>
+  // Header shadow on scroll
+  const header = document.querySelector<HTMLElement>('[data-header]');
+  const onScroll = () => header?.toggleAttribute('data-scrolled', window.scrollY > 8);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  // Full-screen menu (native <dialog>: focus trap + Esc for free)
+  const dlg = document.getElementById('site-menu') as HTMLDialogElement | null;
+  document.querySelector('[data-menu-open]')?.addEventListener('click', () => {
+    dlg?.showModal();
+    document.documentElement.style.overflow = 'hidden';
+  });
+  const close = () => dlg?.close();
+  document.querySelector('[data-menu-close]')?.addEventListener('click', close);
+  dlg?.addEventListener('close', () => { document.documentElement.style.overflow = ''; });
+  dlg?.addEventListener('click', (e) => {
+    if ((e.target as HTMLElement).closest('a')) close();
+    else if (e.target === dlg) close();
+  });
+
+  // The lion of the section in view lights up
+  const links = [...document.querySelectorAll<HTMLAnchorElement>('[data-nav-anchor]')];
+  const ids = [...new Set(links.map((a) => a.dataset.navAnchor!))];
+  const sections = ids.map((id) => document.getElementById(id)).filter(Boolean) as HTMLElement[];
+  if (sections.length && 'IntersectionObserver' in window) {
+    const visible = new Map<string, number>();
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) visible.set(e.target.id, e.isIntersecting ? e.intersectionRatio : 0);
+      let best = ''; let max = 0;
+      for (const [id, r] of visible) if (r > max) { max = r; best = id; }
+      for (const a of links) {
+        const on = a.dataset.navAnchor === best && max > 0;
+        a.classList.toggle('is-active', on);
+        if (on) a.setAttribute('aria-current', 'location'); else a.removeAttribute('aria-current');
+      }
+    }, { rootMargin: '-35% 0px -45% 0px', threshold: [0, 0.01, 0.25, 0.5, 0.75, 1] });
+    sections.forEach((s) => io.observe(s));
+  }
+</script>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    height: var(--header-h);
+    background-color: color-mix(in srgb, var(--cream) 92%, transparent);
+    background-image: var(--grain);
+    backdrop-filter: saturate(1.1) blur(8px);
+    border-bottom: 1px solid transparent;
+    transition: border-color var(--dur-2) var(--ease), box-shadow var(--dur-2) var(--ease);
+  }
+  .site-header[data-scrolled] {
+    border-bottom-color: var(--line);
+    box-shadow: 0 10px 30px -22px rgb(39 38 36 / 0.6);
+  }
+  .site-header__bar {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    max-width: 90rem;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+    color: var(--ink);
+    margin-right: auto;
+    min-height: 2.75rem;
+  }
+  .brand__mark {
+    width: 2.4rem;
+    height: 3.2rem;
+    display: grid;
+    place-items: end start;
+    overflow: hidden;
+    border-right: 1px solid var(--gold);
+    padding-right: 0.15rem;
+  }
+  .brand__mark :global(svg) { width: 100%; height: 100%; }
+  .brand__text { display: flex; flex-direction: column; line-height: 1; }
+  .brand__small {
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--label);
+  }
+  .brand__big {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: var(--bordeaux);
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+  }
+  .site-header__nav { display: none; }
+  .site-header__actions { display: flex; align-items: center; gap: 0.5rem; }
+  .site-header__actions :global(.site-header__status) { display: none; }
+  .site-header__cta { min-height: 2.6rem; padding-inline: 1rem; }
+
+  .menu-btn {
+    width: 2.9rem;
+    height: 2.9rem;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+  }
+  .menu-btn__lines { display: grid; gap: 6px; width: 1.15rem; }
+  .menu-btn__lines span { height: 1.5px; background: var(--ink); }
+  .menu-btn__lines span:last-child { width: 70%; justify-self: end; }
+
+  /* Small phones: hide the CTA (it lives in the bottom bar + menu) */
+  @media (max-width: 30rem) {
+    .site-header__cta { display: none; }
+    .site-header__actions :global(.site-header__lang) { display: none; }
+  }
+
+  .bottom-bar {
+    position: fixed;
+    inset: auto 0 0 0;
+    z-index: 60;
+    height: calc(var(--bottom-bar-h) + env(safe-area-inset-bottom, 0px));
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    border-top: 1px solid color-mix(in srgb, var(--gold) 55%, transparent);
+    box-shadow: 0 -10px 30px -18px rgb(0 0 0 / 0.7);
+  }
+
+  /* Overlay menu */
+  .menu-overlay {
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    inset: 0;
+  }
+  .menu-overlay::backdrop { background: rgb(20 14 10 / 0.6); }
+  .menu-overlay[open] { animation: overlay-in var(--dur-3) var(--ease-out); }
+  @keyframes overlay-in { from { opacity: 0; } to { opacity: 1; } }
+  .menu-overlay__inner {
+    position: relative;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1.25rem var(--gutter) 2rem;
+    overflow: hidden;
+  }
+  .menu-overlay__top { display: flex; align-items: center; justify-content: space-between; }
+  .menu-close {
+    width: 2.9rem; height: 2.9rem;
+    border-radius: 50%;
+    border: 1px solid color-mix(in srgb, var(--gold) 55%, transparent);
+    background: transparent;
+    color: var(--cream);
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  .menu-overlay__meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.9rem;
+    color: var(--cream);
+  }
+  .menu-overlay__phone {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    color: var(--gold-light);
+    text-decoration: none;
+  }
+  .menu-overlay__lion {
+    position: absolute;
+    right: -1px;
+    bottom: 0;
+    width: 38%;
+    max-width: 14rem;
+    color: color-mix(in srgb, var(--gold) 18%, transparent);
+    transform: scaleX(-1);
+    pointer-events: none;
+  }
+  .menu-overlay__inner :global(.menu-overlay__rule) { margin: 0; }
+
+  @media (min-width: 64rem) {
+    .site-header__nav { display: block; }
+    .menu-btn, .bottom-bar { display: none; }
+    .brand { margin-right: 0; }
+    .site-header__nav { margin-inline: auto; }
+  }
+  @media (min-width: 64rem) and (max-width: 79.99rem) {
+    .site-header__nav :global(.lions__lion) { display: none; }
+  }
+  @media (min-width: 100rem) {
+    .site-header__actions :global(.site-header__status) { display: inline-flex; }
+  }
+</style>

@@ -1,0 +1,41 @@
+---
+import LionIcon from './LionIcon.astro';
+import OrnamentRule from './OrnamentRule.astro';
+import ReservationForm from './ReservationForm.astro';
+import FindUsMap from './FindUsMap.astro';
+import EventsForm from './EventsForm.astro';
+import Voucher from './Voucher.astro';
+import KilimBand from './KilimBand.astro';
+import { t, type Locale } from '../lib/i18n';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+---
+<section id="kapija" class="section gate dark forest marble-veins" aria-labelledby="kapija-title">
+  <span class="gate__lion" aria-hidden="true" data-parallax="60"><LionIcon variant="half" /></span>
+  <div class="container">
+    <header class="section-head">
+      <span class="section-lion" aria-hidden="true"><LionIcon variant="kapija" /></span>
+      <span class="label">{t(locale, 'gate.kicker')}</span>
+      <h2 id="kapija-title">{t(locale, 'gate.title')}</h2>
+      <OrnamentRule />
+    </header>
+    <div class="gate__panel" data-reveal><ReservationForm locale={locale} /></div>
+    <div class="gate__block" data-reveal><FindUsMap locale={locale} /></div>
+    <KilimBand tone="dark" height={12} class="gate__kilim" />
+    <div class="gate__panel" data-reveal><EventsForm locale={locale} /></div>
+    <div class="gate__block gate__voucher" data-reveal><Voucher locale={locale} /></div>
+  </div>
+</section>
+<style>
+  .gate { overflow: hidden; }
+  .gate__lion { position: absolute; left: 0; top: 30%; width: clamp(6rem, 15vw, 12rem); color: color-mix(in srgb, var(--gold) 10%, transparent); pointer-events: none; }
+  .gate__panel {
+    max-width: 52rem; margin: 0 auto var(--space-8); padding: clamp(1.25rem, 4vw, 2.5rem);
+    border: 1px solid color-mix(in srgb, var(--gold) 40%, transparent);
+    background: color-mix(in srgb, var(--wood) 45%, transparent);
+  }
+  .gate__panel :global(h3) { color: var(--cream); }
+  .gate__block { margin-bottom: var(--space-8); }
+  .gate__block :global(h3) { color: var(--cream); }
+  .gate :global(.gate__kilim) { margin-bottom: var(--space-8); opacity: 0.8; }
+</style>

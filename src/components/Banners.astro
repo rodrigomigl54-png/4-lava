@@ -1,0 +1,50 @@
+---
+/** Fasting ribbon (computed client-side from today's date) + seasonal banner (info.json). */
+import info from '../data/info.json';
+import { t, type Locale } from '../lib/i18n';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const fasts = Object.fromEntries(['bozicni', 'veliki', 'petrovski', 'gospojinski'].map((k) => [k, t(locale, `fast.${k}`)]));
+const s = { text: t(locale, 'fast.text'), weekly: t(locale, 'fast.weekly'), days: ['7', '1', '2', '3', '4', '5', '6'].map((d) => t(locale, `days.${d}`)) };
+const season = info.seasonalBanner.active as string | null;
+---
+<div class="banners">
+  <div class="fast-ribbon" hidden data-fast data-fasts={JSON.stringify(fasts)} data-s={JSON.stringify(s)}>
+    <span class="fast-ribbon__tag">{t(locale, 'fast.ribbon')}</span>
+    <span class="fast-ribbon__text" data-fast-text></span>
+    <a class="fast-ribbon__link" href="#jelovnik-ceo" data-fast-link>{t(locale, 'fast.cta')} →</a>
+  </div>
+  {season && <p class="season">{t(locale, `season.${season}`)}</p>}
+</div>
+<script>
+  import { fastingNow } from '../lib/fasting';
+  const el = document.querySelector<HTMLElement>('[data-fast]');
+  el?.querySelector('[data-fast-link]')?.addEventListener('click', () => document.dispatchEvent(new CustomEvent('k4l:filter', { detail: 'posno' })));
+  if (el) {
+    const f = fastingNow();
+    const fasts = JSON.parse(el.dataset.fasts || '{}');
+    const s = JSON.parse(el.dataset.s || '{}');
+    const txt = el.querySelector<HTMLElement>('[data-fast-text]')!;
+    if (f.fast) { txt.textContent = s.text.replace('{fast}', fasts[f.fast]); el.hidden = false; document.documentElement.dataset.fast = f.fast; }
+    else if (f.weeklyDay) {
+      const wd = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Belgrade', weekday: 'short' }).format(new Date());
+      const idx = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(wd);
+      txt.textContent = s.weekly.replace('{day}', s.days[idx]);
+      el.hidden = false; el.classList.add('is-light');
+    }
+  }
+</script>
+<style>
+  .fast-ribbon {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 0.4rem 1rem;
+    padding: 0.7rem var(--gutter); background: var(--forest); color: var(--cream); font-size: 0.92rem; text-align: center;
+    border-bottom: 1px solid color-mix(in srgb, var(--gold) 50%, transparent);
+  }
+  .fast-ribbon[hidden] { display: none; }
+  .fast-ribbon.is-light { background: color-mix(in srgb, var(--forest) 8%, var(--cream)); color: var(--ink); }
+  .fast-ribbon__tag { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold-light); border: 1px solid currentColor; padding: 0.15rem 0.55rem; }
+  .is-light .fast-ribbon__tag { color: var(--gold-ink); }
+  .fast-ribbon__link { color: var(--gold-light); min-height: 2.75rem; display: inline-flex; align-items: center; }
+  .is-light .fast-ribbon__link { color: var(--bordeaux); }
+  .season { margin: 0; padding: 0.8rem var(--gutter); text-align: center; background: var(--bordeaux); color: var(--cream); font-family: var(--font-display); font-style: italic; font-size: var(--step-1); }
+</style>

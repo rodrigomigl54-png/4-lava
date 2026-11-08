@@ -1,0 +1,35 @@
+/* Time-of-day mode — html[data-time="jutro|podne|vece"], set before first paint. */
+body, .paper, .section, .site-header, .hero { transition: background-color 1.2s var(--ease), color 1.2s var(--ease); }
+
+/* Јутро: lighter cream, sunlight tint */
+html[data-time='jutro'] {
+  --bg: #f8f2e7;
+  --paper: #f8f2e7;
+}
+html[data-time='jutro'] .hero::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(60% 55% at 85% 0%, rgb(255 214 140 / 0.22), transparent 70%);
+}
+
+/* Вече: candle-light — deeper paper, wood/forest darker, warm vignette */
+html[data-time='vece'] {
+  --bg: #ece1cd;
+  --paper: #ece1cd;
+  --forest: #26301f;
+}
+html[data-time='vece'] .dark.forest { --bg: #241d16; }
+html[data-time='vece'] body::after {
+  content: ''; position: fixed; inset: 0; z-index: 40; pointer-events: none;
+  background: radial-gradient(120% 90% at 50% 45%, transparent 55%, rgb(42 20 8 / 0.28) 100%);
+}
+html[data-time='vece'] .hero::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(45% 50% at 50% 60%, rgb(255 170 80 / 0.12), transparent 70%);
+}
+
+/* Mode-specific content: [data-only="jutro vece"] */
+[data-only] { display: none; }
+html[data-time='jutro'] [data-only~='jutro'],
+html[data-time='podne'] [data-only~='podne'],
+html[data-time='vece'] [data-only~='vece'] { display: revert; }
+html:not([data-time]) [data-only~='podne'] { display: revert; }

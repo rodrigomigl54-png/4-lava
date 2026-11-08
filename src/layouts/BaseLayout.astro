@@ -1,0 +1,130 @@
+---
+import '../styles/base.css';
+import LionSprite from '../components/LionSprite.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { restaurantLD, menuLD } from '../lib/schema';
+import { HTML_LANG, OG_LOCALE, LOCALES, localePath, stripLocale, t, type Locale } from '../lib/i18n';
+
+interface Props {
+  locale: Locale;
+  title?: string;
+  description?: string;
+  onHome?: boolean;
+  /** lite = QR menu: no header nav lions / bottom bar */
+  lite?: boolean;
+  /** JSON-LD: 'restaurant' (home) | 'menu' (QR menu) */
+  schema?: 'restaurant' | 'menu';
+  /** show the first-visit intro (homepage only) */
+  intro?: boolean;
+}
+const { locale, title = t(locale, 'meta.title'), description = t(locale, 'meta.description'), onHome = true, lite = false, schema, intro = false } = Astro.props;
+const demo = import.meta.env.PUBLIC_DEMO !== 'false';
+const site = Astro.site ?? new URL('https://www.example.com');
+const rest = stripLocale(Astro.url.pathname);
+const canonical = new URL(localePath(locale, rest), site).href;
+const alternates = LOCALES.map((l) => ({ hreflang: HTML_LANG[l], href: new URL(localePath(l, rest), site).href }));
+const sub = locale === 'sr' ? 'cyrillic' : 'latin';
+const preload = [
+  `/fonts/cormorant-garamond-${sub}-600-normal.woff2`,
+  `/fonts/cormorant-garamond-${sub}-500-italic.woff2`,
+  `/fonts/lora-${sub}-400-normal.woff2`,
+];
+---
+<!doctype html>
+<html lang={HTML_LANG[locale]} data-locale={locale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {demo && <meta name="robots" content="noindex,nofollow" />}
+    <link rel="canonical" href={canonical} />
+    {alternates.map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
+    <link rel="alternate" hreflang="x-default" href={alternates[0].href} />
+    <meta name="theme-color" content="#2A1E17" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    {preload.map((href) => <link rel="preload" href={href} as="font" type="font/woff2" crossorigin />)}
+
+    <meta property="og:type" content="restaurant" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:locale" content={OG_LOCALE[locale]} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL('/og.jpg', site).href} />
+    <meta name="twitter:card" content="summary_large_image" />
+    {schema === 'restaurant' && <script type="application/ld+json" set:html={JSON.stringify(restaurantLD(locale, site))} />}
+    {schema === 'menu' && <script type="application/ld+json" set:html={JSON.stringify([restaurantLD(locale, site), menuLD(locale, site)])} />}
+    <slot name="head" />
+    <script is:inline>
+      // Time-of-day mode (Europe/Belgrade) before first paint; demo override from the footer.
+      (function () {
+        var m = null;
+        try { m = localStorage.getItem('k4l-time'); } catch (e) {}
+        if (!/^(jutro|podne|vece)$/.test(m || '')) {
+          var h = Number(new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Belgrade', hour: 'numeric', hourCycle: 'h23' }).format(new Date()));
+          m = h >= 6 && h < 11 ? 'jutro' : h >= 11 && h < 17 ? 'podne' : 'vece';
+        }
+        document.documentElement.dataset.time = m;
+      })();
+    </script>
+    {intro && <script is:inline>
+      // First visit → intro (before first paint, so the site never flashes underneath)
+      (function () {
+        try {
+          if (/[?&]nointro/.test(location.search) || /bot|crawl|spider|slurp|facebookexternalhit/i.test(navigator.userAgent)) return;
+          if (localStorage.getItem('k4l-intro-seen')) return;
+          document.documentElement.dataset.introMode = 'on';
+        } catch (e) {}
+      })();
+    </script>}
+    <script is:inline>
+      // Remembered language: redirect only when arriving from outside the site.
+      (function () {
+        try {
+          var want = localStorage.getItem('k4l-locale');
+          var cur = document.documentElement.dataset.locale;
+          var internal = document.referrer && new URL(document.referrer).origin === location.origin;
+          if (!want || want === cur || internal || !/^(sr|lat|en)$/.test(want)) return;
+          var rest = location.pathname.replace(/^\/(lat|en)(?=\/|$)/, '') || '/';
+          location.replace((want === 'sr' ? '' : '/' + want) + rest + location.search + location.hash);
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body class:list={[{ 'is-lite': lite }]}>
+    <a class="skip-link" href="#main">{t(locale, 'skip')}</a>
+    <LionSprite />
+    {!lite && <Header locale={locale} onHome={onHome} />}
+    <slot name="header" />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <Footer locale={locale} />
+    <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+    <script>
+      // Ornaments draw themselves (stroke-dashoffset) when they enter the viewport
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const els = document.querySelectorAll<SVGElement>('[data-draw]');
+      if (!reduce && 'IntersectionObserver' in window) {
+        const io = new IntersectionObserver((entries) => {
+          for (const e of entries) if (e.isIntersecting) { e.target.classList.add('is-drawn'); io.unobserve(e.target); }
+        }, { rootMargin: '0px 0px -10% 0px' });
+        els.forEach((el) => { el.classList.add('will-draw'); io.observe(el); });
+      }
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  html:not(.no-smooth) { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  main:focus { outline: none; }
+  body.is-lite { padding-bottom: 0; }
+  .will-draw path { stroke-dasharray: 1; stroke-dashoffset: 1; }
+  .will-draw.is-drawn path { stroke-dashoffset: 0; transition: stroke-dashoffset 2.2s var(--ease) 0.15s; }
+  .will-draw circle { opacity: 0; transition: opacity 1s var(--ease) 1.4s; }
+  .will-draw.is-drawn circle { opacity: 1; }
+</style>

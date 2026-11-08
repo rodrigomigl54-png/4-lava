@@ -1,0 +1,77 @@
+---
+import info from '../data/info.json';
+import SendButtons from './SendButtons.astro';
+import { t, type Locale } from '../lib/i18n';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const lang = locale;
+const weekdays = ['7', '1', '2', '3', '4', '5', '6'].map((d) => t(locale, `days.${d}`));
+const cfg = {
+  template: t(locale, 'res.msg'),
+  phone: { intl: info.phone.intl, whatsapp: info.phone.whatsapp },
+  weekdays, lang,
+  words: { one: t(locale, 'word.person1'), few: t(locale, 'word.person2'), many: t(locale, 'word.person5') },
+  s: { required: t(locale, 'form.err.required'), date: t(locale, 'form.err.date'), check: t(locale, 'form.err.check'), ok: t(locale, 'form.ok'), viberCopied: t(locale, 'form.viberCopied') },
+};
+// half-hour slots within opening hours (default day), last seating 1 h before closing
+const [o, c] = (info.hours.week['1'] ?? [['08:00', '23:00']])[0];
+const toMin = (s: string) => Number(s.slice(0, 2)) * 60 + Number(s.slice(3));
+const slots: string[] = [];
+for (let m = toMin(o); m <= toMin(c) - 60; m += 30) slots.push(`${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`);
+const id = 'res';
+---
+<form class="form msg-form" data-msg-form data-cfg={JSON.stringify(cfg)} novalidate>
+  <h3>{t(locale, 'res.title')}</h3>
+  <div class="form__row form__row--3">
+    <div class="field">
+      <label for={`${id}-date`}>{t(locale, 'form.date')}</label>
+      <input class="input" id={`${id}-date`} name="date" type="date" required data-min-today aria-describedby={`${id}-date-err`} />
+      <p class="field__err" id={`${id}-date-err`} data-err-for="date"></p>
+    </div>
+    <div class="field">
+      <label for={`${id}-time`}>{t(locale, 'form.time')}</label>
+      <select class="input" id={`${id}-time`} name="time" required aria-describedby={`${id}-time-err`}>
+        <option value="">—</option>
+        {slots.map((s) => <option value={s} selected={s === '13:00'}>{s}</option>)}
+      </select>
+      <p class="field__err" id={`${id}-time-err`} data-err-for="time"></p>
+    </div>
+    <div class="field">
+      <span class="field__label" id={`${id}-people-l`}>{t(locale, 'form.people')}</span>
+      <div class="stepper" data-stepper role="group" aria-labelledby={`${id}-people-l`}>
+        <button type="button" data-step="-1" aria-label={t(locale, 'form.minus')}>−</button>
+        <input class="input" name="people" type="number" min="1" max="60" value="2" inputmode="numeric" aria-labelledby={`${id}-people-l`} />
+        <button type="button" data-step="1" aria-label={t(locale, 'form.plus')}>+</button>
+      </div>
+    </div>
+  </div>
+  <fieldset class="choices">
+    <legend>{t(locale, 'form.place')}</legend>
+    {['inside', 'terrace', 'any'].map((p, i) => (
+      <label class="choice"><input type="radio" name="place" value={p} data-text={t(locale, `form.${p}`)} checked={i === 2} /><span>{t(locale, `form.${p}`)}</span></label>
+    ))}
+  </fieldset>
+  <div class="form__row form__row--2">
+    <div class="field">
+      <label for={`${id}-name`}>{t(locale, 'form.name')}</label>
+      <input class="input" id={`${id}-name`} name="name" autocomplete="name" required aria-describedby={`${id}-name-err`} />
+      <p class="field__err" id={`${id}-name-err`} data-err-for="name"></p>
+    </div>
+    <div class="field">
+      <label for={`${id}-note`}>{t(locale, 'form.note')} <small>({t(locale, 'form.optional')})</small></label>
+      <input class="input" id={`${id}-note`} name="note" />
+    </div>
+  </div>
+  <details class="preview-wrap"><summary>{t(locale, 'form.preview')}</summary><pre class="preview" data-preview></pre></details>
+  <SendButtons locale={locale} />
+  <p class="form__note">{t(locale, 'form.noBackend')}</p>
+</form>
+<script>
+  import { initMessageForms } from '../scripts/message-forms';
+  import { belgradeISODate } from '../lib/message';
+  document.querySelectorAll<HTMLInputElement>('input[data-min-today]').forEach((i) => {
+    i.min = belgradeISODate(Number(i.dataset.minHours || 0));
+    if (!i.value) i.value = i.min;
+  });
+  initMessageForms();
+</script>

@@ -1,0 +1,167 @@
+{
+  "note": "Playful coffee-cup fortunes. Each ends with a dish from menu.json (dish = menu item id).",
+  "sr": [
+    {
+      "text": "Видим дуг пут… и Рожин овчји паприкаш у вашој блиској будућности.",
+      "dish": "rozin-paprikas"
+    },
+    {
+      "text": "Шоља каже: неко мисли на вас. Шоља такође каже — Шненокле.",
+      "dish": "snenokle"
+    },
+    {
+      "text": "Видим птицу — добре вести стижу. До тада: Добар јунећи гулаш.",
+      "dish": "juneci-gulas"
+    },
+    {
+      "text": "Талог прави стазу ка чесми. Вратићете се — по Јунеће репове у вину, ако будете имали среће.",
+      "dish": "juneci-repovi"
+    },
+    {
+      "text": "Видим срце на дну шоље. И палачинке поред њега.",
+      "dish": "palacinke"
+    },
+    {
+      "text": "Пред вама је важна одлука. Савет шоље: Катина штрудла с маком.",
+      "dish": "katina-strudla"
+    },
+    {
+      "text": "Видим лава који отвара уста. Јасно као дан: Лављи залогај.",
+      "dish": "lavlji-zalogaj"
+    },
+    {
+      "text": "Шоља шапуће о путовању на запад, у Беч. Почните Бечком шницлом.",
+      "dish": "becka-snicla"
+    },
+    {
+      "text": "Видим круну — данас сте ви главни. Краљевски избор: Рамстек са бермет сосом.",
+      "dish": "ramstek-bermet"
+    },
+    {
+      "text": "Талог је мекан као јутро. Почните дан Карловачким доручком.",
+      "dish": "karlovacki-dorucak"
+    },
+    {
+      "text": "Видим кључ — отвориће се врата која сте тражили. Мала врата, велики Куглоф.",
+      "dish": "katin-kuglof"
+    },
+    {
+      "text": "Ваша срећа је округла и слатка. Баш као Чоколадна торта са бадемима и малинама.",
+      "dish": "cokoladna-torta"
+    },
+    {
+      "text": "Видим пуну трпезу и много смеха. Недеља је — Војвођански ручак.",
+      "dish": "vojvodjanski-rucak"
+    },
+    {
+      "text": "Шоља види винограде Фрушке горе. Звезде кажу: Виноградарска пљескавица.",
+      "dish": "vinogradarska-pljeskavica"
+    },
+    {
+      "text": "Видим жену са кецељом и тајним рецептом. То је Зуза паприкаш.",
+      "dish": "zuza-paprikas"
+    },
+    {
+      "text": "Ваше стрпљење биће награђено — Пофезнама са домаћим киселим млеком.",
+      "dish": "pofezne"
+    },
+    {
+      "text": "Видим четири лава који вас чувају. И једну Лавицу — салату.",
+      "dish": "lavica"
+    },
+    {
+      "text": "Талог прича о далеким земљама. А најближа је Карловачка шницла.",
+      "dish": "karlovacka-snicla"
+    },
+    {
+      "text": "Видим чашу која се пуни сама од себе. Наравно — бермет.",
+      "dish": "bermet"
+    },
+    {
+      "text": "Шоља је оптимиста: све ће бити добро. Поготово уз Ћевапе.",
+      "dish": "cevapi"
+    }
+  ],
+  "en": [
+    {
+      "text": "I see a long journey… and Roža’s mutton paprikash in your very near future.",
+      "dish": "rozin-paprikas"
+    },
+    {
+      "text": "The cup says someone is thinking of you. The cup also says: Šnenokle.",
+      "dish": "snenokle"
+    },
+    {
+      "text": "I see a bird — good news is on its way. Until then: a good beef goulash.",
+      "dish": "juneci-gulas"
+    },
+    {
+      "text": "The grounds draw a path to the fountain. You will return — for oxtail in wine, if you’re lucky.",
+      "dish": "juneci-repovi"
+    },
+    {
+      "text": "There is a heart at the bottom of your cup. And pancakes right next to it.",
+      "dish": "palacinke"
+    },
+    {
+      "text": "A big decision lies ahead. The cup advises: poppy-seed strudel.",
+      "dish": "katina-strudla"
+    },
+    {
+      "text": "I see a lion opening its mouth. Clear as day: the Lion’s Bite mixed grill.",
+      "dish": "lavlji-zalogaj"
+    },
+    {
+      "text": "The cup whispers of a trip west, to Vienna. Start with the Wiener schnitzel.",
+      "dish": "becka-snicla"
+    },
+    {
+      "text": "I see a crown — today you are in charge. A royal choice: rump steak with bermet sauce.",
+      "dish": "ramstek-bermet"
+    },
+    {
+      "text": "The grounds are soft as morning. Begin your day with a Karlovci breakfast.",
+      "dish": "karlovacki-dorucak"
+    },
+    {
+      "text": "I see a key — a door you were looking for will open. Small door, big Gugelhupf.",
+      "dish": "katin-kuglof"
+    },
+    {
+      "text": "Your luck is round and sweet. Just like the chocolate cake with almonds and raspberries.",
+      "dish": "cokoladna-torta"
+    },
+    {
+      "text": "I see a full table and lots of laughter. It’s Sunday — Vojvodina lunch.",
+      "dish": "vojvodjanski-rucak"
+    },
+    {
+      "text": "The cup sees the vineyards of Fruška Gora. The stars say: the wine country burger.",
+      "dish": "vinogradarska-pljeskavica"
+    },
+    {
+      "text": "I see a woman in an apron with a secret recipe. That’s Zuza paprikash.",
+      "dish": "zuza-paprikas"
+    },
+    {
+      "text": "Your patience will be rewarded — with pofezne and homemade sour milk.",
+      "dish": "pofezne"
+    },
+    {
+      "text": "I see four lions guarding you. And one lioness — the Lavica salad.",
+      "dish": "lavica"
+    },
+    {
+      "text": "The grounds speak of far-away lands. The nearest one is the Karlovci schnitzel.",
+      "dish": "karlovacka-snicla"
+    },
+    {
+      "text": "I see a glass that keeps filling itself. Of course — bermet.",
+      "dish": "bermet"
+    },
+    {
+      "text": "The cup is an optimist: everything will be fine. Especially with ćevapi.",
+      "dish": "cevapi"
+    }
+  ]
+}

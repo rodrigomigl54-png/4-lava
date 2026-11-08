@@ -1,0 +1,107 @@
+{
+  "TODO_VERIFY": "Wine names come from the 'Vinska preporuka' notes on the printed menu. Winery, vintage and prices unknown – the second drinks page (wine list) was not photographed.",
+  "wines": [
+    {
+      "id": "sila",
+      "name": {
+        "sr": "Сила",
+        "en": "Sila"
+      },
+      "winery": null,
+      "type": "white",
+      "note": {
+        "sr": "Новостворена српска сорта.",
+        "en": "A newly bred Serbian grape variety."
+      },
+      "priceGlass": null,
+      "priceBottle": null,
+      "verify": true
+    },
+    {
+      "id": "roze",
+      "name": {
+        "sr": "Розе",
+        "en": "Rosé"
+      },
+      "winery": null,
+      "type": "rose",
+      "note": {
+        "sr": "Cabernet Sauvignon и Pinot Grigio.",
+        "en": "Cabernet Sauvignon and Pinot Grigio."
+      },
+      "priceGlass": null,
+      "priceBottle": null,
+      "verify": true
+    },
+    {
+      "id": "probus",
+      "name": {
+        "sr": "Пробус",
+        "en": "Probus"
+      },
+      "winery": null,
+      "type": "red",
+      "note": {
+        "sr": "Аутохтона српска новостворена сорта.",
+        "en": "An indigenous, newly bred Serbian variety."
+      },
+      "priceGlass": null,
+      "priceBottle": null,
+      "verify": true
+    },
+    {
+      "id": "portugizer",
+      "name": {
+        "sr": "Португизер",
+        "en": "Portugieser"
+      },
+      "winery": null,
+      "type": "red",
+      "note": {
+        "sr": "Заоставштина из времена Аустроугарске.",
+        "en": "A legacy of Austro-Hungarian times."
+      },
+      "priceGlass": null,
+      "priceBottle": null,
+      "verify": true
+    },
+    {
+      "id": "bermet",
+      "name": {
+        "sr": "Бермет",
+        "en": "Bermet"
+      },
+      "winery": null,
+      "type": "bermet",
+      "note": {
+        "sr": "Карловачки специјалитет — ароматично десертно вино.",
+        "en": "The Karlovci speciality — an aromatic dessert wine."
+      },
+      "priceGlass": null,
+      "priceBottle": null,
+      "verify": true
+    }
+  ],
+  "pairingReasons": {
+    "sila": {
+      "sr": "Свежа, лагана бела сорта — за поврће и маслиново уље.",
+      "en": "A fresh, light white — for vegetables and olive oil."
+    },
+    "roze": {
+      "sr": "Розе прати пилетину и беле сосове, а не надјачава их.",
+      "en": "Rosé suits chicken and creamy sauces without overpowering them."
+    },
+    "probus": {
+      "sr": "Снажно српско црвено за паприкаш од овчетине.",
+      "en": "A robust Serbian red for a mutton paprikash."
+    },
+    "portugizer": {
+      "sr": "Меко црвено из аустроугарских времена — за дуго крчкано месо.",
+      "en": "A soft red from Habsburg days — for slow-simmered meat."
+    },
+    "bermet": {
+      "sr": "Слатки, зачињени бермет за колаче и крај оброка.",
+      "en": "Sweet, spiced bermet for cakes and the end of the meal."
+    }
+  }
+}

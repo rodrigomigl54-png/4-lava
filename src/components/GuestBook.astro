@@ -1,0 +1,161 @@
+---
+import reviews from '../data/reviews.json';
+import info from '../data/info.json';
+import OrnamentRule from './OrnamentRule.astro';
+import { t, sr2, formatNumber, type Locale } from '../lib/i18n';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const reviewHref = info.links.googleReview || info.links.googleMaps;
+const entries = reviews.reviews.map((r) => {
+  const sameLang = (locale === 'en') === (r.lang === 'en');
+  const target = locale === 'en' ? 'en' : 'sr';
+  const tr = (r.translation as Record<string, string>)[target];
+  const author = r.author ? (locale === 'sr' ? r.author : (r as { authorLatin?: string }).authorLatin ?? sr2(locale, r.author)) : (locale === 'en' ? r.authorLabel?.en : sr2(locale, r.authorLabel?.sr ?? ''));
+  return {
+    id: r.id,
+    text: r.lang === 'sr' ? sr2(locale, r.text) : r.text,
+    textLang: r.lang === 'sr' ? (locale === 'lat' ? 'sr-Latn' : 'sr-Cyrl') : 'en',
+    translation: !sameLang && tr ? sr2(locale, tr) : null,
+    author,
+    date: r.date,
+    shortened: (r as { shortened?: boolean }).shortened,
+  };
+});
+---
+<section id="knjiga" class="section book-sec dark wood marble-veins" aria-labelledby="knjiga-title">
+  <div class="container">
+    <header class="section-head">
+      <h2 id="knjiga-title">{t(locale, 'book.title')}</h2>
+      <OrnamentRule />
+      <p class="book-sec__rating"><span class="book-sec__value">{formatNumber(locale, info.rating.value, 1)}</span> <span aria-hidden="true">★</span> · {formatNumber(locale, info.rating.count)} <small>{t(locale, 'book.source')}</small></p>
+      <p class="book-sec__lead">{t(locale, 'book.lead')}</p>
+    </header>
+
+    <div class="book" data-book data-page-tpl={t(locale, 'book.page')}>
+      <div class="book__cover">
+        <div class="book__spread" data-book-spread>
+          {entries.map((e, i) => (
+            <article class="entry" data-entry={i}>
+              <p class="entry__text" lang={e.textLang}>„{e.text}“</p>
+              {e.shortened && <p class="entry__meta">({t(locale, 'book.shortened')})</p>}
+              {e.translation && <p class="entry__tr"><span>{t(locale, 'book.translation')}:</span> {e.translation}</p>}
+              <p class="entry__sign">— {e.author}{e.date && <>, {e.date}</>} · <span class="entry__src">Google</span></p>
+              <span class="entry__num" aria-hidden="true">{i + 1}</span>
+            </article>
+          ))}
+        </div>
+      </div>
+      <div class="book__nav">
+        <button class="btn btn--ghost" type="button" data-book-prev aria-label={t(locale, 'book.prev')}>←</button>
+        <p class="book__count" aria-live="polite" data-book-count></p>
+        <button class="btn btn--ghost" type="button" data-book-next aria-label={t(locale, 'book.next')}>→</button>
+      </div>
+    </div>
+
+    <p class="book-sec__cta"><a class="btn" href={reviewHref} target="_blank" rel="noopener">{t(locale, 'book.leave')}</a></p>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-book]').forEach((book) => {
+    const spread = book.querySelector<HTMLElement>('[data-book-spread]')!;
+    const entries = [...spread.querySelectorAll<HTMLElement>('[data-entry]')];
+    const count = book.querySelector<HTMLElement>('[data-book-count]')!;
+    const tpl = book.dataset.pageTpl || '{n} / {total}';
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const wide = matchMedia('(min-width: 56rem)');
+    let i = 0;
+    book.classList.add('is-js');
+    const per = () => (wide.matches ? 2 : 1);
+    const pages = () => Math.ceil(entries.length / per());
+
+    function show(dir = 0) {
+      const p = per();
+      i = Math.max(0, Math.min(i, entries.length - 1));
+      i -= i % p;
+      entries.forEach((e, k) => {
+        const on = k >= i && k < i + p;
+        e.hidden = !on;
+        e.classList.toggle('is-left', on && p === 2 && k === i);
+        e.classList.toggle('is-right', on && p === 2 && k === i + 1);
+      });
+      count.textContent = tpl.replace('{n}', String(i / p + 1)).replace('{total}', String(pages()));
+      (book.querySelector('[data-book-prev]') as HTMLButtonElement).disabled = i === 0;
+      (book.querySelector('[data-book-next]') as HTMLButtonElement).disabled = i + p >= entries.length;
+      if (dir && !reduce) {
+        spread.classList.remove('turn-next', 'turn-prev');
+        void spread.offsetWidth;
+        spread.classList.add(dir > 0 ? 'turn-next' : 'turn-prev');
+      }
+    }
+    const go = (d: number) => { const ni = i + d * per(); if (ni < 0 || ni >= entries.length) return; i = ni; show(d); };
+    book.querySelector('[data-book-prev]')!.addEventListener('click', () => go(-1));
+    book.querySelector('[data-book-next]')!.addEventListener('click', () => go(1));
+    book.addEventListener('keydown', (e) => { if (e.key === 'ArrowLeft') go(-1); if (e.key === 'ArrowRight') go(1); });
+    // swipe
+    let x0: number | null = null;
+    spread.addEventListener('pointerdown', (e) => { x0 = e.clientX; });
+    spread.addEventListener('pointerup', (e) => { if (x0 === null) return; const dx = e.clientX - x0; x0 = null; if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1); });
+    wide.addEventListener('change', () => show());
+    show();
+  });
+</script>
+
+<style>
+  .book-sec__rating { font-family: var(--font-display); font-size: var(--step-3); color: var(--gold-light); margin: 1.25rem 0 0.25rem; }
+  .book-sec__value { font-size: 1.6em; font-weight: 600; }
+  .book-sec__rating small { font-size: 0.5em; font-family: var(--font-body); color: var(--cream-dim); letter-spacing: 0.05em; }
+  .book-sec__lead { color: var(--cream-dim); }
+  .book { max-width: 62rem; margin: 0 auto; perspective: 2200px; }
+  .book__cover {
+    padding: clamp(0.8rem, 2.5vw, 1.6rem);
+    border-radius: 6px 10px 10px 6px;
+    background:
+      radial-gradient(120% 80% at 30% 20%, rgb(255 255 255 / 0.06), transparent 60%),
+      repeating-linear-gradient(45deg, rgb(0 0 0 / 0.05) 0 2px, transparent 2px 5px),
+      linear-gradient(135deg, #5a2a1c, #3b1a12 60%, #2a120c);
+    box-shadow: inset 0 0 0 2px #2a120c, inset 0 0 0 4px color-mix(in srgb, var(--gold) 55%, transparent), 0 30px 50px -25px rgb(0 0 0 / 0.8);
+  }
+  .book__spread {
+    position: relative; display: grid; gap: 0;
+    background: linear-gradient(#f5ecd9, #efe3cb);
+    background-image: var(--grain), linear-gradient(#f5ecd9, #efe3cb);
+    color: var(--ink);
+    min-height: 22rem;
+    border-radius: 2px;
+    box-shadow: inset 0 0 40px rgb(120 80 30 / 0.25);
+    touch-action: pan-y;
+    transform-style: preserve-3d;
+  }
+  .entry {
+    position: relative; padding: clamp(1.5rem, 4vw, 2.75rem);
+    font-family: var(--font-hand); color: #2b2620;
+    background-image: repeating-linear-gradient(transparent 0 2.05rem, rgb(94 26 31 / 0.12) 2.05rem calc(2.05rem + 1px));
+    background-position: 0 1.6rem;
+  }
+  .book:not(.is-js) .entry + .entry { border-top: 1px dashed var(--taupe); }
+  .entry__text { font-size: clamp(1.35rem, 1.1rem + 0.9vw, 1.7rem); line-height: 2.05rem; margin: 0 0 0.6rem; }
+  .entry__tr { font-family: var(--font-body); font-size: 0.86rem; line-height: 1.55; color: var(--taupe-ink); margin: 0.6rem 0; }
+  .entry__tr span, .entry__meta { font-family: var(--font-body); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gold-ink); }
+  .entry__sign { font-size: 1.45rem; text-align: right; margin: 1rem 0 0; color: var(--bordeaux); }
+  .entry__src { font-family: var(--font-body); font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--taupe-ink); }
+  .entry__num { position: absolute; bottom: 0.6rem; left: 50%; font-family: var(--font-display); font-style: italic; color: var(--gold-ink); font-size: 0.9rem; }
+  .is-js .entry.is-left { box-shadow: inset -24px 0 30px -24px rgb(80 50 20 / 0.45); }
+  .is-js .entry.is-right { box-shadow: inset 24px 0 30px -24px rgb(80 50 20 / 0.45); }
+  .book__nav { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-top: 1.25rem; }
+  .book__nav .btn { min-width: 3.2rem; font-size: 1.1rem; }
+  .book__nav .btn:disabled { opacity: 0.35; cursor: default; }
+  .book__count { margin: 0; min-width: 9rem; text-align: center; color: var(--cream-dim); font-size: 0.9rem; }
+  .book-sec__cta { text-align: center; margin-top: var(--space-6); }
+  .turn-next { animation: turn-next 0.9s var(--ease-out); transform-origin: left center; }
+  .turn-prev { animation: turn-prev 0.9s var(--ease-out); transform-origin: right center; }
+  @keyframes turn-next { from { transform: rotateY(-14deg); opacity: 0.2; } to { transform: none; opacity: 1; } }
+  @keyframes turn-prev { from { transform: rotateY(14deg); opacity: 0.2; } to { transform: none; opacity: 1; } }
+  @media (min-width: 56rem) {
+    .is-js .book__spread { grid-template-columns: 1fr 1fr; }
+    .is-js .book__spread::after {
+      content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: 2px; transform: translateX(-50%);
+      background: linear-gradient(rgb(90 50 20 / 0.5), rgb(90 50 20 / 0.25));
+    }
+  }
+</style>

@@ -1,0 +1,42 @@
+/* Paper grain — tiny pre-rendered noise tile (< 15 KB). Rasterised instead of live SVG
+   feTurbulence filters, which cost ~0.5 s of rendering on mobile. */
+:root {
+  --grain: url('/tex/grain.png');
+  /* Red-marble veining — pre-rendered from the procedural SVG noise (feTurbulence), 18 KB WebP */
+  --marble: url('/tex/marble.webp');
+}
+
+.paper {
+  background-color: var(--bg);
+  background-image: var(--grain);
+  background-size: 160px 160px;
+}
+
+/* Use on dark sections: faint marble veins under the content */
+.marble-veins {
+  position: relative;
+  isolation: isolate;
+}
+.marble-veins::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image: var(--marble);
+  background-size: cover;
+  opacity: 0.09;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.dark {
+  --bg: var(--forest);
+  --fg: var(--cream);
+  --fg-muted: var(--cream-dim);
+  --heading: var(--cream);
+  --label: var(--gold-light);
+  --accent: var(--gold-light);
+  background-color: var(--bg);
+  color: var(--fg);
+}
+.dark.wood { --bg: var(--wood); }

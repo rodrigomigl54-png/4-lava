@@ -1,0 +1,41 @@
+---
+import { t, type Locale } from '../lib/i18n';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const opts = [
+  { v: 'auto', icon: 'A', label: t(locale, 'time.auto') },
+  { v: 'jutro', icon: '☀', label: t(locale, 'time.jutro') },
+  { v: 'podne', icon: '◐', label: t(locale, 'time.podne') },
+  { v: 'vece', icon: '☾', label: t(locale, 'time.vece') },
+];
+---
+<div class="tt" role="group" aria-label={t(locale, 'time.toggle')}>
+  {opts.map((o) => (
+    <button type="button" data-time-set={o.v} title={o.label} aria-pressed="false">
+      <span aria-hidden="true">{o.icon}</span><span class="visually-hidden">{o.label}</span>
+    </button>
+  ))}
+</div>
+<script>
+  import { getTimeMode } from '../lib/time-mode';
+  const btns = document.querySelectorAll<HTMLButtonElement>('[data-time-set]');
+  const stored = () => { try { return localStorage.getItem('k4l-time') || 'auto'; } catch { return 'auto'; } };
+  const sync = () => btns.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.timeSet === stored())));
+  btns.forEach((b) => b.addEventListener('click', () => {
+    const v = b.dataset.timeSet!;
+    try { v === 'auto' ? localStorage.removeItem('k4l-time') : localStorage.setItem('k4l-time', v); } catch {}
+    document.documentElement.dataset.time = v === 'auto' ? getTimeMode() : v;
+    document.dispatchEvent(new CustomEvent('k4l:time'));
+    sync();
+  }));
+  sync();
+</script>
+<style>
+  .tt { display: inline-flex; gap: 0.15rem; opacity: 0.55; transition: opacity var(--dur-2) var(--ease); }
+  .tt:hover, .tt:focus-within { opacity: 1; }
+  .tt button {
+    min-width: 2.75rem; min-height: 2.75rem; border: 0; background: transparent; color: var(--cream-dim);
+    cursor: pointer; font-size: 0.95rem; border-radius: 50%;
+  }
+  .tt button[aria-pressed='true'] { color: var(--gold-light); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--gold) 60%, transparent); }
+</style>

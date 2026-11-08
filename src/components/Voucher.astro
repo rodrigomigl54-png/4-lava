@@ -1,0 +1,157 @@
+---
+import LionIcon from './LionIcon.astro';
+import OrnamentRule from './OrnamentRule.astro';
+import { t, type Locale } from '../lib/i18n';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const s = {
+  heading: t(locale, 'voucher.heading'), lunch: t(locale, 'voucher.lunch'), for: t(locale, 'voucher.for'), from: t(locale, 'voucher.from'),
+  valid: t(locale, 'voucher.valid'), code: t(locale, 'voucher.code'), brand: t(locale, 'brand.name'), place: t(locale, 'brand.place'),
+  currency: t(locale, 'price.currency'),
+};
+---
+<div class="voucher-tool" data-voucher data-s={JSON.stringify(s)}>
+  <h3>{t(locale, 'voucher.title')}</h3>
+  <p class="voucher-tool__lead">{t(locale, 'voucher.lead')}</p>
+  <div class="voucher-tool__grid">
+    <form class="form" data-voucher-form>
+      <div class="form__row form__row--2">
+        <div class="field"><label for="v-to">{t(locale, 'voucher.for')}</label><input class="input" id="v-to" name="to" maxlength="40" autocomplete="off" /></div>
+        <div class="field"><label for="v-from">{t(locale, 'voucher.from')}</label><input class="input" id="v-from" name="from" maxlength="40" autocomplete="off" /></div>
+      </div>
+      <div class="form__row form__row--2">
+        <div class="field"><label for="v-amount">{t(locale, 'voucher.amount')}</label><input class="input" id="v-amount" name="amount" type="number" min="0" step="500" inputmode="numeric" placeholder="3000" /></div>
+        <div class="field"><label for="v-occ">{t(locale, 'voucher.occasion')}</label><input class="input" id="v-occ" name="occasion" maxlength="40" placeholder={t(locale, 'voucher.occasionPh')} /></div>
+      </div>
+      <div class="voucher-tool__btns">
+        <button class="btn" type="button" data-voucher-print>{t(locale, 'voucher.print')}</button>
+        <button class="btn btn--ghost" type="button" data-voucher-png>{t(locale, 'voucher.download')}</button>
+      </div>
+      <p class="form__note">{t(locale, 'voucher.note')}</p>
+    </form>
+
+    <article class="voucher" id="voucher-card" aria-label={t(locale, 'voucher.heading')}>
+      <svg class="voucher__frame" viewBox="0 0 400 250" preserveAspectRatio="none" aria-hidden="true">
+        <rect x="6" y="6" width="388" height="238" fill="none" stroke="#B08D57" stroke-width="1.5" />
+        <rect x="12" y="12" width="376" height="226" fill="none" stroke="#B08D57" stroke-width=".6" />
+        {[[12, 12, 1, 1], [388, 12, -1, 1], [12, 238, 1, -1], [388, 238, -1, -1]].map(([x, y, sx, sy]) => (
+          <path transform={`translate(${x} ${y}) scale(${sx} ${sy})`} d="M0 26C8 26 14 20 14 12S20 0 26 0M6 6c6 0 10 4 10 10" fill="none" stroke="#B08D57" stroke-width="1" />
+        ))}
+      </svg>
+      <span class="voucher__lion" aria-hidden="true"><LionIcon variant="half" /></span>
+      <div class="voucher__body">
+        <p class="voucher__brand">{s.brand}</p>
+        <p class="voucher__kicker">{s.heading}</p>
+        <p class="voucher__title">„{s.lunch}“</p>
+        <OrnamentRule width="9rem" class="voucher__rule" />
+        <p class="voucher__line"><span>{s.for}:</span> <b data-v="to">…</b></p>
+        <p class="voucher__line"><span>{s.from}:</span> <b data-v="from">…</b></p>
+        <p class="voucher__amount" data-v="amount"></p>
+        <p class="voucher__occ" data-v="occasion"></p>
+        <p class="voucher__small">{s.valid} · {s.code} <span data-v="code"></span></p>
+      </div>
+    </article>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-voucher]').forEach((root) => {
+    const s = JSON.parse(root.dataset.s || '{}') as Record<string, string>;
+    const form = root.querySelector<HTMLFormElement>('[data-voucher-form]')!;
+    const card = root.querySelector<HTMLElement>('.voucher')!;
+    const out = (k: string) => card.querySelector<HTMLElement>(`[data-v="${k}"]`)!;
+    const d = new Date();
+    const code = `K4L-${String(d.getFullYear()).slice(2)}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
+    const num = (n: number) => new Intl.NumberFormat('de-DE').format(n);
+    const val = (n: string) => (form.elements.namedItem(n) as HTMLInputElement).value.trim();
+    const render = () => {
+      out('to').textContent = val('to') || '…';
+      out('from').textContent = val('from') || '…';
+      const a = Number(val('amount'));
+      out('amount').textContent = a > 0 ? `${num(a)} ${s.currency}` : '';
+      out('occasion').textContent = val('occasion');
+      out('code').textContent = code;
+    };
+    form.addEventListener('input', render);
+    render();
+
+    root.querySelector('[data-voucher-print]')!.addEventListener('click', () => {
+      document.body.classList.add('printing-voucher');
+      window.print();
+      setTimeout(() => document.body.classList.remove('printing-voucher'), 500);
+    });
+
+    // PNG via canvas (fonts are already loaded on the page)
+    root.querySelector('[data-voucher-png]')!.addEventListener('click', async () => {
+      const W = 1600, H = 1000;
+      const c = document.createElement('canvas');
+      c.width = W; c.height = H;
+      const x = c.getContext('2d')!;
+      await document.fonts.ready;
+      x.fillStyle = '#F3EBDD'; x.fillRect(0, 0, W, H);
+      x.strokeStyle = '#B08D57'; x.lineWidth = 6; x.strokeRect(24, 24, W - 48, H - 48);
+      x.lineWidth = 2; x.strokeRect(48, 48, W - 96, H - 96);
+      // lion
+      try {
+        const svg = (await (await fetch('/brand/logo-lion-half.svg')).text()).replace(/currentColor/g, '#272624');
+        const img = new Image();
+        img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+        await img.decode();
+        x.globalAlpha = 0.9; x.drawImage(img, 48, 48, (H - 96) * (750 / 1296), H - 96); x.globalAlpha = 1;
+      } catch {}
+      const cx = 960;
+      x.textAlign = 'center'; x.textBaseline = 'alphabetic';
+      x.fillStyle = '#7A5F32'; x.font = '600 34px Lora'; x.fillText(s.brand.toUpperCase(), cx, 190);
+      x.fillStyle = '#5E1A1F'; x.font = 'italic 500 56px "Cormorant Garamond"'; x.fillText(s.heading, cx, 280);
+      x.font = '600 96px "Cormorant Garamond"'; x.fillText(`„${s.lunch}“`, cx, 390);
+      x.strokeStyle = '#B08D57'; x.beginPath(); x.moveTo(cx - 180, 430); x.lineTo(cx + 180, 430); x.stroke();
+      x.fillStyle = '#272624'; x.font = '400 44px Lora';
+      x.fillText(`${s.for}: ${val('to') || '……………'}`, cx, 520);
+      x.fillText(`${s.from}: ${val('from') || '……………'}`, cx, 590);
+      const a = Number(val('amount'));
+      if (a > 0) { x.fillStyle = '#8E2A2A'; x.font = '600 84px "Cormorant Garamond"'; x.fillText(`${num(a)} ${s.currency}`, cx, 710); }
+      if (val('occasion')) { x.fillStyle = '#5E1A1F'; x.font = 'italic 500 48px "Cormorant Garamond"'; x.fillText(val('occasion'), cx, 790); }
+      x.fillStyle = '#6B5D52'; x.font = '400 28px Lora'; x.fillText(`${s.valid} · ${s.code} ${code} · ${s.place}`, cx, 900);
+      const a2 = document.createElement('a');
+      a2.download = `vaucer-kod-4-lava-${code}.png`;
+      a2.href = c.toDataURL('image/png');
+      a2.click();
+    });
+  });
+</script>
+
+<style>
+  .voucher-tool__lead { color: var(--fg-muted); }
+  .voucher-tool__grid { display: grid; gap: 2rem; align-items: center; }
+  .voucher-tool__btns { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+  .voucher {
+    position: relative; aspect-ratio: 8 / 5; overflow: hidden; color: var(--ink);
+    background: var(--cream); background-image: var(--grain);
+    box-shadow: 0 25px 45px -25px rgb(0 0 0 / 0.75);
+    container-type: inline-size;
+  }
+  .voucher__frame { position: absolute; inset: 3%; width: 94%; height: 94%; }
+  .voucher__lion { position: absolute; left: 4.5%; top: 5%; bottom: 5%; width: 26%; color: var(--ink); opacity: 0.92; }
+  .voucher__lion :global(svg) { height: 100%; width: auto; }
+  .voucher__body { position: absolute; inset: 8% 6% 8% 30%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+  .voucher p { margin: 0; line-height: 1.2; }
+  .voucher__brand { font-size: 2.6cqi; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold-ink); }
+  .voucher__kicker { font-family: var(--font-display); font-style: italic; font-size: 4.4cqi; color: var(--bordeaux); margin-top: 1.5cqi !important; }
+  .voucher__title { font-family: var(--font-display); font-weight: 600; font-size: 6.4cqi; color: var(--bordeaux); }
+  .voucher :global(.voucher__rule) { width: 26cqi !important; margin: 1cqi auto 2cqi; }
+  .voucher__line { font-size: 3cqi; }
+  .voucher__line span { color: var(--taupe-ink); }
+  .voucher__amount { font-family: var(--font-display); font-weight: 600; font-size: 6cqi; color: var(--marble-red); min-height: 1em; margin-top: 1cqi !important; }
+  .voucher__occ { font-family: var(--font-display); font-style: italic; font-size: 3.6cqi; color: var(--bordeaux); min-height: 1em; }
+  .voucher__small { font-size: 1.8cqi; color: var(--taupe-ink); margin-top: 1.5cqi !important; }
+  @media (min-width: 56rem) { .voucher-tool__grid { grid-template-columns: 1fr 1.25fr; } }
+  @media print {
+    :global(body.printing-voucher > *:not(main)), :global(body.printing-voucher main > *:not(#kapija)) { display: none !important; }
+    :global(body.printing-voucher #kapija > .container > *:not(.gate__voucher)) { display: none !important; }
+    :global(body.printing-voucher .voucher-tool > *:not(.voucher-tool__grid)), :global(body.printing-voucher .voucher-tool__grid > form) { display: none !important; }
+    :global(body.printing-voucher) { background: white !important; padding: 0 !important; }
+    :global(body.printing-voucher #kapija) { padding: 0 !important; background: white !important; }
+    :global(body.printing-voucher #kapija::before) { display: none !important; }
+    .voucher { box-shadow: none; width: 180mm; margin: 20mm auto; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  }
+</style>

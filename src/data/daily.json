@@ -1,0 +1,39 @@
+{
+  "TODO_VERIFY": "Demo content. The owner edits this file or the Google Sheet (info.json → dailySheetCsv).",
+  "date": null,
+  "items": [
+    {
+      "sr": "Добар јунећи гулаш",
+      "en": "A good beef goulash",
+      "price": 1300
+    },
+    {
+      "sr": "Запечени пребранац",
+      "en": "Baked prebranac (beans)",
+      "price": 420
+    },
+    {
+      "sr": "Шненокле",
+      "en": "Šnenokle",
+      "price": 360
+    }
+  ],
+  "note": {
+    "sr": "Док траје!",
+    "en": "While it lasts!"
+  },
+  "weekly": {
+    "2": {
+      "sr": "Уторак: шкембићи могу и запечени са сиром",
+      "en": "Tuesday: tripe, also baked with cheese"
+    },
+    "4": {
+      "sr": "Четвртак: Рожин овчји паприкаш",
+      "en": "Thursday: Roža’s mutton paprikash"
+    },
+    "7": {
+      "sr": "Недеља: Војвођански ручак",
+      "en": "Sunday: Vojvodina lunch"
+    }
+  }
+}

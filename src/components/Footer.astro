@@ -1,0 +1,142 @@
+---
+import LionIcon from './LionIcon.astro';
+import LangSwitch from './LangSwitch.astro';
+import OpenStatus from './OpenStatus.astro';
+import KilimBand from './KilimBand.astro';
+import OrnamentRule from './OrnamentRule.astro';
+import TimeToggle from './TimeToggle.astro';
+import info from '../data/info.json';
+import { t, pick, localePath, type Locale } from '../lib/i18n';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const demo = import.meta.env.PUBLIC_DEMO !== 'false';
+
+// Group days with identical hours: "Сваки дан 08:00–23:00" or per-day rows
+const week = info.hours.week as Record<string, [string, string][]>;
+const fmt = (d: string) => (week[d] ?? []).map(([o, c]) => `${o}–${c}`).join(', ') || '—';
+const allSame = ['2', '3', '4', '5', '6', '7'].every((d) => fmt(d) === fmt('1'));
+const rows = allSame
+  ? [{ day: t(locale, 'footer.hoursEvery'), hours: fmt('1') }]
+  : ['1', '2', '3', '4', '5', '6', '7'].map((d) => ({ day: t(locale, `days.${d}`), hours: fmt(d) }));
+const street = locale === 'en' ? info.address.en.street : pick(locale, info.address.street);
+const city = locale === 'en' ? info.address.en.city : pick(locale, info.address.city);
+const social = [
+  { name: 'Instagram', href: info.links.instagram },
+  { name: 'Facebook', href: info.links.facebook },
+];
+---
+<footer class="site-footer dark wood marble-veins">
+  <KilimBand tone="dark" height={14} />
+  <div class="container site-footer__grid">
+    <div class="site-footer__brand">
+      <span class="site-footer__lion"><LionIcon variant="half" /></span>
+      <div>
+        <p class="site-footer__name">{t(locale, 'brand.name')}</p>
+        <p class="site-footer__place">{t(locale, 'brand.place')}</p>
+        <OpenStatus locale={locale} tone="dark" />
+      </div>
+    </div>
+
+    <div>
+      <h2 class="label">{t(locale, 'footer.address')}</h2>
+      <address>
+        {street}<br />{info.address.postalCode} {city}
+      </address>
+      <a class="site-footer__link" href={info.links.googleDirections} target="_blank" rel="noopener">
+        {t(locale, 'footer.map')} <span aria-hidden="true">↗</span>
+      </a>
+    </div>
+
+    <div>
+      <h2 class="label">{t(locale, 'footer.phone')}</h2>
+      <a class="site-footer__phone" href={`tel:${info.phone.intl}`}>{info.phone.display}</a>
+      <p class="site-footer__muted">{t(locale, 'footer.services')}</p>
+    </div>
+
+    <div>
+      <h2 class="label">{t(locale, 'footer.hours')}</h2>
+      <dl class="site-footer__hours">
+        {rows.map((r) => (<><dt>{r.day}</dt><dd>{r.hours}</dd></>))}
+      </dl>
+      <p class="site-footer__muted">{t(locale, 'footer.price')}: {pick(locale, info.priceRangeText)}</p>
+    </div>
+  </div>
+
+  <div class="container">
+    <OrnamentRule width="16rem" />
+  </div>
+
+  <div class="container site-footer__bottom">
+    <p>{t(locale, 'footer.copy')} · {new Date().getFullYear()}</p>
+    <ul class="site-footer__social" role="list" aria-label={t(locale, 'footer.social')}>
+      {social.map((s) => (
+        <li>{s.href
+          ? <a href={s.href} target="_blank" rel="noopener">{s.name}</a>
+          : <span title={t(locale, 'footer.socialSoon')}>{s.name} <small>({t(locale, 'footer.socialSoon')})</small></span>}
+        </li>
+      ))}
+    </ul>
+    <LangSwitch locale={locale} label={t(locale, 'lang.labelFooter')} />
+    <TimeToggle locale={locale} />
+  </div>
+  {demo && <p class="site-footer__demo">{t(locale, 'footer.demo')}</p>}
+</footer>
+
+<style>
+  .site-footer { padding-bottom: 1.5rem; }
+  .site-footer__grid {
+    display: grid;
+    gap: 2.25rem;
+    padding-block: var(--space-8) var(--space-7);
+    grid-template-columns: 1fr;
+  }
+  .site-footer h2.label { font-size: 0.72rem; margin-bottom: 0.75rem; font-family: var(--font-body); }
+  .site-footer__brand { display: flex; gap: 1rem; align-items: flex-start; }
+  .site-footer__lion { width: 3.6rem; flex: none; color: var(--gold); }
+  .site-footer__name {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 600;
+    line-height: 1.05;
+    margin: 0 0 0.25rem;
+  }
+  .site-footer__place { color: var(--cream-dim); font-style: italic; margin-bottom: 0.9rem; }
+  address { font-style: normal; margin-bottom: 0.6rem; }
+  .site-footer__link { color: var(--gold-light); display: inline-block; min-height: 2.75rem; padding-block: 0.6rem; }
+  .site-footer__phone {
+    font-family: var(--font-display);
+    font-size: var(--step-3);
+    font-weight: 600;
+    color: var(--gold-light);
+    text-decoration: none;
+    line-height: 1.1;
+    display: inline-block;
+    margin-bottom: 0.5rem;
+  }
+  .site-footer__muted { color: var(--cream-dim); font-size: var(--step--1); }
+  .site-footer__hours { display: grid; grid-template-columns: auto auto; gap: 0.2rem 1.2rem; margin: 0 0 0.75rem; justify-content: start; }
+  .site-footer__hours dd { margin: 0; font-variant-numeric: tabular-nums; }
+  .site-footer__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem 1.5rem;
+    padding-top: 1.25rem;
+    font-size: var(--step--1);
+    color: var(--cream-dim);
+  }
+  .site-footer__bottom p { margin: 0; }
+  .site-footer__social { display: flex; gap: 1.25rem; list-style: none; margin: 0; padding: 0; }
+  .site-footer__social small { opacity: 0.85; }
+  .site-footer__demo {
+    margin: 1rem 0 0;
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--cream-dim);
+    letter-spacing: 0.08em;
+  }
+  @media (min-width: 48rem) {
+    .site-footer__grid { grid-template-columns: 1.4fr 1fr 1fr 1fr; }
+  }
+</style>

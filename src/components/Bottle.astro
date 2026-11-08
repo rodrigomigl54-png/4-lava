@@ -1,0 +1,32 @@
+---
+/** Stylised SVG bottle — silhouette depends on wine type. */
+interface Props { type: string; label: string; class?: string }
+const { type, label, class: cls = '' } = Astro.props;
+const glass = { white: '#6f7a3c', rose: '#c98a7a', red: '#2b1012', bermet: '#7a3a12' }[type] ?? '#3a2a1a';
+const shine = { white: '#c9c98a', rose: '#f1cfc4', red: '#7a3a3a', bermet: '#d08a4a' }[type] ?? '#888';
+// paths: x 0–60, y 0–220
+const shapes: Record<string, string> = {
+  white: 'M25 0h10v6l1 40c0 18 16 30 16 52v114a8 8 0 0 1-8 8H16a8 8 0 0 1-8-8V98c0-22 16-34 16-52l1-40Z',
+  red: 'M24 0h12v8l1 52c0 8 14 10 14 24v128a8 8 0 0 1-8 8H17a8 8 0 0 1-8-8V84c0-14 14-16 14-24l1-52Z',
+  bermet: 'M24 40h12v6l1 30c0 6 17 10 17 28v108a8 8 0 0 1-8 8H14a8 8 0 0 1-8-8V104c0-18 17-22 17-28l1-30Z',
+};
+const d = shapes[type] ?? (type === 'rose' ? shapes.white : shapes.red);
+const top = type === 'bermet' ? 40 : 0;
+---
+<svg class:list={['bottle', cls]} viewBox="-4 -6 68 232" aria-hidden="true" focusable="false">
+  <path d={d} fill={glass} />
+  <path d={d} fill="url(#bottle-shade)" />
+  <rect x="23" y={top - 4} width="14" height="16" rx="2" fill="#B08D57" />
+  <path d={`M17 ${type === 'bermet' ? 112 : 104}c0-6 2-10 4-12`} stroke={shine} stroke-width="2.5" stroke-linecap="round" fill="none" opacity=".7" />
+  <path d={`M17 ${type === 'bermet' ? 122 : 116}v80`} stroke={shine} stroke-width="2.5" stroke-linecap="round" opacity=".45" />
+  <!-- label -->
+  <g transform={`translate(0 ${type === 'bermet' ? 132 : 128})`}>
+    <rect x={type === 'white' || type === 'rose' ? 11 : 12} y="0" width={type === 'white' || type === 'rose' ? 38 : 36} height="52" fill="#F3EBDD" />
+    <rect x={type === 'white' || type === 'rose' ? 13 : 14} y="2" width={type === 'white' || type === 'rose' ? 34 : 32} height="48" fill="none" stroke="#B08D57" stroke-width=".8" />
+    <path d="M22 14h16M24 38h12" stroke="#8E2A2A" stroke-width="1.2" />
+    <text x="30" y="29" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="9" font-weight="600" fill="#5E1A1F">{label}</text>
+  </g>
+</svg>
+<style>
+  .bottle { width: 100%; height: auto; overflow: visible; filter: drop-shadow(0 10px 8px rgb(0 0 0 / 0.45)); }
+</style>

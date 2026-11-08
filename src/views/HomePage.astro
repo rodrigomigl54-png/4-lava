@@ -1,0 +1,186 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import LionIcon from '../components/LionIcon.astro';
+import OpenStatus from '../components/OpenStatus.astro';
+import OrnamentRule from '../components/OrnamentRule.astro';
+import OrnamentCorner from '../components/OrnamentCorner.astro';
+import KilimBand from '../components/KilimBand.astro';
+import Banners from '../components/Banners.astro';
+import Intro from '../components/Intro.astro';
+import Chalkboard from '../components/Chalkboard.astro';
+import Specialties from '../components/Specialties.astro';
+import SacPreorder from '../components/SacPreorder.astro';
+import MenuFull from '../components/MenuFull.astro';
+import TakeawayCart from '../components/TakeawayCart.astro';
+import Cellar from '../components/Cellar.astro';
+import Story from '../components/Story.astro';
+import GuestBook from '../components/GuestBook.astro';
+import Gate from '../components/Gate.astro';
+import Roll from '../components/Roll.astro';
+import FountainArt from '../components/FountainArt.astro';
+import info from '../data/info.json';
+import introData from '../data/intro.json';
+import { t, formatNumber, type Locale } from '../lib/i18n';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const rating = t(locale, 'hero.rating', {
+  value: formatNumber(locale, info.rating.value, 1),
+  count: formatNumber(locale, info.rating.count),
+});
+// Hero background: the intro's fountain footage (video → still), subtly darkened
+type Media = Record<string, Record<string, string>>;
+const heroVideo = introData.fountain.video as Media | null;
+const heroStill = (introData.fountain.stills as Media[])[0] ?? null;
+const hints = [
+  { mode: 'jutro', href: '#jelovnik' },
+  { mode: 'podne', href: '#jelovnik' },
+  { mode: 'vece', href: '#podrum' },
+];
+---
+<BaseLayout locale={locale} schema="restaurant" intro>
+  <Intro locale={locale} />
+  <section class="hero dark wood" aria-labelledby="hero-title">
+    {heroVideo && (
+      <video class="hero__bg" muted loop playsinline preload="none" aria-hidden="true" data-hero-video
+        poster={heroVideo.mobile.poster} data-src={JSON.stringify({ desktop: heroVideo.desktop, mobile: heroVideo.mobile })}></video>
+    )}
+    {!heroVideo && heroStill && (
+      <picture class="hero__bg" aria-hidden="true">
+        <source media="(max-width: 47.99rem)" srcset={heroStill.mobile.avif} type="image/avif" />
+        <source media="(max-width: 47.99rem)" srcset={heroStill.mobile.webp} type="image/webp" />
+        <source srcset={heroStill.desktop.avif} type="image/avif" />
+        <source srcset={heroStill.desktop.webp} type="image/webp" />
+        <img src={heroStill.desktop.jpg} alt="" fetchpriority="high" decoding="async" />
+      </picture>
+    )}
+    <OrnamentCorner position="tl" />
+    <OrnamentCorner position="br" />
+    <span class="hero__lion" aria-hidden="true"><LionIcon variant="half" /></span>
+    {!heroVideo && !heroStill && <div class="hero__fountain" aria-hidden="true"><FountainArt /></div>}
+    <div class="container hero__inner">
+      <p class="label hero__kicker">{t(locale, 'brand.place')} · 1799</p>
+      <h1 id="hero-title" class="hero__title" tabindex="-1">{t(locale, 'hero.title')}</h1>
+      <OrnamentRule width="15rem" class="hero__rule" />
+      <p class="hero__sub italic-display">{t(locale, 'hero.sub')}</p>
+      <div class="hero__ctas">
+        <a class="btn" href="#jelovnik">{t(locale, 'cta.seeMenu')}</a>
+        <a class="btn btn--ghost" href="#kapija">{t(locale, 'cta.reserveTable')}</a>
+      </div>
+      <div class="hero__meta">
+        <a class="hero__rating" href={info.links.googleMaps} target="_blank" rel="noopener">{rating}</a>
+        <OpenStatus locale={locale} tone="dark" />
+      </div>
+      {hints.map((h) => (
+        <p class="hero__hint" data-only={h.mode}>
+          <span class="label">{t(locale, `time.${h.mode}`)}</span>
+          {t(locale, `time.hint.${h.mode}`)} <a href={h.href}>{t(locale, `time.link.${h.mode}`)} →</a>
+        </p>
+      ))}
+    </div>
+  </section>
+  <Banners locale={locale} />
+  <KilimBand height={14} />
+
+  <section id="jelovnik" class="section" aria-labelledby="jelovnik-title">
+    <div class="container">
+      <header class="section-head">
+        <span class="section-lion" aria-hidden="true"><LionIcon variant="trpeza" /></span>
+        <span class="label">{t(locale, 'nav.trpeza.lion')}</span>
+        <h2 id="jelovnik-title">{t(locale, 'section.trpeza')}</h2>
+        <OrnamentRule />
+      </header>
+      <div class="menu-intro" data-reveal><Chalkboard locale={locale} /></div>
+      <div class="menu-block"><Specialties locale={locale} /></div>
+      <SacPreorder locale={locale} />
+      <div class="menu-block" id="jelovnik-ceo">
+        <h3 class="menu-block__title">{t(locale, 'full.title')}</h3>
+        <MenuFull locale={locale} />
+      </div>
+    </div>
+  </section>
+  <TakeawayCart locale={locale} />
+  <Roll locale={locale} />
+  <Cellar locale={locale} />
+  <Story locale={locale} />
+  <GuestBook locale={locale} />
+  <Gate locale={locale} />
+</BaseLayout>
+
+<script>
+  import { initMotion } from '../scripts/home-motion';
+  // Hero footage: loaded after first paint, paused when off-screen or with reduced motion
+  const hv = document.querySelector<HTMLVideoElement>('[data-hero-video]');
+  if (hv) {
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const load = () => {
+      const src = JSON.parse(hv.dataset.src || '{}');
+      const s = matchMedia('(max-width: 47.99rem)').matches ? src.mobile : src.desktop;
+      if (!matchMedia('(max-width: 47.99rem)').matches) hv.poster = src.desktop.poster;
+      for (const [type, url] of [['video/webm', s.webm], ['video/mp4', s.mp4]]) {
+        const el = document.createElement('source'); el.type = type; el.src = url; hv.appendChild(el);
+      }
+      hv.load();
+      if (reduce) return;
+      new IntersectionObserver(([e]) => { if (e.isIntersecting) hv.play().catch(() => {}); else hv.pause(); }).observe(hv);
+    };
+    addEventListener('load', () => setTimeout(load, 200), { once: true });
+  }
+  const start = () => initMotion();
+  if ('requestIdleCallback' in window) requestIdleCallback(start, { timeout: 1500 }); else setTimeout(start, 300);
+</script>
+
+<style>
+  .hero {
+    position: relative;
+    overflow: hidden;
+    min-height: calc(100svh - var(--header-h) - var(--bottom-bar-h));
+    display: grid;
+    align-items: center;
+    padding-block: var(--space-8);
+    /* warm depth without an image, so the headline (not a texture) is the LCP element */
+    background-image:
+      radial-gradient(70% 55% at 50% 42%, rgb(142 42 42 / 0.16), transparent 70%),
+      radial-gradient(120% 90% at 50% 120%, rgb(0 0 0 / 0.45), transparent 60%),
+      linear-gradient(115deg, transparent 30%, rgb(176 141 87 / 0.05) 45%, transparent 60%),
+      var(--grain);
+    background-size: auto, auto, auto, 160px 160px;
+  }
+  .hero { isolation: isolate; }
+  .hero__bg { position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; object-fit: cover; filter: saturate(0.9); }
+  .hero__bg img { width: 100%; height: 100%; object-fit: cover; }
+  .hero:has(.hero__bg)::before { content: ''; position: absolute; inset: 0; z-index: 0; background: linear-gradient(rgb(30 20 14 / 0.55), rgb(30 20 14 / 0.72)), radial-gradient(80% 70% at 50% 45%, transparent, rgb(20 12 8 / 0.6)); }
+  .hero__inner { position: relative; z-index: 1; text-align: center; }
+  /* Candle-light entrance (CSS only; reduced motion collapses it to the final frame) */
+  .hero__inner > * { animation: hero-in 1.6s var(--ease-out) both; }
+  .hero__kicker { animation-delay: 0.1s !important; }
+  .hero__title { animation-delay: 0.25s !important; animation-name: hero-title !important; animation-duration: 2s !important; }
+  .hero__sub { animation-delay: 0.7s !important; }
+  .hero__ctas { animation-delay: 0.95s !important; }
+  .hero__meta { animation-delay: 1.15s !important; }
+  .hero__hint { animation-delay: 1.35s !important; }
+  @keyframes hero-in { from { opacity: 0.01; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  @keyframes hero-title { from { opacity: 0.01; letter-spacing: 0.06em; filter: blur(3px); } to { opacity: 1; letter-spacing: 0.005em; filter: none; } }
+  .hero__fountain { animation: hero-in 2.4s var(--ease-out) 0.6s both; }
+  @media (prefers-reduced-motion: reduce) { .hero__inner > *, .hero__fountain { animation: none !important; } }
+  .hero__kicker { margin-bottom: 1rem; }
+  .hero__title:focus { outline: none; }
+  .hero__title { color: var(--cream); font-size: var(--step-5); font-weight: 600; margin-bottom: 1rem; }
+  .hero__inner :global(.hero__rule) { margin-bottom: 1.25rem; }
+  .hero__sub { max-width: 34rem; margin: 0 auto 2rem; font-size: var(--step-2); line-height: 1.3; color: var(--cream-dim); }
+  .hero__ctas { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; margin-bottom: 2rem; }
+  .hero__meta { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 0.75rem 1.25rem; }
+  .hero__rating { color: var(--gold-light); text-decoration: none; font-size: var(--step--1); letter-spacing: 0.06em; min-height: 2.75rem; display: inline-flex; align-items: center; }
+  .hero__rating:hover { text-decoration: underline; }
+  .hero__hint { max-width: 32rem; margin: 1.75rem auto 0; font-size: 0.92rem; color: var(--cream-dim); }
+  .hero__hint .label { display: block; margin-bottom: 0.25rem; font-size: 0.68rem; }
+  .hero__hint a { color: var(--gold-light); white-space: nowrap; }
+  .hero__lion { position: absolute; left: 0; bottom: -4%; width: clamp(7rem, 22vw, 19rem); color: color-mix(in srgb, var(--gold) 14%, transparent); pointer-events: none; }
+  .hero__fountain { position: absolute; right: -4%; bottom: -2%; width: clamp(10rem, 26vw, 24rem); opacity: 0.16; pointer-events: none; }
+  @media (min-width: 48rem) {
+    .hero__lion { color: color-mix(in srgb, var(--gold) 22%, transparent); }
+    .hero__fountain { opacity: 0.32; right: 2%; }
+  }
+  .menu-intro { margin-bottom: var(--space-8); }
+  .menu-block { margin-top: var(--space-8); }
+  .menu-block__title { text-align: center; font-size: var(--step-3); margin-bottom: var(--space-5); }
+</style>

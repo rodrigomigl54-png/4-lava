@@ -1,0 +1,135 @@
+---
+import LionIcon from './LionIcon.astro';
+import { NAV_LIONS } from '../lib/nav';
+import { t, localePath, type Locale } from '../lib/i18n';
+interface Props { locale: Locale; onHome?: boolean; layout: 'row' | 'bar' | 'overlay' }
+const { locale, onHome = true, layout } = Astro.props;
+const base = onHome ? '' : localePath(locale, '/');
+---
+<ul class:list={['lions', `lions--${layout}`]} role="list">
+  {NAV_LIONS.map((n, i) => (
+    <li>
+      <a class="lions__link" href={`${base}#${n.anchor}`} data-nav-anchor={n.anchor} title={layout === 'overlay' ? undefined : t(locale, `nav.${n.key}.label`)}>
+        <span class="lions__icon"><LionIcon variant={n.variant} /></span>
+        <span class="lions__text">
+          <span class="lions__lion">{t(locale, `nav.${n.key}.lion`)}</span>
+          <span class="lions__label">{t(locale, `nav.${n.key}.${layout === 'overlay' ? 'label' : 'short'}`)}</span>
+        </span>
+        {layout === 'overlay' && <span class="lions__num" aria-hidden="true">{['I', 'II', 'III', 'IV'][i]}</span>}
+      </a>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .lions { list-style: none; margin: 0; padding: 0; display: flex; }
+  .lions__link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+  }
+  .lions__icon {
+    display: grid;
+    place-items: center;
+    flex: none;
+    border-radius: 50%;
+    overflow: hidden;
+    color: var(--ink);
+    transition: color var(--dur-2) var(--ease), background-color var(--dur-2) var(--ease),
+      box-shadow var(--dur-2) var(--ease), transform var(--dur-3) var(--ease-out);
+  }
+  .lions__icon :global(svg) { width: 100%; height: 100%; }
+  .lions__text { display: flex; flex-direction: column; line-height: 1.15; white-space: nowrap; }
+  .lions__lion {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--label);
+  }
+  .lions__label { font-family: var(--font-display); font-weight: 600; }
+
+  /* Active lion lights up in gold */
+  .lions__link.is-active .lions__icon,
+  .lions__link:hover .lions__icon {
+    color: var(--gold);
+    background: var(--wood);
+    box-shadow: 0 0 0 1px var(--gold), 0 0 18px -2px color-mix(in srgb, var(--gold) 70%, transparent);
+  }
+  .lions__link:hover .lions__icon { transform: rotate(-4deg) scale(1.04); }
+
+  /* Desktop row */
+  .lions--row { gap: clamp(0.75rem, 1.6vw, 1.75rem); }
+  .lions--row .lions__link { gap: 0.6rem; padding: 0.35rem 0.25rem; }
+  .lions--row .lions__icon {
+    width: 2.6rem; height: 2.6rem; padding: 0.15rem;
+    background: color-mix(in srgb, var(--taupe) 45%, transparent);
+  }
+  .lions--row .lions__label { font-size: 1.12rem; color: var(--heading); }
+  .lions--row .lions__link::after {
+    content: '';
+    position: absolute;
+    left: 3.2rem; right: 0.25rem; bottom: 0;
+    height: 1px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--dur-3) var(--ease-out);
+  }
+  .lions--row .lions__link.is-active::after { transform: scaleX(1); }
+
+  /* Mobile bottom bar */
+  .lions--bar { justify-content: space-around; height: 100%; }
+  .lions--bar li { flex: 1; }
+  .lions--bar .lions__link {
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.2rem;
+    height: 100%;
+    min-height: 3rem;
+    text-align: center;
+  }
+  .lions--bar .lions__icon {
+    width: 2.25rem; height: 2.25rem; padding: 0.2rem;
+    color: var(--cream);
+  }
+  .lions--bar .lions__lion { display: none; }
+  .lions--bar .lions__label {
+    font-family: var(--font-body);
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--cream-dim);
+    max-width: 6.5rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .lions--bar .lions__link.is-active .lions__label { color: var(--gold-light); }
+  .lions--bar .lions__link.is-active .lions__icon { background: transparent; box-shadow: none; color: var(--gold-light); }
+
+  /* Full-screen overlay */
+  .lions--overlay { flex-direction: column; gap: 0.4rem; }
+  .lions--overlay .lions__link {
+    gap: 1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--gold) 30%, transparent);
+  }
+  .lions--overlay .lions__icon {
+    width: 3.4rem; height: 3.4rem; padding: 0.4rem;
+    color: var(--gold);
+    background: color-mix(in srgb, var(--ink) 40%, transparent);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--gold) 45%, transparent);
+  }
+  .lions--overlay .lions__label { font-size: var(--step-2); color: var(--cream); }
+  .lions--overlay .lions__lion { color: var(--gold-light); }
+  .lions--overlay .lions__num {
+    margin-left: auto;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: var(--step-1);
+    color: var(--gold);
+  }
+</style>
