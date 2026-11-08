@@ -36,7 +36,7 @@ export function initIntro() {
   // Videos load only after first paint
   requestAnimationFrame(() => setTimeout(() => {
     root.querySelectorAll<HTMLVideoElement>('video[data-src]').forEach(pickSrc);
-    const fv = fountain.querySelector<HTMLVideoElement>('video');
+    const fv = fountain.querySelector<HTMLVideoElement>('video:not([data-walk-video])');
     if (fv && !reduce) fv.play().catch(() => {});
   }, 50));
 
@@ -67,13 +67,33 @@ export function initIntro() {
       if (focusMain) (document.getElementById('hero-title') || document.getElementById('main'))?.focus?.({ preventScroll: true });
       else prevFocus?.focus?.();
     };
-    if (reduce) finish(); else setTimeout(finish, 900);
+    if (reduce) finish(); else setTimeout(finish, 750);
   }
 
   function enter() {
     if (done || root!.classList.contains('is-entering')) return;
     root!.classList.add('is-entering');
     if (reduce) { close(); return; }
+    // One-shot walk from the fountain to the door: play it, glow at the door, reveal
+    const walk = root!.querySelector<HTMLVideoElement>('[data-walk-video]');
+    if (walk) {
+      root!.classList.add('is-walking');
+      let glowed = false, closed = false;
+      const glow = () => {
+        if (glowed) return; glowed = true;
+        door.classList.add('is-active', 'is-open');
+        welcome.textContent = welcomeText;
+      };
+      const finish = () => { if (closed) return; closed = true; glow(); setTimeout(() => close(), 250); };
+      walk.addEventListener('ended', finish, { once: true });
+      walk.currentTime = 0;
+      walk.play().then(() => {
+        const ms = Number.isFinite(walk.duration) ? walk.duration * 1000 : 3000;
+        setTimeout(glow, Math.max(0, ms - 700));          // the door glows as we arrive
+        setTimeout(finish, Math.min(ms + 150, 4200));     // safety net
+      }).catch(finish);
+      return;
+    }
     // fountain → door: cross-fade + pan, the door frame glows, then reveal
     fountain.classList.add('is-past');
     fountain.classList.remove('is-active');

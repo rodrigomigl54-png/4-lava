@@ -3,7 +3,7 @@ import wines from '../data/wines.json';
 import { t, pick, formatPrice, type Locale } from './i18n';
 
 export type MenuItem = (typeof menu.items)[number] & {
-  hidden?: boolean; note?: string; subcategory?: string; easterEgg?: string; pairingSource?: string; wineId?: string;
+  hidden?: boolean; note?: string; pairingRakija?: string; subcategory?: string; easterEgg?: string; pairingSource?: string; wineId?: string;
 };
 export const ITEMS = (menu.items as MenuItem[]).filter((i) => !i.hidden);
 export const CATEGORIES = [...menu.categories].sort((a, b) => a.order - b.order);
@@ -50,10 +50,20 @@ export function priceText(l: Locale, i: MenuItem): string {
 
 export const unitText = (i: MenuItem) => (i.unit && i.unit !== 'kg' ? i.unit : '');
 
+/** All drinks of the cellar: wines + rakije (same shape, `kind` tells them apart). */
+export type Drink = (typeof wines.wines)[number] & { kind: 'wine' | 'rakija'; producer?: string | null; winery?: string | null; image?: string | null };
+export const DRINKS = [...wines.wines, ...wines.rakije] as unknown as Drink[];
+export const PAIRING_REASONS = wines.pairingReasons as Record<string, { sr: string; en: string }>;
+
 export function wineName(l: Locale, id: string | null | undefined): string {
   if (!id) return '';
-  const w = wines.wines.find((x) => x.id === id);
-  return w ? pick(l, w.name) : '';
+  const w = DRINKS.find((x) => x.id === id);
+  return w ? pick(l, w.name).split(' — ')[0] : '';
+}
+
+/** Dishes that pair with a drink (wine via `pairing`, rakija via `pairingRakija`). */
+export function dishesFor(drinkId: string) {
+  return ITEMS.filter((i) => i.category !== 'pica' && (i.pairing === drinkId || (i as { pairingRakija?: string }).pairingRakija === drinkId));
 }
 
 export const MENU_UPDATED = menu.updated;
