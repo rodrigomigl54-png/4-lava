@@ -10,39 +10,13 @@
   },
   "shots": [
     {
-      "note": "fountain — drone pulls back and turns away (recording reversed)",
+      "note": "drone: slow rise and pull-back from the Four Lions Fountain, gently turning toward the town (one continuous move)",
       "src": [
         10.3,
-        7.85
+        8.55
       ],
-      "speed": 1.5,
+      "speed": 0.55,
       "ease": true,
-      "cam": [
-        {
-          "cx": 0.55,
-          "cy": 0.55,
-          "z": 1.45,
-          "roll": 0
-        },
-        {
-          "cx": 0.48,
-          "cy": 0.47,
-          "z": 1.05,
-          "roll": -1.2
-        }
-      ],
-      "desktop": [
-        {
-          "z": 1.3,
-          "cx": 0.5
-        },
-        {
-          "z": 1.0
-        }
-      ],
-      "out": {
-        "type": "cut"
-      },
       "erase": [
         {
           "t": 10.2,
@@ -57,133 +31,73 @@
       ],
       "clean": {
         "text_x_max": 0.42
-      }
-    },
-    {
-      "note": "banked turn toward the street",
-      "src": [
-        7.85,
-        7.05
-      ],
-      "speed": 2.2,
-      "ease": false,
+      },
       "cam": [
         {
-          "cx": 0.5,
-          "cy": 0.47,
-          "z": 1.05,
-          "roll": -1.2
+          "cx": 0.6,
+          "cy": 0.58,
+          "z": 1.32,
+          "roll": 0.6
         },
         {
-          "cx": 0.46,
-          "cy": 0.45,
-          "z": 1.12,
-          "roll": -2.4
+          "cx": 0.5,
+          "cy": 0.5,
+          "z": 1.06,
+          "roll": -0.8
+        }
+      ],
+      "desktop": [
+        {
+          "z": 1.18,
+          "cx": 0.56
+        },
+        {
+          "z": 1.0,
+          "cx": 0.5
         }
       ],
       "out": {
-        "type": "whip",
-        "frames": 5,
-        "angle": 0
-      },
-      "clean": {
-        "text_x_max": 0.5
+        "type": "dissolve",
+        "frames": 26
       }
     },
     {
-      "note": "glide down the street toward the restaurant (pin removed)",
+      "note": "drone: glides in front of Kod 4 Lava and slowly enters through the open door — warm light",
       "src": [
-        4.55,
-        5.7
+        1.25,
+        0.0
       ],
-      "speed": 1.0,
-      "ease": false,
+      "speed": 0.42,
+      "ease": true,
+      "limit_y": 0.775,
       "cam": [
         {
-          "cx": 0.55,
-          "cy": 0.44,
-          "z": 1.1,
-          "roll": -1.0
+          "cx": 0.62,
+          "cy": 0.55,
+          "z": 1.08,
+          "roll": -0.6
         },
         {
-          "cx": 0.59,
-          "cy": 0.46,
-          "z": 1.65,
+          "cx": 0.57,
+          "cy": 0.7,
+          "z": 1.95,
           "roll": 0
         }
       ],
       "desktop": [
         {
-          "z": 1.05
+          "z": 1.0
         },
         {
-          "z": 1.4
-        }
-      ],
-      "out": {
-        "type": "dissolve",
-        "frames": 5
-      }
-    },
-    {
-      "note": "Street View swoosh into the facade (reversed, slowed)",
-      "src": [
-        2.25,
-        1.95
-      ],
-      "speed": 0.55,
-      "ease": false,
-      "cam": [
-        {
-          "cx": 0.55,
-          "cy": 0.5,
-          "z": 1.3
-        },
-        {
-          "cx": 0.56,
-          "cy": 0.55,
-          "z": 1.12
-        }
-      ],
-      "out": {
-        "type": "dissolve",
-        "frames": 4
-      }
-    },
-    {
-      "note": "the camera turns to the open door of Kod 4 Lava and pushes in — warm light",
-      "src": [
-        0.55,
-        0.0
-      ],
-      "speed": 0.4,
-      "ease": true,
-      "limit_y": 0.775,
-      "cam": [
-        {
-          "cx": 0.8,
-          "cy": 0.58,
-          "z": 1.25
-        },
-        {
-          "cx": 0.57,
-          "cy": 0.7,
-          "z": 2.2
-        }
-      ],
-      "desktop": [
-        {
-          "z": 1.05
-        },
-        {
-          "z": 1.5
+          "z": 1.45
         }
       ],
       "glow": {
-        "from": 0.6,
+        "from": 0.62,
         "x": 0.5,
         "y": 0.68
       }
     }
-  ]
+  ],
+  "sr": "fsrcnn"
 }

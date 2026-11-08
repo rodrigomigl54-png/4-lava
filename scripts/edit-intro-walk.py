@@ -250,6 +250,25 @@ def track_boxes(frames, t_first, fps, erase):
                 k += direction
     return out
 
+_SR = {}
+def super_res(img, model):
+    """×2 neural upscaling (OpenCV dnn_superres, model file in raw/models/)."""
+    if not model:
+        return img
+    if model not in _SR:
+        path = ROOT / 'raw' / 'models' / f'{model.upper()}_x2.pb'
+        if not path.exists():
+            print(f'  (super-resolution model {path.name} missing — using Lanczos)')
+            _SR[model] = None
+        else:
+            sr = cv2.dnn_superres.DnnSuperResImpl_create(); sr.readModel(str(path)); sr.setModel(model, 2)
+            _SR[model] = sr
+    sr = _SR[model]
+    up = sr.upsample(img) if sr else cv2.resize(img, None, fx=2, fy=2, interpolation=cv2.INTER_LANCZOS4)
+    # gentle detail recovery
+    blur = cv2.GaussianBlur(up, (0, 0), 1.4)
+    return cv2.addWeighted(up, 1.35, blur, -0.35, 0)
+
 # ---------------------------------------------------------------- virtual camera
 def camera_crop(img, cam, aspect, limit_y):
     """cam = dict(cx, cy, z, roll) in normalised source coords; returns the cropped view."""
@@ -332,7 +351,7 @@ def build(edl, src, outdir, preview=False):
                     for (bx, by, bw2, bh2) in boxes[fi]:
                         pad = int(bw2 * 0.25)
                         cv2.rectangle(extra, (bx - pad, by - pad), (bx + bw2 + pad, by + bh2 + pad), 255, -1)
-                cache = {fi: clean(src_frames[fi], {**clean_cfg, **sh.get('clean', {})}, extra)}
+                cache = {fi: super_res(clean(src_frames[fi], {**clean_cfg, **sh.get('clean', {})}, extra), edl.get('sr'))}
             img = cache[fi]
             e = ease(p) if sh.get('ease', True) else p
             c0, c1 = sh['cam'][0], sh['cam'][1]

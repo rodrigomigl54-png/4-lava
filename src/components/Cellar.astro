@@ -45,7 +45,7 @@ const drinks = DRINKS.map((d) => ({
           <li class="ring__item" data-ring-item={i} data-kind={d.kind}>
             <button type="button" class="ring__btn" data-ring-pick={i} aria-label={d.label}>
               {d.image
-                ? <img src={asset(d.image)} alt="" loading="lazy" decoding="async" />
+                ? <img src={asset(d.image)} alt={`${d.label}${(d.producer || d.winery) ? ' — ' + (d.producer || d.winery) : ''}`} width="480" height="1200" loading="lazy" decoding="async" />
                 : <Bottle type={d.type} label={d.label.slice(0, 11)} />}
               <span class="ring__name" aria-hidden="true">{d.label}</span>
             </button>

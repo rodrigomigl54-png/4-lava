@@ -55,7 +55,19 @@ const preload = [
     <meta property="og:locale" content={OG_LOCALE[locale]} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={new URL(asset('/og.jpg'), site).href} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={t(locale, 'brand.name')} />
+    <meta property="og:site_name" content={t(locale, 'brand.name')} />
+    {LOCALES.filter((l) => l !== locale).map((l) => <meta property="og:locale:alternate" content={OG_LOCALE[l] === OG_LOCALE[locale] ? 'sr_Latn_RS' : OG_LOCALE[l]} />)}
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={new URL(asset('/og.jpg'), site).href} />
+    <meta name="geo.region" content="RS-VO" />
+    <meta name="geo.placename" content="Sremski Karlovci" />
+    <meta name="geo.position" content="45.2026848;19.9336557" />
+    <meta name="format-detection" content="telephone=no" />
     {schema === 'restaurant' && <script type="application/ld+json" set:html={JSON.stringify(restaurantLD(locale, site))} />}
     {schema === 'menu' && <script type="application/ld+json" set:html={JSON.stringify([restaurantLD(locale, site), menuLD(locale, site)])} />}
     <slot name="head" />
