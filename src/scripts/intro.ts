@@ -1,11 +1,13 @@
 /**
- * Intro controller. html[data-intro="on"] is set before first paint (BaseLayout)
- * only on the homepage, on the first visit, and never for bots/?nointro.
+ * Intro controller. html[data-intro-mode="on"] is set before first paint (BaseLayout)
+ * on the homepage once per browser session, never for bots or with ?nointro.
+ * With the filmed walk the intro starts by itself as the page opens (Skip always visible);
+ * the "Попиј гутљај" button is only a fallback when the browser blocks autoplay.
  */
-const KEY = 'k4l-intro-seen';
+const KEY = 'k4l-intro-session';
 const HOLD_MS = 1000;
 
-function remember() { try { localStorage.setItem(KEY, '1'); } catch {} }
+function remember() { try { sessionStorage.setItem(KEY, '1'); } catch {} }
 
 function pickSrc(v: HTMLVideoElement) {
   const src = JSON.parse(v.dataset.src || 'null');
@@ -33,12 +35,22 @@ export function initIntro() {
   const prevFocus = document.activeElement as HTMLElement | null;
   let done = false;
 
-  // Videos load only after first paint
-  requestAnimationFrame(() => setTimeout(() => {
-    root.querySelectorAll<HTMLVideoElement>('video[data-src]').forEach(pickSrc);
-    const fv = fountain.querySelector<HTMLVideoElement>('video:not([data-walk-video])');
-    if (fv && !reduce) fv.play().catch(() => {});
-  }, 50));
+  // Start loading the footage immediately — the intro is the first thing on screen
+  root.querySelectorAll<HTMLVideoElement>('video[data-src]').forEach(pickSrc);
+  const fv = fountain.querySelector<HTMLVideoElement>('video:not([data-walk-video])');
+  if (fv && !reduce) fv.play().catch(() => {});
+
+  // Filmed walk → plays automatically (no tap needed)
+  const autoWalk = root.querySelector<HTMLVideoElement>('[data-walk-video]');
+  if (autoWalk && !reduce) {
+    root.classList.add('is-auto');
+    let started = false;
+    const go = () => { if (started || done) return; started = true; enter(); };
+    if (autoWalk.readyState >= 3) go();
+    else autoWalk.addEventListener('canplay', go, { once: true });
+    // slow connection or autoplay blocked: offer the button instead of waiting forever
+    setTimeout(() => { if (!started) root.classList.remove('is-auto'); }, 4000);
+  }
 
   // Several stills of the fountain → slow cross-fade sequence
   const stills = [...fountain.querySelectorAll<HTMLElement>('.intro__still')];
@@ -70,8 +82,10 @@ export function initIntro() {
     if (reduce) finish(); else setTimeout(finish, 750);
   }
 
+  let enteredOnce = false;
   function enter() {
-    if (done || root!.classList.contains('is-entering')) return;
+    if (done || enteredOnce) return;
+    enteredOnce = true;
     root!.classList.add('is-entering');
     if (reduce) { close(); return; }
     // One-shot walk from the fountain to the door: play it, glow at the door, reveal
@@ -82,6 +96,7 @@ export function initIntro() {
       const glow = () => {
         if (glowed) return; glowed = true;
         door.classList.add('is-active', 'is-open');
+        root!.classList.add('is-arriving');
         welcome.textContent = welcomeText;
       };
       const finish = () => { if (closed) return; closed = true; glow(); setTimeout(() => close(), 250); };
@@ -91,7 +106,11 @@ export function initIntro() {
         const ms = Number.isFinite(walk.duration) ? walk.duration * 1000 : 3000;
         setTimeout(glow, Math.max(0, ms - 700));          // the door glows as we arrive
         setTimeout(finish, Math.min(ms + 150, 4200));     // safety net
-      }).catch(finish);
+      }).catch(() => {
+        // autoplay refused (e.g. power-saving mode): let the visitor start it
+        root!.classList.remove('is-auto', 'is-entering', 'is-walking');
+        enteredOnce = false;
+      });
       return;
     }
     // fountain → door: cross-fade + pan, the door frame glows, then reveal

@@ -140,7 +140,7 @@ const drinks = DRINKS.map((d) => ({
   .ring__item[hidden] { display: none; }
   .ring__btn { display: grid; justify-items: center; gap: 0.5rem; width: 100%; padding: 0; border: 0; background: none; cursor: pointer; color: var(--cream); }
   .ring__btn :global(.bottle) { width: 4.6rem; transition: transform 0.6s var(--ease-out); }
-  .ring__btn img { width: auto; max-width: 10.5rem; height: 15rem; object-fit: contain; object-position: bottom; filter: drop-shadow(0 14px 12px rgb(0 0 0 / 0.55)); transition: transform 0.6s var(--ease-out); }
+  .ring__btn img { width: 6.4rem; height: 16rem; aspect-ratio: 2 / 5; object-fit: contain; object-position: bottom; filter: drop-shadow(0 14px 12px rgb(0 0 0 / 0.55)); transition: transform 0.6s var(--ease-out); }
   .ring__item.is-front .ring__btn img { transform: translateY(-8px) scale(1.06); }
   .ring__name { font-family: var(--font-display); font-size: 1.05rem; font-weight: 600; white-space: nowrap; opacity: 0; transition: opacity 0.4s var(--ease); }
   .ring__item.is-front .ring__name { opacity: 1; }

@@ -2,7 +2,6 @@
 import LionIcon from './LionIcon.astro';
 import OrnamentRule from './OrnamentRule.astro';
 import OrnamentCorner from './OrnamentCorner.astro';
-import FountainArt from './FountainArt.astro';
 import Emblem from './Emblem.astro';
 import Timeline from './Timeline.astro';
 import TouristGuide from './TouristGuide.astro';
@@ -22,9 +21,6 @@ const { locale } = Astro.props;
     </header>
 
     <div class="story__grid">
-      <figure class="story__fountain" data-reveal>
-        <FountainArt title={t(locale, 'story.fountainTitle')} />
-      </figure>
       <div class="story__text" data-reveal>
         <h3>{t(locale, 'story.fountainTitle')}</h3>
         <p>{t(locale, 'story.fountainText')}</p>
@@ -57,8 +53,9 @@ const { locale } = Astro.props;
   .story__lion { position: absolute; left: 0; top: 4rem; width: clamp(5rem, 12vw, 10rem); color: color-mix(in srgb, var(--taupe) 22%, transparent); pointer-events: none; }
   .story__lead { max-width: 38rem; margin: 1.25rem auto 0; font-size: var(--step-1); font-family: var(--font-display); font-style: italic; color: var(--fg); line-height: 1.4; }
   .story__grid { display: grid; gap: 2.5rem; align-items: center; margin-bottom: var(--space-8); }
-  .story__fountain { margin: 0 auto; width: min(100%, 22rem); }
+  .story__text { text-align: center; }
   .story__text h3 { font-size: var(--step-3); }
+  .story__legend { text-align: left; }
   .story__legend { margin: 1.75rem 0 0; padding: 1.25rem 1.5rem; border-left: 2px solid var(--marble-red); background: color-mix(in srgb, var(--marble-red) 6%, transparent); }
   .story__legend p { font-size: var(--step-2); color: var(--bordeaux); margin: 0 0 0.4rem; line-height: 1.25; }
   .story__legend footer { font-size: 0.92rem; color: var(--fg-muted); font-style: italic; }
@@ -72,7 +69,7 @@ const { locale } = Astro.props;
   .border-card :global(.emblem) { color: var(--gold-ink); }
   .border-card :global(.border-card__right) { color: var(--istanbul); }
   @media (min-width: 48rem) {
-    .story__grid { grid-template-columns: 1fr 1.2fr; gap: 4rem; }
+    .story__grid { max-width: 46rem; margin-inline: auto; }
     .border-card { grid-template-columns: auto 1fr auto; padding: 2.5rem 3rem; }
   }
 </style>

@@ -17,7 +17,6 @@ import Story from '../components/Story.astro';
 import GuestBook from '../components/GuestBook.astro';
 import Gate from '../components/Gate.astro';
 import Roll from '../components/Roll.astro';
-import FountainArt from '../components/FountainArt.astro';
 import info from '../data/info.json';
 import introRaw from '../data/intro.json';
 import { assetDeep } from '../lib/base';
@@ -58,7 +57,6 @@ const hints = [
     <OrnamentCorner position="tl" />
     <OrnamentCorner position="br" />
     <span class="hero__lion" aria-hidden="true"><LionIcon variant="half" /></span>
-    {!heroVideo && !heroStill && <div class="hero__fountain" aria-hidden="true"><FountainArt /></div>}
     <div class="container hero__inner">
       <p class="label hero__kicker">{t(locale, 'brand.place')} · 1799</p>
       <h1 id="hero-title" class="hero__title" tabindex="-1">{t(locale, 'hero.title')}</h1>
@@ -162,8 +160,7 @@ const hints = [
   .hero__hint { animation-delay: 1.35s !important; }
   @keyframes hero-in { from { opacity: 0.01; transform: translateY(14px); } to { opacity: 1; transform: none; } }
   @keyframes hero-title { from { opacity: 0.01; letter-spacing: 0.06em; filter: blur(3px); } to { opacity: 1; letter-spacing: 0.005em; filter: none; } }
-  .hero__fountain { animation: hero-in 2.4s var(--ease-out) 0.6s both; }
-  @media (prefers-reduced-motion: reduce) { .hero__inner > *, .hero__fountain { animation: none !important; } }
+  @media (prefers-reduced-motion: reduce) { .hero__inner > * { animation: none !important; } }
   .hero__kicker { margin-bottom: 1rem; }
   .hero__title:focus { outline: none; }
   .hero__title { color: var(--cream); font-size: var(--step-5); font-weight: 600; margin-bottom: 1rem; }
@@ -177,10 +174,8 @@ const hints = [
   .hero__hint .label { display: block; margin-bottom: 0.25rem; font-size: 0.68rem; }
   .hero__hint a { color: var(--gold-light); white-space: nowrap; }
   .hero__lion { position: absolute; left: 0; bottom: -4%; width: clamp(7rem, 22vw, 19rem); color: color-mix(in srgb, var(--gold) 14%, transparent); pointer-events: none; }
-  .hero__fountain { position: absolute; right: -4%; bottom: -2%; width: clamp(10rem, 26vw, 24rem); opacity: 0.16; pointer-events: none; }
   @media (min-width: 48rem) {
     .hero__lion { color: color-mix(in srgb, var(--gold) 22%, transparent); }
-    .hero__fountain { opacity: 0.32; right: 2%; }
   }
   .menu-intro { margin-bottom: var(--space-8); }
   .menu-block { margin-top: var(--space-8); }

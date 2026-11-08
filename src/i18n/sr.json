@@ -308,5 +308,6 @@
   "pairing.wine": "Вино",
   "pairing.rakija": "Ракија",
   "cellar.type.rakija": "ракија",
-  "cellar.type.rakija-aged": "ракија"
+  "cellar.type.rakija-aged": "ракија",
+  "intro.replay": "Погледај интро"
 }

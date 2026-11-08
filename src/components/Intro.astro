@@ -28,7 +28,7 @@ const d = intro.door as { video: Video; stills: Stills };
   <!-- Scene 1: fountain -->
   <div class="intro__scene intro__scene--fountain is-active" data-scene="fountain">
     {w ? (
-      <video class="intro__media intro__walk" muted playsinline preload="auto" aria-hidden="true" data-walk-video
+      <video class="intro__media intro__walk" muted playsinline autoplay preload="auto" aria-hidden="true" data-walk-video
         poster={w.mobile.poster} data-poster-desktop={w.desktop.poster}
         data-src={JSON.stringify({ desktop: w.desktop, mobile: w.mobile })}></video>
     ) : f.video ? (
@@ -141,7 +141,11 @@ const d = intro.door as { video: Video; stills: Stills };
   video.intro__media { filter: brightness(0.92); }
   /* Walk (fountain → door, one shot): slow push-in while waiting, then it plays */
   .intro__walk { animation: kenburns 12s var(--ease) both; }
-  .is-walking .intro__walk { animation-play-state: paused; }
+  .is-walking .intro__walk { animation: none; }
+  /* auto mode: the film plays by itself; only the quote and Skip are shown */
+  .is-auto .intro__sip, .is-auto .intro__hint { display: none; }
+  .is-auto.is-entering .intro__quote, .is-auto.is-entering .intro__lion { opacity: 1 !important; }
+  .is-auto.is-arriving .intro__quote, .is-auto.is-arriving .intro__lion { opacity: 0 !important; transition: opacity 0.6s var(--ease); }
   [data-walk] .intro__scene--door { background: none; transform: none; }
   [data-walk] .intro__doorglow { background: radial-gradient(30% 45% at 50% 55%, rgb(255 196 110 / 0.6), rgb(229 138 58 / 0.2) 55%, transparent 78%); }
 
