@@ -61,7 +61,8 @@ const LOCALES = [
 
 const cards = [];
 for (const l of LOCALES) {
-  const url = new URL(l.path, site).href;
+  // keep a sub-path such as GitHub Pages' /4-lava
+  const url = site.replace(/\/+$/, '') + l.path;
   const svg = qrSvg(url);
   fs.writeFileSync(path.join(out, `meni-${l.id}.svg`), svg);
   await sharp(Buffer.from(svg), { density: 300 }).resize(1200, 1200).png().toFile(path.join(out, `meni-${l.id}.png`));

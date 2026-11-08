@@ -68,6 +68,16 @@ PUBLIC_SITE_URL=https://www.pravi-domen.rs npm run qr
 
 ⚠ QR кодови се праве тек кад је познат прави домен — без `PUBLIC_SITE_URL` воде на `example.com` (само за демо).
 
+## Демо на GitHub Pages
+
+Сајт се сам објављује на **https://rodrigomigl54-png.github.io/4-lava/** при сваком спајању (merge) у `main` (`.github/workflows/deploy.yml`: тестови → build → објава).
+
+Једнократно подешавање: на GitHub-у отворите репозиторијум → **Settings → Pages → Build and deployment → Source: „GitHub Actions“**. Затим **Actions → „Deploy to GitHub Pages“ → Run workflow** (или само следећи merge).
+
+- Адреса је јавна (свако са линком је може отворити), али је у демо режиму `noindex`, па се не појављује на Google-у.
+- Кад стигне прави домен: у **Settings → Secrets and variables → Actions → Variables** додајте `PUBLIC_SITE_URL` = `https://www.pravi-domen.rs` (и `PUBLIC_DEMO` = `false` при објави).
+- Под-путања `/4-lava/` се аутоматски узима из `PUBLIC_SITE_URL`; сви линкови, фонтови и слике је поштују.
+
 ## Објава (launch)
 
 ```bash

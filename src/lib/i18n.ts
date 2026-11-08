@@ -1,6 +1,7 @@
 import sr from '../i18n/sr.json';
 import en from '../i18n/en.json';
 import { toLatin, stripKeep } from './translit';
+import { BASE, stripBase } from './base';
 
 export type Locale = 'sr' | 'lat' | 'en';
 export const LOCALES: Locale[] = ['sr', 'lat', 'en'];
@@ -16,11 +17,11 @@ const EN = en as Dict;
 export const prefix = (l: Locale) => (l === 'sr' ? '' : `/${l}`);
 
 /** Build a localized path; `path` must start with "/". */
-export const localePath = (l: Locale, path = '/') => `${prefix(l)}${path}`.replace(/\/{2,}/g, '/');
+export const localePath = (l: Locale, path = '/') => `${BASE}${prefix(l)}${path}`.replace(/\/{2,}/g, '/');
 
 /** Remove the locale prefix from a pathname. */
 export function stripLocale(pathname: string): string {
-  const p = pathname.replace(/^\/(lat|en)(?=\/|$)/, '');
+  const p = stripBase(pathname).replace(/^\/(lat|en)(?=\/|$)/, '');
   return p === '' ? '/' : p;
 }
 

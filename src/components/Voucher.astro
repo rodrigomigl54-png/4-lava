@@ -2,6 +2,7 @@
 import LionIcon from './LionIcon.astro';
 import OrnamentRule from './OrnamentRule.astro';
 import { t, type Locale } from '../lib/i18n';
+import { asset } from '../lib/base';
 interface Props { locale: Locale }
 const { locale } = Astro.props;
 const s = {
@@ -10,7 +11,7 @@ const s = {
   currency: t(locale, 'price.currency'),
 };
 ---
-<div class="voucher-tool" data-voucher data-s={JSON.stringify(s)}>
+<div class="voucher-tool" data-voucher data-s={JSON.stringify(s)} data-logo={asset('/brand/logo-lion-half.svg')}>
   <h3>{t(locale, 'voucher.title')}</h3>
   <p class="voucher-tool__lead">{t(locale, 'voucher.lead')}</p>
   <div class="voucher-tool__grid">
@@ -93,7 +94,7 @@ const s = {
       x.lineWidth = 2; x.strokeRect(48, 48, W - 96, H - 96);
       // lion
       try {
-        const svg = (await (await fetch('/brand/logo-lion-half.svg')).text()).replace(/currentColor/g, '#272624');
+        const svg = (await (await fetch(root.dataset.logo || '/brand/logo-lion-half.svg')).text()).replace(/currentColor/g, '#272624');
         const img = new Image();
         img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
         await img.decode();
