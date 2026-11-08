@@ -1,0 +1,188 @@
+---
+/**
+ * Intro „Попиј воду са чесме“ — first visit only.
+ * Scene 1: the Four Lions Fountain (video → graded stills with Ken Burns → SVG fountain).
+ * Hold/tap „Попиј гутљај“ (~1 s, gold progress ring) → cross-fade/pan to the small
+ * entrance door (video → stills → SVG door), the door frame glows, the site is revealed.
+ * Media come from src/data/intro.json, written by scripts/process-intro.sh.
+ * Skip button always visible, Esc skips. Reduced motion: one still + „Уђи“.
+ */
+import intro from '../data/intro.json';
+import FountainArt from './FountainArt.astro';
+import LionIcon from './LionIcon.astro';
+import { t, type Locale } from '../lib/i18n';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+
+type Stills = { desktop: Record<string, string>; mobile: Record<string, string> }[];
+type Video = { desktop: Record<string, string>; mobile: Record<string, string> } | null;
+const f = intro.fountain as { video: Video; stills: Stills };
+const d = intro.door as { video: Video; stills: Stills };
+---
+<div class="intro" data-intro role="dialog" aria-modal="true" aria-labelledby="intro-quote" aria-describedby="intro-hint" lang={locale === 'en' ? 'en' : locale === 'lat' ? 'sr-Latn' : 'sr-Cyrl'}>
+  <button type="button" class="intro__skip" data-intro-skip>{t(locale, 'intro.skip')}</button>
+
+  <!-- Scene 1: fountain -->
+  <div class="intro__scene intro__scene--fountain is-active" data-scene="fountain">
+    {f.video ? (
+      <video class="intro__media" muted playsinline loop preload="none" aria-hidden="true"
+        poster={f.video.mobile.poster} data-poster-desktop={f.video.desktop.poster}
+        data-src={JSON.stringify({ desktop: f.video.desktop, mobile: f.video.mobile })}></video>
+    ) : f.stills.length ? (
+      f.stills.map((s, i) => (
+        <picture class:list={['intro__media', 'intro__still', { 'is-on': i === 0 }]} style={`--i:${i}`}>
+          <source media="(max-width: 47.99rem)" srcset={s.mobile.avif} type="image/avif" />
+          <source media="(max-width: 47.99rem)" srcset={s.mobile.webp} type="image/webp" />
+          <source srcset={s.desktop.avif} type="image/avif" />
+          <source srcset={s.desktop.webp} type="image/webp" />
+          <img src={s.desktop.jpg} alt="" fetchpriority={i === 0 ? 'high' : 'low'} decoding="async" />
+        </picture>
+      ))
+    ) : (
+      <div class="intro__media intro__svg marble-veins" aria-hidden="true"><FountainArt /></div>
+    )}
+  </div>
+
+  <!-- Scene 2: the small door -->
+  <div class="intro__scene intro__scene--door" data-scene="door" aria-hidden="true">
+    {d.video ? (
+      <video class="intro__media" muted playsinline preload="none" data-src={JSON.stringify({ desktop: d.video.desktop, mobile: d.video.mobile })} poster={d.video.mobile.poster}></video>
+    ) : d.stills.length ? (
+      <picture class="intro__media intro__still is-on">
+        <source media="(max-width: 47.99rem)" srcset={d.stills[0].mobile.avif} type="image/avif" />
+        <source media="(max-width: 47.99rem)" srcset={d.stills[0].mobile.webp} type="image/webp" />
+        <source srcset={d.stills[0].desktop.avif} type="image/avif" />
+        <source srcset={d.stills[0].desktop.webp} type="image/webp" />
+        <img src={d.stills[0].desktop.jpg} alt="" loading="lazy" decoding="async" />
+      </picture>
+    ) : (
+      <div class="intro__media intro__svg intro__door" aria-hidden="true">
+        <svg viewBox="0 0 400 520">
+          <defs>
+            <radialGradient id="door-light" cx="50%" cy="62%" r="55%"><stop offset="0" stop-color="#ffd38a" /><stop offset=".55" stop-color="#e58a3a" stop-opacity=".55" /><stop offset="1" stop-color="#e58a3a" stop-opacity="0" /></radialGradient>
+            <pattern id="wall" width="60" height="30" patternUnits="userSpaceOnUse"><path d="M0 30h60M30 0v15M0 15h60M60 15v15" stroke="#cdb995" stroke-width="1" fill="none" /></pattern>
+          </defs>
+          <rect width="400" height="520" fill="#e6d6b8" /><rect width="400" height="520" fill="url(#wall)" opacity=".5" />
+          <path d="M0 0h400v40H0z" fill="#8E2A2A" opacity=".85" />
+          <ellipse class="door-glow" cx="200" cy="330" rx="190" ry="210" fill="url(#door-light)" />
+          <!-- frame -->
+          <path d="M120 470V250a80 80 0 0 1 160 0v220" fill="#3a2416" stroke="#B08D57" stroke-width="3" />
+          <path class="door-gap" d="M132 470V252a68 68 0 0 1 136 0v218z" fill="#ffcf7a" />
+          <!-- door leaf, opens on reveal -->
+          <g class="door-leaf">
+            <path d="M132 470V252a68 68 0 0 1 136 0v218z" fill="#5a3a24" stroke="#2a1a10" stroke-width="2" />
+            <path d="M150 460V262a50 50 0 0 1 100 0v198M150 360h100" fill="none" stroke="#3a2416" stroke-width="3" />
+            <circle cx="248" cy="380" r="5" fill="#B08D57" />
+          </g>
+          <!-- little lion above the door -->
+          <g transform="translate(184 150) scale(.03)" style="color:#2A1E17"><use href="#lion" width="1296" height="1296" /></g>
+          <!-- lantern -->
+          <path d="M322 230v-30M308 230h28l-4 36h-20z" stroke="#2A1E17" stroke-width="3" fill="#ffd38a" />
+          <rect y="470" width="400" height="50" fill="#bfa982" />
+        </svg>
+      </div>
+    )}
+    <div class="intro__doorglow" aria-hidden="true"></div>
+  </div>
+
+  <div class="intro__veil" aria-hidden="true"></div>
+
+  <div class="intro__ui">
+    <span class="intro__lion" aria-hidden="true"><LionIcon variant="half" /></span>
+    <p id="intro-quote" class="intro__quote">{t(locale, 'intro.quote')}</p>
+    <button type="button" class="intro__sip" data-intro-sip>
+      <svg class="intro__ring" viewBox="0 0 100 100" aria-hidden="true">
+        <circle cx="50" cy="50" r="44" class="intro__ring-bg" />
+        <circle cx="50" cy="50" r="44" class="intro__ring-fg" pathLength="1" />
+        <path class="intro__drop" d="M50 28c8 12 14 20 14 28a14 14 0 0 1-28 0c0-8 6-16 14-28Z" />
+      </svg>
+      <span class="intro__sip-label" data-label-motion>{t(locale, 'intro.prompt')}</span>
+      <span class="intro__sip-label" data-label-reduced hidden>{t(locale, 'intro.enter')}</span>
+    </button>
+    <p id="intro-hint" class="intro__hint">{t(locale, 'intro.hint')}</p>
+    <p class="intro__welcome" aria-live="polite" data-intro-welcome></p>
+  </div>
+  <span class="intro__welcome-text" hidden data-welcome-text>{t(locale, 'intro.welcome')}</span>
+</div>
+
+<script>
+  import { initIntro } from '../scripts/intro';
+  initIntro();
+</script>
+
+<style>
+  .intro { display: none; }
+  :global(html[data-intro-mode='on']) .intro {
+    position: fixed; inset: 0; z-index: 500; display: grid; place-items: center; overflow: hidden;
+    background: var(--wood); color: var(--cream);
+  }
+  :global(html[data-intro-mode='on'] body) { overflow: hidden; }
+  .intro.is-leaving { opacity: 0; transition: opacity 0.9s var(--ease); pointer-events: none; }
+
+  .intro__scene { position: absolute; inset: 0; opacity: 0; transition: opacity 1.2s var(--ease), transform 1.6s var(--ease-out); }
+  .intro__scene.is-active { opacity: 1; }
+  .intro__scene--door { transform: translateX(6%) scale(1.06); }
+  .intro__scene--door.is-active { transform: none; }
+  .intro__scene--fountain.is-past { transform: translateX(-6%) scale(1.08); }
+  .intro__media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .intro__media img { width: 100%; height: 100%; object-fit: cover; }
+  /* Ken Burns on stills, cross-fading if several */
+  .intro__still { opacity: 0; transition: opacity 1.4s var(--ease); }
+  .intro__still.is-on { opacity: 1; }
+  .intro__still.is-on img { animation: kenburns 9s var(--ease) both; }
+  @keyframes kenburns { from { transform: scale(1.02) translate(0, 0); } to { transform: scale(1.14) translate(-2%, -1.5%); } }
+  video.intro__media { filter: brightness(0.92); }
+
+  .intro__svg { display: grid; justify-items: center; align-items: start; padding-top: max(5rem, 9vh); background: radial-gradient(70% 60% at 50% 35%, #3d2a1e, var(--wood)); }
+  .intro__svg :global(.fountain) { width: min(78vw, 46vh); }
+  .intro__door { background: #e6d6b8; padding-top: 0; align-items: start; }
+  .intro__door svg { width: auto; height: 100%; max-width: 100%; }
+  .door-leaf { transform-box: fill-box; transform-origin: left center; transition: transform 1.4s var(--ease-out) 0.3s; }
+  .door-glow { opacity: 0.25; transition: opacity 1.4s var(--ease); }
+  .is-open .door-leaf { transform: scaleX(0.28) skewY(-4deg); }
+  .is-open .door-glow { opacity: 1; }
+  /* warm glow on the door frame when using real footage */
+  .intro__doorglow { position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity 1.4s var(--ease);
+    background: radial-gradient(28% 40% at 50% 58%, rgb(255 196 110 / 0.55), rgb(229 138 58 / 0.18) 55%, transparent 75%); mix-blend-mode: screen; }
+  .is-open .intro__doorglow { opacity: 1; }
+
+  .intro__veil { position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(120% 90% at 50% 40%, transparent 35%, rgb(20 12 8 / 0.75) 100%), linear-gradient(transparent 45%, rgb(20 12 8 / 0.65)); }
+
+  .intro__ui { position: absolute; z-index: 2; left: 0; right: 0; bottom: 0; display: grid; justify-items: center; gap: 1rem; padding: 2rem var(--gutter) max(2.5rem, 6vh); text-align: center;
+    background: linear-gradient(transparent, rgb(20 12 8 / 0.55) 30%, rgb(20 12 8 / 0.8)); }
+  .intro__lion { width: 2.4rem; color: var(--gold); opacity: 0; animation: intro-in 1.2s var(--ease-out) 0.2s forwards; }
+  .intro__quote { max-width: 30rem; margin: 0; font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: clamp(1.6rem, 1.2rem + 2.2vw, 2.7rem); line-height: 1.2; text-shadow: 0 2px 18px rgb(0 0 0 / 0.6);
+    opacity: 0.01; animation: intro-in 1.6s var(--ease-out) 0.35s forwards; }
+  .intro__sip {
+    position: relative; display: grid; justify-items: center; gap: 0.5rem; padding: 0.5rem 1rem; border: 0; background: none; color: var(--gold-light); cursor: pointer;
+    font-family: var(--font-body); font-size: 0.85rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; touch-action: none; user-select: none; -webkit-user-select: none;
+    opacity: 0; animation: intro-in 1.2s var(--ease-out) 1.1s forwards;
+  }
+  .intro__sip:focus-visible { outline: none; box-shadow: none; }
+  .intro__sip:focus-visible .intro__ring-bg { stroke: var(--gold-light); stroke-width: 3; }
+  .intro__sip:focus-visible .intro__sip-label { text-decoration: underline; text-underline-offset: 0.35em; }
+  .intro__ring { width: 5.5rem; height: 5.5rem; transform: rotate(-90deg); filter: drop-shadow(0 4px 14px rgb(0 0 0 / 0.5)); }
+  .intro__ring-bg { fill: rgb(42 30 23 / 0.55); stroke: color-mix(in srgb, var(--gold) 40%, transparent); stroke-width: 2; }
+  .intro__ring-fg { fill: none; stroke: var(--gold); stroke-width: 4; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: var(--fill, 1); }
+  .intro__drop { fill: #c9e2e0; transform: rotate(90deg); transform-origin: 50px 50px; animation: drop 2.4s ease-in-out infinite; }
+  @keyframes drop { 0%, 100% { opacity: 0.75; } 50% { opacity: 1; } }
+  .intro__sip.is-holding .intro__drop { animation: none; opacity: 1; }
+  .intro__hint { margin: -0.5rem 0 0; font-size: 0.8rem; color: var(--cream-dim); opacity: 0; animation: intro-in 1s var(--ease) 1.6s forwards; }
+  .intro__welcome { min-height: 1.4em; margin: 0; font-family: var(--font-display); font-style: italic; font-size: var(--step-2); color: var(--cream); }
+  .is-entering .intro__sip, .is-entering .intro__hint, .is-entering .intro__quote, .is-entering .intro__lion { opacity: 0 !important; transition: opacity 0.6s var(--ease); animation: none; }
+  @keyframes intro-in { from { opacity: 0.01; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+  .intro__skip {
+    position: absolute; z-index: 3; top: max(1rem, env(safe-area-inset-top)); right: 1rem; min-height: 2.9rem; padding: 0.5rem 1.2rem; border-radius: 999px;
+    border: 1px solid var(--gold); background: rgb(42 30 23 / 0.7); color: var(--cream); cursor: pointer; backdrop-filter: blur(6px);
+    font-size: 0.85rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+  }
+  .intro__skip:hover { background: var(--gold); color: var(--wood); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .intro__still.is-on img { animation: none; }
+    .intro__lion, .intro__quote, .intro__sip, .intro__hint { animation: none; opacity: 1; }
+    .intro__scene { transition: none; }
+  }
+</style>

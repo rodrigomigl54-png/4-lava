@@ -8,7 +8,8 @@
     "preview": "astro preview",
     "test": "vitest run",
     "enhance-menu": "python3 scripts/enhance-menu.py",
-    "qr": "node scripts/make-qr.mjs"
+    "qr": "node scripts/make-qr.mjs",
+    "intro": "bash scripts/process-intro.sh"
   },
   "repository": {
     "type": "git",

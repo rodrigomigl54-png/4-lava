@@ -15,8 +15,10 @@ interface Props {
   lite?: boolean;
   /** JSON-LD: 'restaurant' (home) | 'menu' (QR menu) */
   schema?: 'restaurant' | 'menu';
+  /** show the first-visit intro (homepage only) */
+  intro?: boolean;
 }
-const { locale, title = t(locale, 'meta.title'), description = t(locale, 'meta.description'), onHome = true, lite = false, schema } = Astro.props;
+const { locale, title = t(locale, 'meta.title'), description = t(locale, 'meta.description'), onHome = true, lite = false, schema, intro = false } = Astro.props;
 const demo = import.meta.env.PUBLIC_DEMO !== 'false';
 const site = Astro.site ?? new URL('https://www.example.com');
 const rest = stripLocale(Astro.url.pathname);
@@ -67,6 +69,16 @@ const preload = [
         document.documentElement.dataset.time = m;
       })();
     </script>
+    {intro && <script is:inline>
+      // First visit → intro (before first paint, so the site never flashes underneath)
+      (function () {
+        try {
+          if (/[?&]nointro/.test(location.search) || /bot|crawl|spider|slurp|facebookexternalhit/i.test(navigator.userAgent)) return;
+          if (localStorage.getItem('k4l-intro-seen')) return;
+          document.documentElement.dataset.introMode = 'on';
+        } catch (e) {}
+      })();
+    </script>}
     <script is:inline>
       // Remembered language: redirect only when arriving from outside the site.
       (function () {

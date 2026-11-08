@@ -280,5 +280,13 @@
   "cart.msg": "Hello! An order ({mode}):\n{items}\nTotal (approx.): {total}\nTime: {when}\nName: {name}\nAddress: {address}\nNote: {note}\n(sent from the website)",
   "months": "January,February,March,April,May,June,July,August,September,October,November,December",
   "lang.labelFooter": "Language (footer)",
-  "lang.labelMenu": "Language (menu)"
+  "lang.labelMenu": "Language (menu)",
+  "intro.label": "Welcome — the Four Lions Fountain",
+  "intro.quote": "“Whoever drinks from the fountain will return to Karlovci.”",
+  "intro.prompt": "Take a sip",
+  "intro.hint": "Hold or tap the water",
+  "intro.skip": "Skip",
+  "intro.enter": "Come in",
+  "intro.welcome": "You have entered — welcome.",
+  "intro.door": "The small door across from the fountain"
 }
