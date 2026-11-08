@@ -83,7 +83,7 @@ def ui_mask(img, cfg):
         cv2.fillPoly(mask, [tail], 255)
     for i in range(1, n):                       # pin cut by the left/right edge of the screen
         x, y, cw, ch, area = stats[i]
-        if area >= 120 and (x <= 1 or x + cw >= w - 1) and 0.03 * h > ch > 15:
+        if area >= 60 and (x <= 2 or x + cw >= w - 2) and 0.06 * h > ch > 10:
             cv2.rectangle(mask, (x - ch, int(y - ch * 0.5)), (x + cw + ch, int(y + ch * 1.9)), 255, -1)
 
     # 1b) the pin's label: a pure-white rounded box (≥ 245) in the middle band of the screen —
@@ -441,7 +441,7 @@ def encode(masters, public_dir, max_mb=2.5):
             if size_mb(f'{base}.webm') <= max_mb:
                 break
             vcrf += 3
-        run(['ffmpeg', '-hide_banner', '-loglevel', 'error', '-y', '-i', f'{base}.mp4', '-frames:v', '1', '-q:v', '2', f'{base}-poster.jpg'])
+        run(['ffmpeg', '-hide_banner', '-loglevel', 'error', '-y', '-i', f'{base}.mp4', '-frames:v', '1', '-q:v', '5', f'{base}-poster.jpg'])
         Image.open(f'{base}-poster.jpg').save(f'{base}-poster.avif', quality=60)
         print(f'  {fmt}: mp4 {size_mb(f"{base}.mp4"):.2f} MB (crf {crf}) · webm {size_mb(f"{base}.webm"):.2f} MB')
         rel = '/intro/' + base.name
