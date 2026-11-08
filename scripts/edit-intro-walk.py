@@ -31,6 +31,7 @@ from PIL import Image
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT_FPS = 30
+CLONE_MAX_ERR = float(os.environ.get('K4L_CLONE_MAX_ERR', 1400))
 
 # ---------------------------------------------------------------- helpers
 def ease(t: float) -> float:
@@ -92,12 +93,13 @@ def ui_mask(img, cfg):
     lab_white[: int(h * 0.25)] = 0
     lab_white[int(h * 0.7):] = 0
     n, lab, stats, _ = cv2.connectedComponentsWithStats(lab_white, 8)
+    labels = []
     for i in range(1, n):
         x, y, cw, ch, area = stats[i]
         if 1500 <= area <= 0.03 * w * h and 1.2 <= cw / max(ch, 1) <= 5 and area / (cw * ch) > 0.45:
-            cv2.rectangle(mask, (x - 8, y - 8), (x + cw + 8, y + ch + 8), 255, -1)
+            labels.append((x - 10, y - 10, cw + 20, ch + 20))
         elif 400 <= area and (x + cw >= w - 2) and area / (cw * ch) > 0.45:     # label cut by the right edge
-            cv2.rectangle(mask, (x - 8, y - 8), (w, y + ch + 8), 255, -1)
+            labels.append((x - 10, y - 10, w - x + 10, ch + 20))
 
     # 2) white UI text / chevrons in the lower part of the screen (street names, arrows' highlights)
     mx = np.maximum(np.maximum(r, g), b)
@@ -118,12 +120,62 @@ def ui_mask(img, cfg):
     keep = cv2.dilate(keep, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (cfg.get('text_grow', 19),) * 2))
     # include the dark outline / soft shadow around the pin and label
     mask = cv2.dilate(mask, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (9, 9)))
-    return mask, keep * 255
+    return mask, keep * 255, labels
+
+def clone_fill(img, rect):
+    """Fill a rectangle with the best-matching piece of the same facade from beside it
+    (facades repeat horizontally) and blend it in with Poisson seamless cloning."""
+    H, W = img.shape[:2]
+    x, y, w, h = rect
+    x, y = max(0, x), max(0, y)
+    w, h = min(w, W - x), min(h, H - y)
+    if w < 8 or h < 8:
+        return None
+    ring = 10
+    def ring_px(px, py):
+        a = img[max(0, py - ring):py + h + ring, max(0, px - ring):px + w + ring].astype(np.float32)
+        m = np.ones(a.shape[:2], bool)
+        iy, ix = min(ring, py), min(ring, px)
+        m[iy:iy + h, ix:ix + w] = False
+        return a, m
+    tgt, tm = ring_px(x, y)
+    best, best_d = None, None
+    cands = [(int(f * w), 0) for f in (-1.1, 1.1, -1.6, 1.6, -2.2, 2.2, -0.8, 0.8)]
+    cands += [(int(fx * w), int(fy * h)) for fy in (-1.1, 1.1, -1.6, 1.6) for fx in (0, -0.5, 0.5)]
+    for dx, dy in cands:
+        cx, cy = x + dx, y + dy
+        if cx - ring < 0 or cx + w + ring > W or cy - ring < 0 or cy + h + ring > H:
+            continue
+        cand, cm = ring_px(cx, cy)
+        if cand.shape != tgt.shape:
+            continue
+        # the source block must not contain UI or blown-out sky
+        block = img[cy:cy + h, cx:cx + w]
+        if (block.min(axis=2) >= 245).mean() > 0.02:
+            continue
+        err = float(((cand - tgt) ** 2)[tm & cm].mean())
+        if best is None or err < best:
+            best, best_d = err, (dx, dy)
+    if best_d is None or best > CLONE_MAX_ERR:
+        if os.environ.get('K4L_DEBUG'):
+            print(f'      clone rejected (err {best})')
+        return None
+    if os.environ.get('K4L_DEBUG'):
+        print(f'      clone ok (err {best:.0f}, offset {best_d})')
+    src = img[y + best_d[1]:y + best_d[1] + h, x + best_d[0]:x + best_d[0] + w].copy()
+    mask = np.full((h, w), 255, np.uint8)
+    mask[:2, :] = mask[-2:, :] = 0
+    mask[:, :2] = mask[:, -2:] = 0
+    try:
+        return cv2.seamlessClone(src, img, mask, (x + w // 2, y + h // 2), cv2.NORMAL_CLONE)
+    except cv2.error:
+        out = img.copy(); out[y:y + h, x:x + w] = src
+        return out
 
 def clean(img, cfg, extra=None):
     """Remove UI: texture-aware inpainting (FSR) for the pin/label on the facade,
     fast inpainting for street names on the asphalt."""
-    m_facade, m_text = ui_mask(img, cfg)
+    m_facade, m_text, labels = ui_mask(img, cfg)
     if extra is not None:
         m_facade = cv2.bitwise_or(m_facade, extra)
     out = img.copy()
@@ -133,6 +185,13 @@ def clean(img, cfg, extra=None):
         filled = cv2.resize(cv2.inpaint(small, ms, 9, cv2.INPAINT_TELEA), (img.shape[1], img.shape[0]), interpolation=cv2.INTER_CUBIC)
         soft = cv2.GaussianBlur(m_text, (0, 0), 3).astype(np.float32)[..., None] / 255.0
         out = (out * (1 - soft) + filled * soft).astype(np.uint8)
+    for rect in labels:
+        filled = clone_fill(out, rect)
+        if filled is not None:
+            out = filled
+        else:                                     # nothing suitable to clone → inpaint it
+            x, y, w2, h2 = rect
+            cv2.rectangle(m_facade, (x, y), (x + w2, y + h2), 255, -1)
     if not m_facade.any():
         return out
     n, lab, stats, _ = cv2.connectedComponentsWithStats((m_facade > 0).astype(np.uint8), 8)
