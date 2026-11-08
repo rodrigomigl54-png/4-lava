@@ -76,7 +76,7 @@ const preload = [
       (function () {
         try {
           if (/[?&]nointro/.test(location.search) || /bot|crawl|spider|slurp|facebookexternalhit/i.test(navigator.userAgent)) return;
-          if (!/[?&]intro\b/.test(location.search) && localStorage.getItem('k4l-intro-seen-v2')) return;
+          if (!/[?&]intro\b/.test(location.search) && sessionStorage.getItem('k4l-intro-session')) return;
           document.documentElement.dataset.introMode = 'on';
         } catch (e) {}
       })();
