@@ -80,6 +80,10 @@ def ui_mask(img, cfg):
         cv2.circle(mask, (int(cx), int(cy)), int(rad * 1.35), 255, -1)
         tail = np.array([[cx - rad * 0.8, cy + rad * 0.6], [cx + rad * 0.8, cy + rad * 0.6], [cx, cy + rad * 1.9]], np.int32)
         cv2.fillPoly(mask, [tail], 255)
+    for i in range(1, n):                       # pin cut by the left/right edge of the screen
+        x, y, cw, ch, area = stats[i]
+        if area >= 120 and (x <= 1 or x + cw >= w - 1) and 0.03 * h > ch > 15:
+            cv2.rectangle(mask, (x - ch, int(y - ch * 0.5)), (x + cw + ch, int(y + ch * 1.9)), 255, -1)
 
     # 1b) the pin's label: a pure-white rounded box (≥ 245) in the middle band of the screen —
     #     detected on its own, so it is removed even when the pin itself is off-screen
@@ -99,6 +103,8 @@ def ui_mask(img, cfg):
     mx = np.maximum(np.maximum(r, g), b)
     white = ((mn > cfg.get('white_min', 232)) & (mx - mn < 22)).astype(np.uint8)
     white[: int(h * cfg.get('white_from_y', 0.55))] = 0
+    if 'text_x_max' in cfg:                      # street names sit on one side in some shots
+        white[:, int(w * cfg['text_x_max']):] = 0
     white = cv2.morphologyEx(white, cv2.MORPH_OPEN, np.ones((2, 2), np.uint8))
     # keep only text-like blobs (not big white areas such as a van's roof)
     n, lab, stats, _ = cv2.connectedComponentsWithStats(white, 8)
@@ -114,10 +120,12 @@ def ui_mask(img, cfg):
     mask = cv2.dilate(mask, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (9, 9)))
     return mask, keep * 255
 
-def clean(img, cfg):
+def clean(img, cfg, extra=None):
     """Remove UI: texture-aware inpainting (FSR) for the pin/label on the facade,
     fast inpainting for street names on the asphalt."""
     m_facade, m_text = ui_mask(img, cfg)
+    if extra is not None:
+        m_facade = cv2.bitwise_or(m_facade, extra)
     out = img.copy()
     if m_text.any():
         small = cv2.resize(out, None, fx=0.5, fy=0.5, interpolation=cv2.INTER_AREA)
@@ -138,7 +146,8 @@ def clean(img, cfg):
         pm = (lab[y0:y1, x0:x1] == i).astype(np.uint8) * 255
         if has_xphoto:
             # FSR at half size (quality ≈ full, ~4× faster), composited back inside the mask
-            ps = cv2.resize(patch, None, fx=0.5, fy=0.5, interpolation=cv2.INTER_AREA)
+            sc = cfg.get('fsr_scale', 1.0)
+            ps = cv2.resize(patch, None, fx=sc, fy=sc, interpolation=cv2.INTER_AREA)
             pms = cv2.resize(pm, (ps.shape[1], ps.shape[0]), interpolation=cv2.INTER_NEAREST)
             d = np.zeros_like(ps)
             cv2.xphoto.inpaint(ps, 255 - pms, d, cv2.xphoto.INPAINT_FSR_FAST)
@@ -147,6 +156,39 @@ def clean(img, cfg):
             dst = cv2.inpaint(patch, pm, 7, cv2.INPAINT_TELEA)
         soft = cv2.GaussianBlur(pm, (0, 0), 2).astype(np.float32)[..., None] / 255.0
         out[y0:y1, x0:x1] = (patch * (1 - soft) + dst * soft).astype(np.uint8)
+    return out
+
+def track_boxes(frames, t_first, fps, erase):
+    """For each erase item {t, box:[x0,y0,x1,y1] normalised}, follow the object through the
+    shot's source frames with template matching; returns {frame_index: [pixel boxes]}."""
+    out = {}
+    if not erase or not frames:
+        return out
+    H, W = frames[0].shape[:2]
+    gray = [cv2.cvtColor(f, cv2.COLOR_BGR2GRAY) for f in frames]
+    for e in erase:
+        k0 = min(len(frames) - 1, max(0, round((e['t'] - t_first) * fps)))
+        x0, y0, x1, y1 = [int(v * (W if i % 2 == 0 else H)) for i, v in enumerate(e['box'])]
+        tpl = gray[k0][y0:y1, x0:x1]
+        bw, bh = x1 - x0, y1 - y0
+        for direction in (1, -1):
+            px, py = x0, y0
+            k = k0
+            while 0 <= k < len(frames):
+                if k != k0:
+                    sx0, sy0 = max(0, px - bw), max(0, py - bh // 2)
+                    sx1, sy1 = min(W, px + 2 * bw), min(H, py + bh + bh // 2)
+                    region = gray[k][sy0:sy1, sx0:sx1]
+                    if region.shape[0] < bh or region.shape[1] < bw:
+                        break
+                    res = cv2.matchTemplate(region, tpl, cv2.TM_CCOEFF_NORMED)
+                    _, score, _, loc = cv2.minMaxLoc(res)
+                    if score < 0.35:
+                        break
+                    px, py = sx0 + loc[0], sy0 + loc[1]
+                    tpl = gray[k][py:py + bh, px:px + bw]       # adapt to slow changes
+                out.setdefault(k, []).append((px, py, bw, bh))
+                k += direction
     return out
 
 # ---------------------------------------------------------------- virtual camera
@@ -215,6 +257,9 @@ def build(edl, src, outdir, preview=False):
         print(f'  shot {si + 1}/{len(shots)}: {t0:.2f}→{t1:.2f}s ×{speed} → {n} frames  ({sh.get("note", "")})')
         src_frames = decode_range(src, t0, t1, w, h)
         a = min(t0, t1)
+        boxes = track_boxes(src_frames, max(0, a - 0.05), fps, sh.get('erase'))
+        if sh.get('erase'):
+            print(f'    tracked {len(sh["erase"])} object(s) through {len(boxes)} frames')
         cache = {}
         start_idx = {k: len(v) for k, v in frames.items()}
         for k in range(n):
@@ -222,7 +267,13 @@ def build(edl, src, outdir, preview=False):
             t = lerp(t0, t1, p)
             fi = min(len(src_frames) - 1, max(0, round((t - max(0, a - 0.05)) * fps)))
             if fi not in cache:
-                cache = {fi: clean(src_frames[fi], clean_cfg)}
+                extra = None
+                if fi in boxes:
+                    extra = np.zeros(src_frames[fi].shape[:2], np.uint8)
+                    for (bx, by, bw2, bh2) in boxes[fi]:
+                        pad = int(bw2 * 0.25)
+                        cv2.rectangle(extra, (bx - pad, by - pad), (bx + bw2 + pad, by + bh2 + pad), 255, -1)
+                cache = {fi: clean(src_frames[fi], {**clean_cfg, **sh.get('clean', {})}, extra)}
             img = cache[fi]
             e = ease(p) if sh.get('ease', True) else p
             c0, c1 = sh['cam'][0], sh['cam'][1]
