@@ -1,0 +1,40 @@
+{
+  "TODO_VERIFY": "All wines are generic placeholders until the owner provides the wine list (name, winery, prices).",
+  "wines": [
+    {
+      "id": "lokalno-belo",
+      "name": { "sr": "Локално вино — бело", "en": "Local wine — white" },
+      "winery": null,
+      "type": "white",
+      "note": { "sr": "Свеже бело вино са падина Фрушке горе.", "en": "A fresh white from the slopes of Fruška Gora." },
+      "priceGlass": null,
+      "priceBottle": null,
+      "verify": true
+    },
+    {
+      "id": "lokalno-crveno",
+      "name": { "sr": "Локално вино — црвено", "en": "Local wine — red" },
+      "winery": null,
+      "type": "red",
+      "note": { "sr": "Црвено вино из карловачког краја.", "en": "A red from the Karlovci wine country." },
+      "priceGlass": null,
+      "priceBottle": null,
+      "verify": true
+    },
+    {
+      "id": "bermet",
+      "name": { "sr": "Бермет", "en": "Bermet" },
+      "winery": null,
+      "type": "bermet",
+      "note": { "sr": "Карловачки специјалитет — ароматично десертно вино.", "en": "The Karlovci speciality — an aromatic dessert wine." },
+      "priceGlass": null,
+      "priceBottle": null,
+      "verify": true
+    }
+  ],
+  "pairingReasons": {
+    "lokalno-belo": { "sr": "Свежина белог вина лепо прати рибу и лакша јела.", "en": "A fresh white sits nicely with fish and lighter dishes." },
+    "lokalno-crveno": { "sr": "Пуније црвено вино за гулаше и печење.", "en": "A fuller red for goulash and roasts." },
+    "bermet": { "sr": "Слатки, зачињени бермет за крај оброка и колаче.", "en": "Sweet, spiced bermet for dessert and the end of the meal." }
+  }
+}

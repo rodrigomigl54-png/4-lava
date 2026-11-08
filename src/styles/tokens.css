@@ -1,0 +1,90 @@
+/* ==========================================================================
+   Design tokens — „Карловачка кућа 1799“
+   Contrast (WCAG 2.x) of every text/background pair used on the site:
+     ink      on cream   12.77  AAA      bordeaux on cream   10.79 AAA
+     marble   on cream    7.05  AAA      gold-ink on cream    5.05 AA
+     taupe-ink on cream   5.35  AA       cream on forest      9.95 AAA
+     cream    on wood    13.68  AAA      gold-light on forest 5.13 AA
+     gold-light on wood   7.06  AAA      cream on bordeaux   10.79 AAA
+   Plain --gold (2.61 on cream, 3.81 on forest) is ONLY for ornaments,
+   rules, icons and large display numerals — never for body text.
+   ========================================================================== */
+:root {
+  /* Brand palette (from the brief) */
+  --marble-red: #8e2a2a;
+  --bordeaux: #5e1a1f;
+  --forest: #2f3b2c;
+  --gold: #b08d57;
+  --cream: #f3ebdd;
+  --taupe: #9c8a7c;
+  --ink: #272624;
+  --wood: #2a1e17;
+
+  /* Accessible text variants */
+  --gold-ink: #7a5f32;      /* gold text on cream */
+  --gold-light: #c9a66b;    /* gold text on forest / wood */
+  --taupe-ink: #6b5d52;     /* muted text on cream */
+  --cream-dim: #d9cdb8;     /* muted text on dark */
+  --istanbul: #1f5c5c;      /* Istanbul theme accent */
+
+  /* Surfaces */
+  --paper: var(--cream);
+  --paper-2: #ebe1cf;
+  --line: color-mix(in srgb, var(--gold) 55%, transparent);
+
+  /* Semantic (light / default) */
+  --bg: var(--paper);
+  --fg: var(--ink);
+  --fg-muted: var(--taupe-ink);
+  --heading: var(--bordeaux);
+  --accent: var(--marble-red);
+  --label: var(--gold-ink);
+  --focus: var(--gold);
+
+  /* Typography */
+  --font-display: 'Cormorant Garamond', 'Cormorant', Georgia, 'Times New Roman', serif;
+  --font-body: 'Lora', 'PT Serif', Georgia, serif;
+  --font-hand: 'Caveat', 'Segoe Print', cursive;
+
+  --step--1: clamp(0.83rem, 0.8rem + 0.15vw, 0.92rem);
+  --step-0: clamp(1rem, 0.96rem + 0.2vw, 1.1rem);
+  --step-1: clamp(1.2rem, 1.1rem + 0.5vw, 1.45rem);
+  --step-2: clamp(1.45rem, 1.25rem + 1vw, 2rem);
+  --step-3: clamp(1.8rem, 1.45rem + 1.8vw, 2.9rem);
+  --step-4: clamp(2.3rem, 1.6rem + 3.4vw, 4.4rem);
+  --step-5: clamp(2.8rem, 1.8rem + 5vw, 6rem);
+
+  /* Spacing / layout */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4.5rem;
+  --space-9: 7rem;
+  --gutter: clamp(1rem, 4vw, 2.5rem);
+  --maxw: 75rem;
+  --maxw-text: 40rem;
+  --header-h: 4.25rem;
+  --bottom-bar-h: 4.5rem;
+  --radius: 2px;
+
+  /* Motion — slow, candle-light pacing */
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-1: 200ms;
+  --dur-2: 450ms;
+  --dur-3: 900ms;
+  --dur-4: 1600ms;
+
+  --shadow-soft: 0 1px 2px rgb(39 38 36 / 0.08), 0 8px 30px -12px rgb(39 38 36 / 0.25);
+}
+
+@media (min-width: 64rem) {
+  :root {
+    --bottom-bar-h: 0px;
+    --header-h: 5rem;
+  }
+}

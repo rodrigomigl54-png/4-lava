@@ -1,0 +1,52 @@
+{
+  "name": {
+    "sr": "Гостиона Код 4 Лава",
+    "lat": "Gostiona Kod 4 Lava",
+    "en": "Gostiona Kod 4 Lava",
+    "enAlt": "Four Lions Inn"
+  },
+  "address": {
+    "street": "Трг Бранка Радичевића 3",
+    "postalCode": "21205",
+    "city": "Сремски Карловци",
+    "country": "RS",
+    "en": { "street": "Trg Branka Radičevića 3", "city": "Sremski Karlovci", "country": "Serbia" }
+  },
+  "geo": { "lat": 45.2027, "lng": 19.9339, "TODO_VERIFY": "Approximate coordinates of the main square – confirm the exact pin." },
+  "phone": { "display": "060 5210606", "intl": "+381605210606", "intlDisplay": "+381 60 5210606", "whatsapp": "381605210606" },
+  "hours": {
+    "TODO_VERIFY": "Only the closing time (23:00) is confirmed. Opening time and days are assumed: every day 08:00–23:00.",
+    "week": {
+      "1": [["08:00", "23:00"]],
+      "2": [["08:00", "23:00"]],
+      "3": [["08:00", "23:00"]],
+      "4": [["08:00", "23:00"]],
+      "5": [["08:00", "23:00"]],
+      "6": [["08:00", "23:00"]],
+      "7": [["08:00", "23:00"]]
+    }
+  },
+  "priceRange": "1000–1500 RSD",
+  "priceRangeText": { "sr": "1.000–1.500 дин. по особи", "en": "1,000–1,500 RSD per person" },
+  "rating": { "value": 4.5, "count": 1233, "source": "Google", "TODO_VERIFY": "Update from the Google Business profile before launch." },
+  "services": ["dineIn", "takeaway", "delivery"],
+  "links": {
+    "googleMaps": "https://www.google.com/maps/search/?api=1&query=Gostiona+Kod+4+Lava%2C+Trg+Branka+Radi%C4%8Devi%C4%87a+3%2C+Sremski+Karlovci",
+    "googleDirections": "https://www.google.com/maps/dir/?api=1&destination=Trg+Branka+Radi%C4%8Devi%C4%87a+3%2C+21205+Sremski+Karlovci",
+    "googleReview": "",
+    "googleReviewTODO_VERIFY": "Paste the 'Ask for reviews' link from the Google Business profile.",
+    "instagram": "",
+    "facebook": ""
+  },
+  "dailySheetCsv": "",
+  "seasonalBanner": {
+    "active": null,
+    "options": ["berba", "bozic", "uskrs"]
+  },
+  "TODO_VERIFY": {
+    "owner": "Owner name(s) unknown – do not publish until provided.",
+    "founded": "Year the restaurant was founded unknown.",
+    "houseYear": "Exact year of the 18th-century house unknown.",
+    "events": "Not confirmed that the restaurant hosts celebrations / groups."
+  }
+}

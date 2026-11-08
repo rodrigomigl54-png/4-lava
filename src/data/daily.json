@@ -1,0 +1,10 @@
+{
+  "TODO_VERIFY": "Demo content. The owner edits this file or the Google Sheet (info.json → dailySheetCsv).",
+  "date": null,
+  "items": [
+    { "sr": "Јунећи гулаш", "en": "Beef goulash", "price": null },
+    { "sr": "Рибља чорба", "en": "Fish soup", "price": null },
+    { "sr": "Уштипци", "en": "Uštipci (fried dough puffs)", "price": null }
+  ],
+  "note": { "sr": "Док траје!", "en": "While it lasts!" }
+}

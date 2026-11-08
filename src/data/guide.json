@@ -1,0 +1,12 @@
+{
+  "TODO_VERIFY": "Short descriptions – verify each with a local source before launch.",
+  "places": [
+    { "id": "cesma", "icon": "fountain", "name": { "sr": "Чесма „Четири лава“", "en": "Four Lions Fountain" }, "text": { "sr": "Барокна чесма од црвеног мермера из 1799. Ко пије с ње — враћа се.", "en": "Baroque red-marble fountain from 1799. Drink from it and you’ll return." }, "distance": { "sr": "преко пута", "en": "right opposite" } },
+    { "id": "saborna-crkva", "icon": "church", "name": { "sr": "Саборна црква Св. Николе", "en": "St Nicholas Cathedral" }, "text": { "sr": "Саборни храм на главном тргу.", "en": "The Orthodox cathedral on the main square." }, "distance": { "sr": "на тргу", "en": "on the square" } },
+    { "id": "patrijarsijski-dvor", "icon": "palace", "name": { "sr": "Патријаршијски двор", "en": "Patriarchal Palace" }, "text": { "sr": "Некадашње седиште карловачких митрополита и патријараха.", "en": "Former seat of the Karlovci metropolitans and patriarchs." }, "distance": { "sr": "на тргу", "en": "on the square" } },
+    { "id": "gimnazija", "icon": "school", "name": { "sr": "Карловачка гимназија", "en": "Karlovci Grammar School" }, "text": { "sr": "Најстарија српска гимназија, основана 1791.", "en": "The oldest Serbian grammar school, founded in 1791." }, "distance": { "sr": "на тргу", "en": "on the square" } },
+    { "id": "bogoslovija", "icon": "book", "name": { "sr": "Богословија", "en": "Seminary" }, "text": { "sr": "Карловачка богословија, једна од најстаријих у српском народу.", "en": "The Karlovci seminary, one of the oldest Serbian theological schools." }, "distance": { "sr": "неколико минута пешке", "en": "a few minutes on foot" } },
+    { "id": "strazilovo", "icon": "hill", "name": { "sr": "Стражилово · гроб Бранка Радичевића", "en": "Stražilovo · Branko Radičević’s grave" }, "text": { "sr": "Излетиште на Фрушкој гори и гроб песника Бранка Радичевића.", "en": "A Fruška Gora picnic spot with the grave of poet Branko Radičević." }, "distance": { "sr": "кратка вожња / шетња", "en": "short drive or hike" } },
+    { "id": "vidikovac", "icon": "view", "name": { "sr": "Видиковац", "en": "Viewpoint" }, "text": { "sr": "Поглед на Карловце, винограде и Дунав.", "en": "A view over Karlovci, the vineyards and the Danube." }, "distance": { "sr": "кратка вожња", "en": "short drive" } }
+  ]
+}

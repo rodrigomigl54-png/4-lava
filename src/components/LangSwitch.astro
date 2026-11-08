@@ -1,0 +1,63 @@
+---
+import { LOCALES, SWITCH_LABEL, HTML_LANG, localePath, stripLocale, t, type Locale } from '../lib/i18n';
+import { stripKeep } from '../lib/translit';
+interface Props { locale: Locale; class?: string }
+const { locale, class: cls = '' } = Astro.props;
+const rest = stripLocale(Astro.url.pathname);
+---
+<nav class:list={['lang', cls]} aria-label={t(locale, 'lang.label')}>
+  {LOCALES.map((l, i) => (
+    <>
+      {i > 0 && <span class="lang__sep" aria-hidden="true">·</span>}
+      <a
+        href={localePath(l, rest) + Astro.url.hash}
+        hreflang={HTML_LANG[l]}
+        lang={HTML_LANG[l]}
+        data-set-locale={l}
+        aria-current={l === locale ? 'true' : undefined}
+        title={t(l, `lang.${l}`)}
+      >{stripKeep(SWITCH_LABEL[l])}</a>
+    </>
+  ))}
+</nav>
+
+<script>
+  document.addEventListener('click', (e) => {
+    const a = (e.target as HTMLElement).closest<HTMLAnchorElement>('a[data-set-locale]');
+    if (!a) return;
+    try { localStorage.setItem('k4l-locale', a.dataset.setLocale || 'sr'); } catch {}
+    // keep the current scroll section when switching language
+    if (location.hash && !a.hash) a.hash = location.hash;
+  });
+</script>
+
+<style>
+  .lang {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+  }
+  .lang a {
+    display: inline-grid;
+    place-items: center;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    padding: 0 0.15rem;
+    text-decoration: none;
+    color: inherit;
+    opacity: 0.72;
+    transition: opacity var(--dur-1) var(--ease), color var(--dur-1) var(--ease);
+  }
+  .lang a:hover { opacity: 1; }
+  .lang a[aria-current='true'] {
+    opacity: 1;
+    color: var(--label);
+    text-decoration: underline;
+    text-decoration-color: var(--gold);
+    text-underline-offset: 0.45em;
+  }
+  .lang__sep { opacity: 0.5; }
+</style>

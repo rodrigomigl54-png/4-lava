@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import OpenStatus from '../components/OpenStatus.astro';
+import LangSwitch from '../components/LangSwitch.astro';
+import { t, localePath, type Locale } from '../lib/i18n';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+---
+<BaseLayout locale={locale} title={t(locale, 'meta.menuTitle')} lite onHome={false}>
+  <header slot="header" class="qr-head container">
+    <a href={localePath(locale, '/')} class="qr-head__brand">{t(locale, 'brand.name')}</a>
+    <OpenStatus locale={locale} />
+    <LangSwitch locale={locale} />
+  </header>
+  <section class="section container">
+    <h1>{t(locale, 'nav.trpeza.label')}</h1>
+    <p class="wip">{t(locale, 'wip')}</p>
+  </section>
+</BaseLayout>
+<style>
+  .qr-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem; padding-block: 0.75rem; }
+  .qr-head__brand { font-family: var(--font-display); font-weight: 700; font-size: 1.35rem; color: var(--bordeaux); text-decoration: none; }
+</style>

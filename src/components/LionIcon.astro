@@ -1,0 +1,41 @@
+---
+/**
+ * A crop of the stencil lion. All variants come from the same traced logo,
+ * so every lion on the site shares one consistent hand: bold black shapes,
+ * no gradients. Each nav lion is a different crop / mirror / tilt ("pose").
+ */
+export type LionVariant = 'half' | 'trpeza' | 'podrum' | 'kuca' | 'kapija' | 'eye';
+interface Props {
+  variant?: LionVariant;
+  class?: string;
+  size?: string;
+  label?: string;
+}
+const { variant = 'half', class: cls = '', size, label } = Astro.props;
+
+// viewBox crop, mirror, rotation (degrees) per pose
+const POSES: Record<LionVariant, { vb: string; flip?: boolean; rot?: number }> = {
+  half:   { vb: '0 0 750 1296' },
+  eye:    { vb: '150 170 600 600' },
+  trpeza: { vb: '-180 330 960 960', rot: -7 },          // head lowered to the table — muzzle & jaw
+  podrum: { vb: '-273 0 1296 1296', flip: true, rot: 4 },// mirrored: looking back into the cellar
+  kuca:   { vb: '-200 -20 1080 1080' },                  // upright brow and mane — head of the house
+  kapija: { vb: '-160 170 1000 1000', flip: true, rot: -10 }, // mirrored, alert — guarding the gate
+};
+const p = POSES[variant];
+const [x, y, w, h] = p.vb.split(' ').map(Number);
+const cx = x + w / 2, cy = y + h / 2;
+const tf = [
+  p.flip ? `translate(${2 * cx} 0) scale(-1 1)` : '',
+  p.rot ? `rotate(${p.rot} ${cx} ${cy})` : '',
+].join(' ').trim();
+---
+<svg
+  class:list={['lion', `lion--${variant}`, cls]}
+  viewBox={p.vb}
+  style={size ? `width:${size};height:auto` : undefined}
+  role={label ? 'img' : undefined}
+  aria-label={label}
+  aria-hidden={label ? undefined : 'true'}
+  focusable="false"
+><use href="#lion" width="1296" height="1296" transform={tf || undefined} /></svg>
