@@ -2,6 +2,7 @@
 import info from '../data/info.json';
 import SendButtons from './SendButtons.astro';
 import { ITEMS, priceText } from '../lib/menu';
+import { asset } from '../lib/base';
 import { t, pick, type Locale } from '../lib/i18n';
 interface Props { locale: Locale }
 const { locale } = Astro.props;
@@ -19,29 +20,12 @@ const id = 'sac';
 <div class="sac dark wood marble-veins" id="sac">
   <div class="sac__grid">
     <div class="sac__art" aria-hidden="true">
-      <svg viewBox="0 0 300 240">
-        <defs>
-          <radialGradient id="ember" cx="50%" cy="60%" r="60%"><stop offset="0" stop-color="#ffb35c" /><stop offset=".45" stop-color="#d9531e" /><stop offset="1" stop-color="#5a1608" stop-opacity="0" /></radialGradient>
-          <linearGradient id="iron" x1="0" x2="1"><stop offset="0" stop-color="#1b1714" /><stop offset=".45" stop-color="#3b332c" /><stop offset="1" stop-color="#15110e" /></linearGradient>
-        </defs>
-        <ellipse class="sac__glow" cx="150" cy="200" rx="135" ry="34" fill="url(#ember)" />
-        <!-- embers -->
-        <g class="sac__embers">
-          {Array.from({ length: 26 }, (_, i) => <circle cx={30 + ((i * 47) % 240)} cy={186 + ((i * 13) % 26)} r={2 + (i % 4)} fill={i % 3 ? '#e2632a' : '#ffb35c'} style={`--d:${(i % 7) * 0.4}s`} />)}
-        </g>
-        <!-- sač bell -->
-        <path d="M60 196c0-70 40-120 90-120s90 50 90 120z" fill="url(#iron)" stroke="#B08D57" stroke-width="1.2" />
-        <path d="M78 160c14-40 40-66 72-66" fill="none" stroke="#6a5d50" stroke-width="2" opacity=".6" />
-        <rect x="132" y="56" width="36" height="22" rx="6" fill="#2a231d" stroke="#B08D57" stroke-width="1.2" />
-        <path d="M138 56c0-12 24-12 24 0" fill="none" stroke="#B08D57" stroke-width="2" />
-        <path d="M50 196h200" stroke="#B08D57" stroke-width="1.5" />
-        <!-- coals on the lid -->
-        {[[120, 100], [150, 92], [178, 102], [105, 120], [196, 122]].map(([x, y]) => <circle class="sac__coal" cx={x} cy={y} r="6" fill="#c2481b" />)}
-        <!-- steam -->
-        <g class="sac__steam" fill="none" stroke="#e8dcc6" stroke-width="1.5" stroke-linecap="round" opacity=".5">
-          <path d="M140 46c-6-10 6-16 0-26" /><path d="M160 46c-6-10 6-16 0-26" />
-        </g>
-      </svg>
+      <div class="sac-fire" data-sac-fire>
+        <canvas class="sac-fire__layer" data-fire-back></canvas>
+        <img class="sac-fire__img" src={asset('/img/sac.webp')} alt="" width="779" height="536" loading="lazy" decoding="async" data-sac-img />
+        <div class="sac-fire__heat" data-sac-heat style={`--sac-mask:url(${asset('/img/sac.webp')});-webkit-mask-image:url(${asset('/img/sac.webp')})`}></div>
+        <canvas class="sac-fire__layer sac-fire__layer--front" data-fire-front></canvas>
+      </div>
     </div>
     <div>
       <h3 class="sac__title">{t(locale, 'sac.title')}</h3>
@@ -102,6 +86,8 @@ const id = 'sac';
 </div>
 
 <script>
+  import { initSacFire } from '../scripts/sac-fire';
+  document.querySelectorAll<HTMLElement>('[data-sac-fire]').forEach(initSacFire);
   import { initMessageForms } from '../scripts/message-forms';
   import { belgradeISODate } from '../lib/message';
   const sel = document.querySelector<HTMLSelectElement>('[data-sac-dish]');
@@ -125,15 +111,16 @@ const id = 'sac';
 <style>
   .sac { padding: clamp(1.5rem, 5vw, 3.5rem); margin-block: var(--space-8); border: 1px solid color-mix(in srgb, var(--gold) 45%, transparent); }
   .sac__grid { display: grid; gap: 2rem; align-items: center; margin-bottom: 2.5rem; }
-  .sac__art svg { width: min(100%, 22rem); margin: 0 auto; overflow: visible; }
-  .sac__glow { animation: glow 3.5s ease-in-out infinite alternate; transform-origin: center; }
-  .sac__embers circle { animation: ember 2.6s ease-in-out infinite alternate; animation-delay: var(--d); }
-  .sac__coal { animation: ember 3s ease-in-out infinite alternate; }
-  .sac__steam path { animation: steam 4s ease-in-out infinite; }
-  .sac__steam path:last-child { animation-delay: 1.5s; }
-  @keyframes glow { from { opacity: 0.55; } to { opacity: 1; } }
-  @keyframes ember { from { opacity: 0.45; } to { opacity: 1; } }
-  @keyframes steam { 0% { opacity: 0; transform: translateY(6px); } 40% { opacity: 0.5; } 100% { opacity: 0; transform: translateY(-14px); } }
+  /* photographed sač + canvas fire (behind and in front) + steam */
+  .sac-fire { position: relative; width: min(100%, 26rem); margin: 0 auto; aspect-ratio: 779 / 960; }
+  .sac-fire__img { position: absolute; left: 6%; right: 6%; bottom: 14%; width: 88%; height: auto; z-index: 1;
+    filter: drop-shadow(0 18px 16px rgb(0 0 0 / 0.6)) contrast(1.05); }
+  .sac-fire__heat { position: absolute; left: 6%; right: 6%; bottom: 14%; aspect-ratio: 779 / 536; z-index: 2; pointer-events: none;
+    background: linear-gradient(0deg, rgb(255 120 40 / 0.4), rgb(255 120 40 / 0.06) 28%, transparent 45%);
+    mix-blend-mode: color-dodge; opacity: 0.85;
+    -webkit-mask-size: 100% 100%; mask-image: var(--sac-mask); mask-size: 100% 100%; mask-repeat: no-repeat; }
+  .sac-fire__layer { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+  .sac-fire__layer--front { z-index: 3; }
   .sac__title { color: var(--cream); font-size: var(--step-3); }
   .sac__lead { font-size: var(--step-2); color: var(--gold-light); line-height: 1.3; }
   .sac__lead2 { color: var(--cream-dim); }

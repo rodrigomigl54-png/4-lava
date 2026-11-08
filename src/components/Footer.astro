@@ -77,6 +77,7 @@ const social = [
       ))}
     </ul>
     <LangSwitch locale={locale} label={t(locale, 'lang.labelFooter')} />
+    <a class="site-footer__replay" href={localePath(locale, '/') + '?intro'}>▶ {t(locale, 'intro.replay')}</a>
     <TimeToggle locale={locale} />
   </div>
   {demo && <p class="site-footer__demo">{t(locale, 'footer.demo')}</p>}
@@ -127,6 +128,7 @@ const social = [
     color: var(--cream-dim);
   }
   .site-footer__bottom p { margin: 0; }
+  .site-footer__replay { color: var(--gold-light); min-height: 2.75rem; display: inline-flex; align-items: center; }
   .site-footer__social { display: flex; gap: 1.25rem; list-style: none; margin: 0; padding: 0; }
   .site-footer__social small { opacity: 0.85; }
   .site-footer__demo {

@@ -2,7 +2,7 @@
  * Intro controller. html[data-intro="on"] is set before first paint (BaseLayout)
  * only on the homepage, on the first visit, and never for bots/?nointro.
  */
-const KEY = 'k4l-intro-seen';
+const KEY = 'k4l-intro-seen-v2'; // bump when the intro footage changes, so everyone sees the new one once
 const HOLD_MS = 1000;
 
 function remember() { try { localStorage.setItem(KEY, '1'); } catch {} }

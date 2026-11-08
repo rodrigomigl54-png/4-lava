@@ -44,6 +44,7 @@ const preload = [
     {alternates.map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
     <link rel="alternate" hreflang="x-default" href={alternates[0].href} />
     <meta name="theme-color" content="#2A1E17" />
+    <meta name="color-scheme" content="only light" />
     <link rel="icon" href={asset('/favicon.svg')} type="image/svg+xml" />
     <link rel="apple-touch-icon" href={asset('/apple-touch-icon.png')} />
     {preload.map((href) => <link rel="preload" href={href} as="font" type="font/woff2" crossorigin />)}
@@ -75,7 +76,7 @@ const preload = [
       (function () {
         try {
           if (/[?&]nointro/.test(location.search) || /bot|crawl|spider|slurp|facebookexternalhit/i.test(navigator.userAgent)) return;
-          if (localStorage.getItem('k4l-intro-seen')) return;
+          if (!/[?&]intro\b/.test(location.search) && localStorage.getItem('k4l-intro-seen-v2')) return;
           document.documentElement.dataset.introMode = 'on';
         } catch (e) {}
       })();

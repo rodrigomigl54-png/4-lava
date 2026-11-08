@@ -308,5 +308,6 @@
   "pairing.wine": "Wine",
   "pairing.rakija": "Rakija",
   "cellar.type.rakija": "rakija",
-  "cellar.type.rakija-aged": "rakija"
+  "cellar.type.rakija-aged": "rakija",
+  "intro.replay": "Watch the intro"
 }

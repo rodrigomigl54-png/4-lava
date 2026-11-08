@@ -5,8 +5,9 @@
  */
 export interface DrinkTheme { top: string; bottom: string; glow: string; line: string; motif: string; pos?: string; size?: string }
 
-const svg = (body: string, vb = '0 0 240 240') =>
-  `url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='${vb}' fill='none' stroke-linecap='round' stroke-linejoin='round'>${body}</svg>`)}")`;
+const dataUri = (body: string, vb = '0 0 240 240') =>
+  `data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='${vb}' fill='none' stroke-linecap='round' stroke-linejoin='round'>${body}</svg>`)}`;
+const svg = (body: string, vb = '0 0 240 240') => `url("${dataUri(body, vb)}")`;
 
 const grapes = (c: string) => `<g stroke='${c}' stroke-width='1.4'><path d='M120 30c0 20-6 30-16 40M120 30c14 4 30 0 40-12'/>${[[104,78],[124,78],[144,78],[94,98],[114,98],[134,98],[154,98],[104,118],[124,118],[144,118],[114,138],[134,138],[124,158]].map(([x,y])=>`<circle cx='${x}' cy='${y}' r='11'/>`).join('')}<path d='M160 18c18-10 40-4 48 12-16 6-34 4-48-12z'/></g>`;
 const fruit = (c: string, leaf = true, pear = false) => `<g stroke='${c}' stroke-width='1.4'>${pear
@@ -41,3 +42,10 @@ export function themeStyle(key: string | null | undefined): string {
       `linear-gradient(180deg, ${t.top} 0%, ${t.bottom} 100%)`,
   ].join(';');
 }
+
+/** The motif as a plain data URI (for <image href> inside SVG, e.g. the pairing wheel). */
+export function motifUri(key: string | null | undefined): string {
+  const t = THEMES[key ?? ''] ?? THEMES.loza;
+  return t.motif.slice(5, -2);
+}
+export const themeOf = (key: string | null | undefined) => THEMES[key ?? ''] ?? THEMES.loza;
