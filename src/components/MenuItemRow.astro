@@ -1,0 +1,43 @@
+---
+import CoffeeCup from './CoffeeCup.astro';
+import { chipsOf, timeHighlight, FIRST_TIME, priceText, unitText, wineName, type MenuItem } from '../lib/menu';
+import { t, pick, type Locale } from '../lib/i18n';
+import { toLatin } from '../lib/translit';
+interface Props { item: MenuItem; locale: Locale; lite?: boolean; cart?: boolean }
+const { item: i, locale, lite = false, cart = true } = Astro.props;
+const name = pick(locale, i.name);
+const desc = pick(locale, i.desc);
+const unit = unitText(i);
+const dev = import.meta.env.DEV;
+const search = [pick('sr', i.name), toLatin(pick('sr', i.name)), i.name.en, desc].join(' ').toLowerCase();
+const hl = lite ? '' : timeHighlight(i.id);
+---
+<li
+  class="mi"
+  id={lite ? `m-${i.id}` : undefined}
+  data-mi={i.id}
+  data-origin={i.origin}
+  data-chips={chipsOf(i)}
+  data-search={search}
+  data-hl={hl || undefined}
+  data-first={!lite && FIRST_TIME.includes(i.id) ? '' : undefined}
+>
+  <div class="mi__line">
+    <h4 class="mi__name">{name}{unit && <span class="mi__unit"> · {unit}</span>}{dev && i.verify && <span class="verify-dot" title="TODO_VERIFY" />}</h4>
+    <span class="mi__dots" aria-hidden="true"></span>
+    {i.price != null && <span class="mi__price">{priceText(locale, i)}</span>}
+    {cart && !lite && i.price != null && (
+      <button type="button" class="mi__add" data-cart-add={i.id} data-name={name + (unit ? ` (${unit})` : '')} data-price={i.price} aria-label={`${t(locale, 'cart.add')}: ${name}`}>+</button>
+    )}
+  </div>
+  {desc && <p class="mi__desc">{desc}</p>}
+  {(i.tags.length > 0 || i.preorder || (i.pairing && !lite)) && (
+    <p class="mi__tags">
+      {i.preorder && <span class="mi__tag mi__tag--order">{t(locale, 'menu.preorderBadge')}</span>}
+      {i.tags.filter((tg) => tg !== 'breakfast').map((tg) => <span class={`mi__tag mi__tag--${tg}`}>{t(locale, `tag.${tg}`)}</span>)}
+      {i.pairing && !lite && i.category !== 'pica' && <span class="mi__tag mi__tag--pair">🍷 {wineName(locale, i.pairing)}</span>}
+    </p>
+  )}
+  {hl && <span class="mi__rec" aria-hidden="true">{hl.split(' ').map((m) => <span data-only={m}>{t(locale, `menu.recommend.${m}`)}</span>)}</span>}
+  {!lite && i.easterEgg === 'coffee-cup' && <CoffeeCup locale={locale} />}
+</li>

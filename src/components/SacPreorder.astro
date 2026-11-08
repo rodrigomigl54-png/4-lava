@@ -1,0 +1,147 @@
+---
+import info from '../data/info.json';
+import SendButtons from './SendButtons.astro';
+import { ITEMS, priceText } from '../lib/menu';
+import { t, pick, type Locale } from '../lib/i18n';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const dishes = ITEMS.filter((i) => i.preorder);
+const weekdays = ['7', '1', '2', '3', '4', '5', '6'].map((d) => t(locale, `days.${d}`));
+const cfg = {
+  template: t(locale, 'sac.msg'),
+  phone: { intl: info.phone.intl, whatsapp: info.phone.whatsapp },
+  weekdays, lang: locale,
+  words: { one: t(locale, 'word.person1'), few: t(locale, 'word.person2'), many: t(locale, 'word.person5') },
+  s: { required: t(locale, 'form.err.required'), date: t(locale, 'form.err.date'), check: t(locale, 'form.err.check'), ok: t(locale, 'form.ok'), viberCopied: t(locale, 'form.viberCopied') },
+};
+const id = 'sac';
+---
+<div class="sac dark wood marble-veins" id="sac">
+  <div class="sac__grid">
+    <div class="sac__art" aria-hidden="true">
+      <svg viewBox="0 0 300 240">
+        <defs>
+          <radialGradient id="ember" cx="50%" cy="60%" r="60%"><stop offset="0" stop-color="#ffb35c" /><stop offset=".45" stop-color="#d9531e" /><stop offset="1" stop-color="#5a1608" stop-opacity="0" /></radialGradient>
+          <linearGradient id="iron" x1="0" x2="1"><stop offset="0" stop-color="#1b1714" /><stop offset=".45" stop-color="#3b332c" /><stop offset="1" stop-color="#15110e" /></linearGradient>
+        </defs>
+        <ellipse class="sac__glow" cx="150" cy="200" rx="135" ry="34" fill="url(#ember)" />
+        <!-- embers -->
+        <g class="sac__embers">
+          {Array.from({ length: 26 }, (_, i) => <circle cx={30 + ((i * 47) % 240)} cy={186 + ((i * 13) % 26)} r={2 + (i % 4)} fill={i % 3 ? '#e2632a' : '#ffb35c'} style={`--d:${(i % 7) * 0.4}s`} />)}
+        </g>
+        <!-- sač bell -->
+        <path d="M60 196c0-70 40-120 90-120s90 50 90 120z" fill="url(#iron)" stroke="#B08D57" stroke-width="1.2" />
+        <path d="M78 160c14-40 40-66 72-66" fill="none" stroke="#6a5d50" stroke-width="2" opacity=".6" />
+        <rect x="132" y="56" width="36" height="22" rx="6" fill="#2a231d" stroke="#B08D57" stroke-width="1.2" />
+        <path d="M138 56c0-12 24-12 24 0" fill="none" stroke="#B08D57" stroke-width="2" />
+        <path d="M50 196h200" stroke="#B08D57" stroke-width="1.5" />
+        <!-- coals on the lid -->
+        {[[120, 100], [150, 92], [178, 102], [105, 120], [196, 122]].map(([x, y]) => <circle class="sac__coal" cx={x} cy={y} r="6" fill="#c2481b" />)}
+        <!-- steam -->
+        <g class="sac__steam" fill="none" stroke="#e8dcc6" stroke-width="1.5" stroke-linecap="round" opacity=".5">
+          <path d="M140 46c-6-10 6-16 0-26" /><path d="M160 46c-6-10 6-16 0-26" />
+        </g>
+      </svg>
+    </div>
+    <div>
+      <h3 class="sac__title">{t(locale, 'sac.title')}</h3>
+      <p class="sac__lead italic-display">{t(locale, 'sac.lead')}</p>
+      <p class="sac__lead2">{t(locale, 'sac.lead2')}</p>
+      <ul class="sac__list" role="list">
+        {dishes.map((d) => <li><span>{pick(locale, d.name)}</span><span>{priceText(locale, d)}</span></li>)}
+      </ul>
+    </div>
+  </div>
+
+  <form class="form sac__form" data-msg-form data-cfg={JSON.stringify(cfg)} novalidate>
+    <h4 class="sac__form-title">{t(locale, 'sac.form')}</h4>
+    <div class="form__row form__row--2">
+      <div class="field">
+        <label for={`${id}-dish`}>{t(locale, 'sac.dish')}</label>
+        <select class="input" id={`${id}-dish`} name="dish" required data-sac-dish aria-describedby={`${id}-dish-err`}>
+          <option value="">—</option>
+          {dishes.map((d) => <option value={d.id} data-hours={d.preorderHours ?? 0} data-text={pick(locale, d.name)}>{pick(locale, d.name)}</option>)}
+        </select>
+        <p class="field__err" id={`${id}-dish-err`} data-err-for="dish"></p>
+        <p class="sac__hours" data-sac-hours data-tpl={t(locale, 'sac.hoursAhead')}></p>
+      </div>
+      <div class="field">
+        <span class="field__label" id={`${id}-people-l`}>{t(locale, 'form.people')}</span>
+        <div class="stepper" data-stepper role="group" aria-labelledby={`${id}-people-l`}>
+          <button type="button" data-step="-1" aria-label={t(locale, 'form.minus')}>−</button>
+          <input class="input" name="people" type="number" min="1" max="40" value="4" inputmode="numeric" aria-labelledby={`${id}-people-l`} />
+          <button type="button" data-step="1" aria-label={t(locale, 'form.plus')}>+</button>
+        </div>
+      </div>
+    </div>
+    <div class="form__row form__row--2">
+      <div class="field">
+        <label for={`${id}-date`}>{t(locale, 'form.date')}</label>
+        <input class="input" id={`${id}-date`} name="date" type="date" required data-min-today aria-describedby={`${id}-date-err`} />
+        <p class="field__err" id={`${id}-date-err`} data-err-for="date"></p>
+      </div>
+      <div class="field">
+        <label for={`${id}-time`}>{t(locale, 'form.time')}</label>
+        <input class="input" id={`${id}-time`} name="time" type="time" value="14:00" min="08:00" max="22:00" step="900" required />
+      </div>
+    </div>
+    <div class="form__row form__row--2">
+      <div class="field">
+        <label for={`${id}-name`}>{t(locale, 'form.name')}</label>
+        <input class="input" id={`${id}-name`} name="name" autocomplete="name" required aria-describedby={`${id}-name-err`} />
+        <p class="field__err" id={`${id}-name-err`} data-err-for="name"></p>
+      </div>
+      <div class="field">
+        <label for={`${id}-note`}>{t(locale, 'form.note')} <small>({t(locale, 'form.optional')})</small></label>
+        <input class="input" id={`${id}-note`} name="note" />
+      </div>
+    </div>
+    <details class="preview-wrap"><summary>{t(locale, 'form.preview')}</summary><pre class="preview" data-preview></pre></details>
+    <SendButtons locale={locale} />
+  </form>
+</div>
+
+<script>
+  import { initMessageForms } from '../scripts/message-forms';
+  import { belgradeISODate } from '../lib/message';
+  const sel = document.querySelector<HTMLSelectElement>('[data-sac-dish]');
+  const date = document.querySelector<HTMLInputElement>('#sac-date');
+  const hintEl = document.querySelector<HTMLElement>('[data-sac-hours]');
+  const sync = () => {
+    const h = Number(sel?.selectedOptions[0]?.dataset.hours || 0);
+    if (date) { date.min = belgradeISODate(h); if (!date.value || date.value < date.min) date.value = date.min; }
+    if (hintEl) hintEl.textContent = h ? (hintEl.dataset.tpl || '').replace('{h}', String(h)) : '';
+  };
+  sel?.addEventListener('change', sync);
+  // a dish link elsewhere on the page can preselect: <a href="#sac" data-preorder="id">
+  document.addEventListener('click', (e) => {
+    const a = (e.target as HTMLElement).closest<HTMLElement>('[data-preorder]');
+    if (a && sel) { sel.value = a.dataset.preorder || ''; sync(); sel.dispatchEvent(new Event('change', { bubbles: true })); }
+  });
+  sync();
+  initMessageForms();
+</script>
+
+<style>
+  .sac { padding: clamp(1.5rem, 5vw, 3.5rem); margin-block: var(--space-8); border: 1px solid color-mix(in srgb, var(--gold) 45%, transparent); }
+  .sac__grid { display: grid; gap: 2rem; align-items: center; margin-bottom: 2.5rem; }
+  .sac__art svg { width: min(100%, 22rem); margin: 0 auto; overflow: visible; }
+  .sac__glow { animation: glow 3.5s ease-in-out infinite alternate; transform-origin: center; }
+  .sac__embers circle { animation: ember 2.6s ease-in-out infinite alternate; animation-delay: var(--d); }
+  .sac__coal { animation: ember 3s ease-in-out infinite alternate; }
+  .sac__steam path { animation: steam 4s ease-in-out infinite; }
+  .sac__steam path:last-child { animation-delay: 1.5s; }
+  @keyframes glow { from { opacity: 0.55; } to { opacity: 1; } }
+  @keyframes ember { from { opacity: 0.45; } to { opacity: 1; } }
+  @keyframes steam { 0% { opacity: 0; transform: translateY(6px); } 40% { opacity: 0.5; } 100% { opacity: 0; transform: translateY(-14px); } }
+  .sac__title { color: var(--cream); font-size: var(--step-3); }
+  .sac__lead { font-size: var(--step-2); color: var(--gold-light); line-height: 1.3; }
+  .sac__lead2 { color: var(--cream-dim); }
+  .sac__list { list-style: none; margin: 1rem 0 0; padding: 0; display: grid; gap: 0.3rem; }
+  .sac__list li { display: flex; justify-content: space-between; gap: 1rem; padding-bottom: 0.3rem; border-bottom: 1px dotted color-mix(in srgb, var(--gold) 40%, transparent); font-size: 0.95rem; }
+  .sac__list li span:last-child { color: var(--gold-light); white-space: nowrap; }
+  .sac__form { max-width: 48rem; margin: 0 auto; padding-top: 2rem; border-top: 1px solid color-mix(in srgb, var(--gold) 35%, transparent); }
+  .sac__form-title { color: var(--cream); font-size: var(--step-2); margin: 0; }
+  .sac__hours { margin: 0; font-size: 0.82rem; color: var(--gold-light); min-height: 1em; }
+  @media (min-width: 52rem) { .sac__grid { grid-template-columns: 0.9fr 1.1fr; } }
+</style>

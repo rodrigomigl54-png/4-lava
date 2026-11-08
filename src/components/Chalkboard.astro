@@ -1,0 +1,105 @@
+---
+import daily from '../data/daily.json';
+import info from '../data/info.json';
+import { t, pick, formatPrice, type Locale } from '../lib/i18n';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const items = daily.items.map((i) => ({ name: locale === 'en' ? i.en : pick(locale, i.sr), price: i.price ? formatPrice(locale, i.price) : '' }));
+const weekly = Object.fromEntries(Object.entries(daily.weekly ?? {}).map(([d, v]) => [d, pick(locale, v as { sr: string; en: string })]));
+const cfg = {
+  sheet: info.dailySheetCsv || '',
+  locale,
+  today: t(locale, 'board.today'),
+  days: ['7', '1', '2', '3', '4', '5', '6'].map((d) => t(locale, `days.${d}`)),
+  months: t(locale, 'months').split(','),
+  currency: t(locale, 'price.currency'),
+  weekly,
+};
+---
+<div class="board-wrap" data-board data-cfg={JSON.stringify(cfg)}>
+  <div class="board">
+    <svg class="board__frame" viewBox="0 0 400 300" preserveAspectRatio="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="wood-g" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#6b4a2f" /><stop offset=".5" stop-color="#4a3020" /><stop offset="1" stop-color="#3a2416" /></linearGradient>
+      </defs>
+      <path d="M0 0h400v300H0zM18 18v264h364V18z" fill="url(#wood-g)" fill-rule="evenodd" />
+      <path d="M8 8h384v284H8z M18 18h364v264H18z" fill="none" stroke="#B08D57" stroke-width=".8" opacity=".7" />
+      <path d="M4 4l14 14M396 4l-14 14M4 296l14-14M396 296l-14-14" stroke="#2a1a10" stroke-width="1.2" />
+      <path d="M0 6h400M0 294h400M6 0v300M394 0v300" stroke="#8a6440" stroke-width=".6" opacity=".6" />
+    </svg>
+    <div class="board__inner">
+      <p class="board__date" data-board-date>&nbsp;</p>
+      <h3 class="board__title">{t(locale, 'board.title')}</h3>
+      <svg class="board__squiggle" viewBox="0 0 200 10" aria-hidden="true"><path d="M2 6c20-6 30 4 50-1s30-5 50 0 30 4 50-1 30-3 46 0" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
+      <ul class="board__list" role="list" data-board-list>
+        {items.map((i) => <li><span>{i.name}</span>{i.price && <span class="board__price">{i.price}</span>}</li>)}
+      </ul>
+      <p class="board__weekly" data-board-weekly hidden></p>
+      <p class="board__note">{pick(locale, daily.note)}</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { parseCSV } from '../lib/csv';
+  document.querySelectorAll<HTMLElement>('[data-board]').forEach(async (root) => {
+    const c = JSON.parse(root.dataset.cfg || '{}');
+    const p = Object.fromEntries(new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Belgrade', weekday: 'short', day: 'numeric', month: 'numeric' })
+      .formatToParts(new Date()).map((x) => [x.type, x.value]));
+    const wd = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(p.weekday);
+    const date = c.locale === 'en' ? `${c.days[wd]} ${Number(p.day)} ${c.months[Number(p.month) - 1]}` : `${c.days[wd]} ${Number(p.day)}. ${c.months[Number(p.month) - 1]}`;
+    root.querySelector('[data-board-date]')!.textContent = c.today.replace('{date}', date);
+    const iso = wd === 0 ? '7' : String(wd);
+    const weekly = root.querySelector<HTMLElement>('[data-board-weekly]')!;
+    if (c.weekly[iso]) { weekly.textContent = c.weekly[iso]; weekly.hidden = false; }
+
+    // Optional: live board from a published Google Sheet (CSV: sr,en,price) — 3 s timeout, falls back to JSON
+    if (!c.sheet) return;
+    const ctl = new AbortController();
+    const to = setTimeout(() => ctl.abort(), 3000);
+    try {
+      const res = await fetch(c.sheet, { signal: ctl.signal, cache: 'no-store' });
+      if (!res.ok) return;
+      const rows = parseCSV(await res.text()).slice(1).filter((r) => r[0]?.trim());
+      if (!rows.length) return;
+      const { toLatin } = await import('../lib/translit');
+      const list = root.querySelector('[data-board-list]')!;
+      list.replaceChildren(...rows.map((r) => {
+        const li = document.createElement('li');
+        const name = c.locale === 'en' ? (r[1] || r[0]) : c.locale === 'lat' ? toLatin(r[0]) : r[0];
+        const s = document.createElement('span'); s.textContent = name.trim(); li.append(s);
+        const pr = Number(String(r[2] || '').replace(/[^\d]/g, ''));
+        if (pr) { const ps = document.createElement('span'); ps.className = 'board__price'; ps.textContent = `${new Intl.NumberFormat('de-DE').format(pr)} ${c.currency}`; li.append(ps); }
+        return li;
+      }));
+    } catch { /* keep JSON fallback */ } finally { clearTimeout(to); }
+  });
+</script>
+
+<style>
+  .board-wrap { max-width: 34rem; margin: 0 auto; transform: rotate(-0.6deg); }
+  .board { position: relative; aspect-ratio: 4 / 3.1; filter: drop-shadow(0 22px 22px rgb(40 20 10 / 0.35)); }
+  .board__frame { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+  .board__inner {
+    position: absolute; inset: 4.5% 3.5%; padding: 6% 8%;
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    background:
+      radial-gradient(80% 60% at 30% 25%, rgb(255 255 255 / 0.07), transparent 70%),
+      radial-gradient(60% 50% at 80% 80%, rgb(255 255 255 / 0.05), transparent 70%),
+      var(--grain),
+      #24352b;
+    color: #f2efe6;
+    font-family: var(--font-hand);
+    text-shadow: 0 0 1px rgb(255 255 255 / 0.5), 0 0 6px rgb(255 255 255 / 0.12);
+    overflow: hidden;
+  }
+  .board__date { margin: 0; font-size: clamp(1rem, 0.85rem + 0.8vw, 1.35rem); opacity: 0.85; }
+  .board__title { font-family: var(--font-hand); font-weight: 500; color: #f7f3e8; font-size: clamp(2rem, 1.4rem + 3vw, 3.2rem); margin: 0; letter-spacing: 0.02em; }
+  .board__squiggle { width: 55%; color: #e8c98f; margin: 0.2rem 0 0.6rem; opacity: 0.8; }
+  .board__list { list-style: none; margin: 0; padding: 0; width: 100%; display: grid; gap: 0.2rem; }
+  .board__list li { display: flex; justify-content: space-between; gap: 1rem; font-size: clamp(1.25rem, 1rem + 1.2vw, 1.75rem); line-height: 1.25; }
+  .board__list li span:first-child { text-align: left; }
+  .board__price { color: #f0d79c; white-space: nowrap; }
+  .board__weekly { margin: 0.6rem 0 0; font-size: clamp(1.05rem, 0.9rem + 0.7vw, 1.35rem); color: #b9e0c8; }
+  .board__note { margin: auto 0 0; font-size: clamp(1.1rem, 0.9rem + 0.8vw, 1.45rem); color: #f4b6a8; transform: rotate(-2deg); }
+</style>

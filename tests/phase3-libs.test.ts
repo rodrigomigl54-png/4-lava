@@ -77,3 +77,11 @@ describe('messages', () => {
     expect(belgradeISODate(24, new Date('2026-11-08T10:00:00Z'))).toBe('2026-11-09');
   });
 });
+
+import { parseCSV } from '../src/lib/csv';
+describe('parseCSV', () => {
+  it('parses quoted cells and newlines', () => {
+    expect(parseCSV('sr,en,price\n"Гулаш, јунећи",Goulash,1300\r\nЧорба,"Soup ""fish""",\n'))
+      .toEqual([['sr', 'en', 'price'], ['Гулаш, јунећи', 'Goulash', '1300'], ['Чорба', 'Soup "fish"', '']]);
+  });
+});

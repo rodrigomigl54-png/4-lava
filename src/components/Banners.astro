@@ -12,13 +12,14 @@ const season = info.seasonalBanner.active as string | null;
   <div class="fast-ribbon" hidden data-fast data-fasts={JSON.stringify(fasts)} data-s={JSON.stringify(s)}>
     <span class="fast-ribbon__tag">{t(locale, 'fast.ribbon')}</span>
     <span class="fast-ribbon__text" data-fast-text></span>
-    <a class="fast-ribbon__link" href="#jelovnik" data-fast-link>{t(locale, 'fast.cta')} →</a>
+    <a class="fast-ribbon__link" href="#jelovnik-ceo" data-fast-link>{t(locale, 'fast.cta')} →</a>
   </div>
   {season && <p class="season">{t(locale, `season.${season}`)}</p>}
 </div>
 <script>
   import { fastingNow } from '../lib/fasting';
   const el = document.querySelector<HTMLElement>('[data-fast]');
+  el?.querySelector('[data-fast-link]')?.addEventListener('click', () => document.dispatchEvent(new CustomEvent('k4l:filter', { detail: 'posno' })));
   if (el) {
     const f = fastingNow();
     const fasts = JSON.parse(el.dataset.fasts || '{}');
