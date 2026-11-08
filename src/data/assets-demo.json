@@ -1,6 +1,18 @@
 {
   "note": "Every asset sourced from Google Maps for the private pitch demo. ALL must be replaced with own footage/photos before launch (see README → Пре објаве).",
   "assets": [
-    { "file": "raw/menu/page-01.jpg … page-09.jpg", "use": "menu transcription only (never shown on the site)", "source": "google-maps-demo", "replaceBeforeLaunch": true }
+    {
+      "file": "raw/menu/page-01.jpg … page-09.jpg",
+      "use": "menu transcription only (never shown on the site)",
+      "source": "google-maps-demo",
+      "replaceBeforeLaunch": true
+    },
+    {
+      "file": "raw/intro/src/screen-recording.mp4",
+      "output": "public/intro/walk-1-*",
+      "use": "intro – walk fountain → door (screen recording of Street View, edited)",
+      "source": "google-maps-demo",
+      "replaceBeforeLaunch": true
+    }
   ]
 }

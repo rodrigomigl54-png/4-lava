@@ -10,3 +10,4 @@ raw/**
 !raw/README.md
 # generated QR codes (scripts/make-qr.mjs)
 qr/
+__pycache__/

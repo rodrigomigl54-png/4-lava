@@ -1,8 +1,23 @@
 {
   "generated": "2026-11-08",
-  "source": null,
+  "source": "google-maps-demo",
   "walk": {
-    "video": null,
+    "video": {
+      "desktop": {
+        "mp4": "/intro/walk-1-desktop.mp4",
+        "webm": "/intro/walk-1-desktop.webm",
+        "poster": "/intro/walk-1-desktop-poster.jpg",
+        "posterAvif": "/intro/walk-1-desktop-poster.avif"
+      },
+      "mobile": {
+        "mp4": "/intro/walk-1-mobile.mp4",
+        "webm": "/intro/walk-1-mobile.webm",
+        "poster": "/intro/walk-1-mobile-poster.jpg",
+        "posterAvif": "/intro/walk-1-mobile-poster.avif"
+      },
+      "raw": "raw/intro/src/screen-recording.mp4",
+      "editor": "scripts/edit-intro-walk.py"
+    },
     "stills": []
   },
   "fountain": {

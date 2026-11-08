@@ -503,7 +503,8 @@
       "image": null,
       "verify": false,
       "source": "05-rucak.jpg",
-      "note": "Price is per kg (2100,00/kg)."
+      "note": "Price is per kg (2100,00/kg).",
+      "pairingRakija": "orahovac"
     },
     {
       "id": "svinjska-rebra",
@@ -524,7 +525,7 @@
       "featured": false,
       "preorder": true,
       "preorderHours": null,
-      "pairing": null,
+      "pairing": "podrum-benisek",
       "image": null,
       "verify": false,
       "source": "05-rucak.jpg"
@@ -574,7 +575,7 @@
       "featured": false,
       "preorder": true,
       "preorderHours": null,
-      "pairing": null,
+      "pairing": "rizling",
       "image": null,
       "verify": false,
       "source": "05-rucak.jpg",
@@ -715,7 +716,8 @@
       "image": null,
       "verify": false,
       "source": "07-specijaliteti.jpg",
-      "pairingSource": "menu"
+      "pairingSource": "menu",
+      "pairingRakija": "orahovac"
     },
     {
       "id": "vojvodjanski-rucak",
@@ -742,7 +744,8 @@
       "image": null,
       "verify": false,
       "source": "07-specijaliteti.jpg",
-      "pairingSource": "menu"
+      "pairingSource": "menu",
+      "pairingRakija": "orahovac"
     },
     {
       "id": "cevapi",
@@ -763,7 +766,7 @@
       "featured": false,
       "preorder": false,
       "preorderHours": null,
-      "pairing": null,
+      "pairing": "podrum-benisek",
       "image": null,
       "verify": false,
       "source": "06-rostilj.jpg",
@@ -788,7 +791,7 @@
       "featured": false,
       "preorder": false,
       "preorderHours": null,
-      "pairing": null,
+      "pairing": "podrum-benisek",
       "image": null,
       "verify": false,
       "source": "06-rostilj.jpg",
@@ -839,7 +842,7 @@
       "featured": false,
       "preorder": false,
       "preorderHours": null,
-      "pairing": null,
+      "pairing": "podrum-benisek",
       "image": null,
       "verify": false,
       "source": "06-rostilj.jpg",
@@ -890,7 +893,7 @@
       "featured": false,
       "preorder": false,
       "preorderHours": null,
-      "pairing": null,
+      "pairing": "podrum-benisek",
       "image": null,
       "verify": false,
       "source": "06-rostilj.jpg",
@@ -918,7 +921,7 @@
       "featured": false,
       "preorder": false,
       "preorderHours": null,
-      "pairing": null,
+      "pairing": "podrum-benisek",
       "image": null,
       "verify": false,
       "source": "06-rostilj.jpg",
@@ -1023,7 +1026,7 @@
       "featured": false,
       "preorder": false,
       "preorderHours": null,
-      "pairing": null,
+      "pairing": "rizling",
       "image": null,
       "verify": false,
       "source": "04-salate.jpg"
@@ -1075,7 +1078,7 @@
       "featured": false,
       "preorder": false,
       "preorderHours": null,
-      "pairing": null,
+      "pairing": "rizling",
       "image": null,
       "verify": false,
       "source": "04-salate.jpg"
@@ -1101,7 +1104,7 @@
       "featured": false,
       "preorder": false,
       "preorderHours": null,
-      "pairing": null,
+      "pairing": "rizling",
       "image": null,
       "verify": false,
       "source": "04-salate.jpg"
