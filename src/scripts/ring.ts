@@ -9,6 +9,7 @@ export function initRing(section: HTMLElement) {
   if (!ring || !track) return;
   const items = [...track.querySelectorAll<HTMLElement>('[data-ring-item]')];
   const cards = [...section.querySelectorAll<HTMLElement>('[data-drink-card]')];
+  const bgs = [...section.querySelectorAll<HTMLElement>('[data-drink-bg]')];
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   let visible = items.slice();
   let rot = 0;           // degrees
@@ -51,9 +52,10 @@ export function initRing(section: HTMLElement) {
     items.forEach((x) => x.classList.toggle('is-front', x === it));
     it.querySelector('button')!.tabIndex = 0;
     const idx = Number(it.dataset.ringItem);
-    if (idx !== front) {
+    if (idx !== front || !bgs.some((b) => b.classList.contains('is-on'))) {
       front = idx;
       cards.forEach((c) => (c.hidden = Number(c.dataset.drinkCard) !== idx));
+      bgs.forEach((b) => b.classList.toggle('is-on', Number(b.dataset.drinkBg) === idx));
     }
   }
 
