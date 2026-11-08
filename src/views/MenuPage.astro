@@ -9,11 +9,11 @@ import { t, localePath, type Locale } from '../lib/i18n';
 interface Props { locale: Locale }
 const { locale } = Astro.props;
 ---
-<BaseLayout locale={locale} title={t(locale, 'meta.menuTitle')} lite onHome={false}>
+<BaseLayout locale={locale} title={t(locale, 'meta.menuTitle')} lite onHome={false} schema="menu">
   <header slot="header" class="qr-head">
     <div class="container qr-head__bar">
-      <a href={localePath(locale, '/')} class="qr-head__brand" aria-label={t(locale, 'menu.backHome')}>
-        <span class="qr-head__lion"><LionIcon variant="half" /></span>
+      <a href={localePath(locale, '/')} class="qr-head__brand" title={t(locale, 'menu.backHome')}>
+        <span class="qr-head__lion" aria-hidden="true"><LionIcon variant="half" /></span>
         <span>{t(locale, 'brand.name')}</span>
       </a>
       <LangSwitch locale={locale} />
@@ -31,7 +31,7 @@ const { locale } = Astro.props;
 <style>
   .qr-head { border-bottom: 1px solid var(--line); }
   .qr-head__bar { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; padding-block: 0.5rem; }
-  .qr-head__brand { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--font-display); font-weight: 700; font-size: 1.2rem; line-height: 1.1; color: var(--bordeaux); text-decoration: none; min-height: 2.75rem; }
+  .qr-head__brand { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--font-display); font-weight: 600; font-size: 1.2rem; line-height: 1.1; color: var(--bordeaux); text-decoration: none; min-height: 2.75rem; }
   .qr-head__lion { width: 1.6rem; height: 2.4rem; overflow: hidden; display: block; }
   .qr-head__lion :global(svg) { width: 100%; height: 100%; }
   .qr-head__meta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem; padding-bottom: 0.6rem; }

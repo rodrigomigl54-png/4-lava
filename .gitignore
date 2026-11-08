@@ -8,3 +8,5 @@ dist/
 # Raw source material (Google Maps demo assets, own footage) – never committed
 raw/**
 !raw/README.md
+# generated QR codes (scripts/make-qr.mjs)
+qr/

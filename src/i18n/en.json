@@ -278,5 +278,7 @@
   "cart.close": "Close",
   "cart.noPay": "No online payment — you pay on pickup or delivery.",
   "cart.msg": "Hello! An order ({mode}):\n{items}\nTotal (approx.): {total}\nTime: {when}\nName: {name}\nAddress: {address}\nNote: {note}\n(sent from the website)",
-  "months": "January,February,March,April,May,June,July,August,September,October,November,December"
+  "months": "January,February,March,April,May,June,July,August,September,October,November,December",
+  "lang.labelFooter": "Language (footer)",
+  "lang.labelMenu": "Language (menu)"
 }

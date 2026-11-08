@@ -87,8 +87,9 @@ const dev = import.meta.env.DEV;
   .bermet p { color: var(--cream-dim); }
   .verify-dot { display: inline-block; width: 0.5rem; height: 0.5rem; margin-left: 0.4rem; border-radius: 50%; background: #e33; vertical-align: super; }
   @media (min-width: 48rem) {
-    .shelf { grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); align-items: end; }
-    .shelf__item { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+    .shelf { grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); align-items: stretch; }
+    .shelf__item { grid-template-columns: 1fr; grid-template-rows: 15rem 1fr; justify-items: center; align-items: end; text-align: center; }
+    .shelf__tag { align-self: stretch; }
     .shelf__bottle { width: 5.5rem; margin-bottom: -1.2rem; position: relative; z-index: 1; }
     .shelf__tag { width: 100%; padding-top: 1.6rem; }
     .shelf__price { justify-content: center; }

@@ -20,7 +20,7 @@ body {
   color: var(--fg);
   background-color: var(--bg);
   background-image: var(--grain);
-  background-size: 180px 180px;
+  background-size: 160px 160px;
   font-kerning: normal;
   font-variant-ligatures: common-ligatures;
   text-rendering: optimizeLegibility;
@@ -145,6 +145,7 @@ p { margin: 0 0 var(--space-4); text-wrap: pretty; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
@@ -179,3 +180,10 @@ p { margin: 0 0 var(--space-4); text-wrap: pretty; }
 }
 .section-lion svg { width: 100%; height: 100%; }
 .dark .section-lion { color: var(--gold); background: var(--wood); }
+
+/* Reveal (set by home-motion.ts only when motion is allowed) */
+.will-reveal { opacity: 0; transform: translateY(28px); transition: opacity 1.2s var(--ease), transform 1.2s var(--ease-out); }
+.will-reveal.is-revealed { opacity: 1; transform: none; }
+
+/* Skip rendering work for sections far below the fold */
+main > .section:not(:first-child), main > .roll { content-visibility: auto; contain-intrinsic-size: auto 1400px; }

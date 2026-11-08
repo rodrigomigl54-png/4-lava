@@ -11,6 +11,7 @@ const unit = unitText(i);
 const dev = import.meta.env.DEV;
 const search = [pick('sr', i.name), toLatin(pick('sr', i.name)), i.name.en, desc].join(' ').toLowerCase();
 const hl = lite ? '' : timeHighlight(i.id);
+const H = lite ? 'h3' : 'h4';
 ---
 <li
   class="mi"
@@ -23,7 +24,7 @@ const hl = lite ? '' : timeHighlight(i.id);
   data-first={!lite && FIRST_TIME.includes(i.id) ? '' : undefined}
 >
   <div class="mi__line">
-    <h4 class="mi__name">{name}{unit && <span class="mi__unit"> · {unit}</span>}{dev && i.verify && <span class="verify-dot" title="TODO_VERIFY" />}</h4>
+    <H class="mi__name">{name}{unit && <span class="mi__unit"> · {unit}</span>}{dev && i.verify && <span class="verify-dot" title="TODO_VERIFY" />}</H>
     <span class="mi__dots" aria-hidden="true"></span>
     {i.price != null && <span class="mi__price">{priceText(locale, i)}</span>}
     {cart && !lite && i.price != null && (

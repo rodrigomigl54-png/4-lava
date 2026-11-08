@@ -76,7 +76,7 @@ const social = [
         </li>
       ))}
     </ul>
-    <LangSwitch locale={locale} />
+    <LangSwitch locale={locale} label={t(locale, 'lang.labelFooter')} />
     <TimeToggle locale={locale} />
   </div>
   {demo && <p class="site-footer__demo">{t(locale, 'footer.demo')}</p>}

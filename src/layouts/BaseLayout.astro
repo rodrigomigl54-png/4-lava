@@ -3,6 +3,7 @@ import '../styles/base.css';
 import LionSprite from '../components/LionSprite.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { restaurantLD, menuLD } from '../lib/schema';
 import { HTML_LANG, OG_LOCALE, LOCALES, localePath, stripLocale, t, type Locale } from '../lib/i18n';
 
 interface Props {
@@ -12,16 +13,21 @@ interface Props {
   onHome?: boolean;
   /** lite = QR menu: no header nav lions / bottom bar */
   lite?: boolean;
+  /** JSON-LD: 'restaurant' (home) | 'menu' (QR menu) */
+  schema?: 'restaurant' | 'menu';
 }
-const { locale, title = t(locale, 'meta.title'), description = t(locale, 'meta.description'), onHome = true, lite = false } = Astro.props;
+const { locale, title = t(locale, 'meta.title'), description = t(locale, 'meta.description'), onHome = true, lite = false, schema } = Astro.props;
 const demo = import.meta.env.PUBLIC_DEMO !== 'false';
 const site = Astro.site ?? new URL('https://www.example.com');
 const rest = stripLocale(Astro.url.pathname);
 const canonical = new URL(localePath(locale, rest), site).href;
 const alternates = LOCALES.map((l) => ({ hreflang: HTML_LANG[l], href: new URL(localePath(l, rest), site).href }));
-const preload = locale === 'sr'
-  ? ['/fonts/cormorant-garamond-cyrillic-600-normal.woff2', '/fonts/lora-cyrillic-400-normal.woff2']
-  : ['/fonts/cormorant-garamond-latin-600-normal.woff2', '/fonts/lora-latin-400-normal.woff2'];
+const sub = locale === 'sr' ? 'cyrillic' : 'latin';
+const preload = [
+  `/fonts/cormorant-garamond-${sub}-600-normal.woff2`,
+  `/fonts/cormorant-garamond-${sub}-500-italic.woff2`,
+  `/fonts/lora-${sub}-400-normal.woff2`,
+];
 ---
 <!doctype html>
 <html lang={HTML_LANG[locale]} data-locale={locale}>
@@ -38,6 +44,7 @@ const preload = locale === 'sr'
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     {preload.map((href) => <link rel="preload" href={href} as="font" type="font/woff2" crossorigin />)}
+
     <meta property="og:type" content="restaurant" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -45,6 +52,8 @@ const preload = locale === 'sr'
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={new URL('/og.jpg', site).href} />
     <meta name="twitter:card" content="summary_large_image" />
+    {schema === 'restaurant' && <script type="application/ld+json" set:html={JSON.stringify(restaurantLD(locale, site))} />}
+    {schema === 'menu' && <script type="application/ld+json" set:html={JSON.stringify([restaurantLD(locale, site), menuLD(locale, site)])} />}
     <slot name="head" />
     <script is:inline>
       // Time-of-day mode (Europe/Belgrade) before first paint; demo override from the footer.

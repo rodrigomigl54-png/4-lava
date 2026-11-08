@@ -9,6 +9,9 @@ interface Props { locale: Locale; lite?: boolean }
 const { locale, lite = false } = Astro.props;
 const groups = CATEGORIES.map((c) => ({ c, items: ITEMS.filter((i) => i.category === c.id) })).filter((g) => g.items.length);
 const subOrder = Object.keys(SUBCATS);
+// heading levels: homepage (inside h2 section > h3 block) vs. /meni/ (h1 page)
+const H = lite ? 'h2' : 'h3';
+const HS = lite ? 'h3' : 'h4';
 const [y, m, d] = MENU_UPDATED.split('-');
 ---
 <div class:list={['menu', { 'menu--lite': lite }]} data-menu data-empire="all">
@@ -39,12 +42,12 @@ const [y, m, d] = MENU_UPDATED.split('-');
     {groups.map(({ c, items }) => (
       <section class="menu-cat" data-menu-cat={c.id} id={lite ? `cat-${c.id}` : undefined} aria-labelledby={`mc-${c.id}${lite ? '-l' : ''}`}>
         {c.kicker && <span class="menu-cat__kicker">{pick(locale, c.kicker)}</span>}
-        <h3 class="menu-cat__title" id={`mc-${c.id}${lite ? '-l' : ''}`}>{pick(locale, c.name)}</h3>
+        <H class="menu-cat__title" id={`mc-${c.id}${lite ? '-l' : ''}`}>{pick(locale, c.name)}</H>
         {!lite && <OrnamentRule width="9rem" class="menu-cat__rule" />}
         {c.id === 'pica'
           ? subOrder.filter((s) => items.some((i) => i.subcategory === s)).map((s) => (
               <>
-                <h4 class="menu-sub" data-menu-sub>{pick(locale, SUBCATS[s])}</h4>
+                <HS class="menu-sub" data-menu-sub>{pick(locale, SUBCATS[s])}</HS>
                 <ul class="mi-list mi-list--2" role="list">
                   {items.filter((i) => i.subcategory === s).map((i) => <MenuItemRow item={i} locale={locale} lite={lite} />)}
                 </ul>

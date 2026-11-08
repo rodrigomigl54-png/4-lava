@@ -1,11 +1,11 @@
 ---
 import { LOCALES, SWITCH_LABEL, HTML_LANG, localePath, stripLocale, t, type Locale } from '../lib/i18n';
 import { stripKeep } from '../lib/translit';
-interface Props { locale: Locale; class?: string }
-const { locale, class: cls = '' } = Astro.props;
+interface Props { locale: Locale; class?: string; label?: string }
+const { locale, class: cls = '', label } = Astro.props;
 const rest = stripLocale(Astro.url.pathname);
 ---
-<nav class:list={['lang', cls]} aria-label={t(locale, 'lang.label')}>
+<nav class:list={['lang', cls]} aria-label={label ?? t(locale, 'lang.label')}>
   {LOCALES.map((l, i) => (
     <>
       {i > 0 && <span class="lang__sep" aria-hidden="true">·</span>}

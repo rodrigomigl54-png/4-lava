@@ -31,11 +31,11 @@ const hints = [
   { mode: 'vece', href: '#podrum' },
 ];
 ---
-<BaseLayout locale={locale}>
-  <section class="hero dark wood marble-veins" aria-labelledby="hero-title">
+<BaseLayout locale={locale} schema="restaurant">
+  <section class="hero dark wood" aria-labelledby="hero-title">
     <OrnamentCorner position="tl" />
     <OrnamentCorner position="br" />
-    <span class="hero__lion" aria-hidden="true" data-parallax="50"><LionIcon variant="half" /></span>
+    <span class="hero__lion" aria-hidden="true"><LionIcon variant="half" /></span>
     <div class="hero__fountain" aria-hidden="true"><FountainArt /></div>
     <div class="container hero__inner">
       <p class="label hero__kicker">{t(locale, 'brand.place')} · 1799</p>
@@ -100,8 +100,27 @@ const hints = [
     display: grid;
     align-items: center;
     padding-block: var(--space-8);
+    /* warm depth without an image, so the headline (not a texture) is the LCP element */
+    background-image:
+      radial-gradient(70% 55% at 50% 42%, rgb(142 42 42 / 0.16), transparent 70%),
+      radial-gradient(120% 90% at 50% 120%, rgb(0 0 0 / 0.45), transparent 60%),
+      linear-gradient(115deg, transparent 30%, rgb(176 141 87 / 0.05) 45%, transparent 60%),
+      var(--grain);
+    background-size: auto, auto, auto, 160px 160px;
   }
   .hero__inner { position: relative; z-index: 1; text-align: center; }
+  /* Candle-light entrance (CSS only; reduced motion collapses it to the final frame) */
+  .hero__inner > * { animation: hero-in 1.6s var(--ease-out) both; }
+  .hero__kicker { animation-delay: 0.1s !important; }
+  .hero__title { animation-delay: 0.25s !important; animation-name: hero-title !important; animation-duration: 2s !important; }
+  .hero__sub { animation-delay: 0.7s !important; }
+  .hero__ctas { animation-delay: 0.95s !important; }
+  .hero__meta { animation-delay: 1.15s !important; }
+  .hero__hint { animation-delay: 1.35s !important; }
+  @keyframes hero-in { from { opacity: 0.01; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  @keyframes hero-title { from { opacity: 0.01; letter-spacing: 0.06em; filter: blur(3px); } to { opacity: 1; letter-spacing: 0.005em; filter: none; } }
+  .hero__fountain { animation: hero-in 2.4s var(--ease-out) 0.6s both; }
+  @media (prefers-reduced-motion: reduce) { .hero__inner > *, .hero__fountain { animation: none !important; } }
   .hero__kicker { margin-bottom: 1rem; }
   .hero__title { color: var(--cream); font-size: var(--step-5); font-weight: 600; margin-bottom: 1rem; }
   .hero__inner :global(.hero__rule) { margin-bottom: 1.25rem; }

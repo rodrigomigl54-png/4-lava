@@ -37,7 +37,7 @@ const sectors = drinks.map((d, i) => {
       {sectors.map((s) => (
         <g>
           <path d={s.path} fill={s.fill} stroke="#B08D57" stroke-width="1" />
-          <text transform={`rotate(${s.angle} ${C} ${C})`} x={C} y={C - R + 34} text-anchor="middle" font-family="Cormorant Garamond, serif" font-weight="700" font-size="17" fill="#F3EBDD">{s.name.split(' — ')[0]}</text>
+          <text transform={`rotate(${s.angle} ${C} ${C})`} x={C} y={C - R + 34} text-anchor="middle" font-family="Cormorant Garamond, serif" font-weight="600" font-size="17" fill="#F3EBDD">{s.name.split(' — ')[0]}</text>
           {s.name.includes(' — ') && <text transform={`rotate(${s.angle} ${C} ${C})`} x={C} y={C - R + 54} text-anchor="middle" font-family="Cormorant Garamond, serif" font-style="italic" font-size="15" fill="#C9A66B">{s.name.split(' — ')[1]}</text>}
         </g>
       ))}
