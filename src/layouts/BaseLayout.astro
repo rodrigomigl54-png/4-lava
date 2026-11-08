@@ -4,6 +4,7 @@ import LionSprite from '../components/LionSprite.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { restaurantLD, menuLD } from '../lib/schema';
+import { asset, BASE } from '../lib/base';
 import { HTML_LANG, OG_LOCALE, LOCALES, localePath, stripLocale, t, type Locale } from '../lib/i18n';
 
 interface Props {
@@ -29,10 +30,10 @@ const preload = [
   `/fonts/cormorant-garamond-${sub}-600-normal.woff2`,
   `/fonts/cormorant-garamond-${sub}-500-italic.woff2`,
   `/fonts/lora-${sub}-400-normal.woff2`,
-];
+].map(asset);
 ---
 <!doctype html>
-<html lang={HTML_LANG[locale]} data-locale={locale}>
+<html lang={HTML_LANG[locale]} data-locale={locale} data-base={BASE}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -43,8 +44,8 @@ const preload = [
     {alternates.map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
     <link rel="alternate" hreflang="x-default" href={alternates[0].href} />
     <meta name="theme-color" content="#2A1E17" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="icon" href={asset('/favicon.svg')} type="image/svg+xml" />
+    <link rel="apple-touch-icon" href={asset('/apple-touch-icon.png')} />
     {preload.map((href) => <link rel="preload" href={href} as="font" type="font/woff2" crossorigin />)}
 
     <meta property="og:type" content="restaurant" />
@@ -52,7 +53,7 @@ const preload = [
     <meta property="og:description" content={description} />
     <meta property="og:locale" content={OG_LOCALE[locale]} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:image" content={new URL('/og.jpg', site).href} />
+    <meta property="og:image" content={new URL(asset('/og.jpg'), site).href} />
     <meta name="twitter:card" content="summary_large_image" />
     {schema === 'restaurant' && <script type="application/ld+json" set:html={JSON.stringify(restaurantLD(locale, site))} />}
     {schema === 'menu' && <script type="application/ld+json" set:html={JSON.stringify([restaurantLD(locale, site), menuLD(locale, site)])} />}
@@ -87,8 +88,10 @@ const preload = [
           var cur = document.documentElement.dataset.locale;
           var internal = document.referrer && new URL(document.referrer).origin === location.origin;
           if (!want || want === cur || internal || !/^(sr|lat|en)$/.test(want)) return;
-          var rest = location.pathname.replace(/^\/(lat|en)(?=\/|$)/, '') || '/';
-          location.replace((want === 'sr' ? '' : '/' + want) + rest + location.search + location.hash);
+          var base = document.documentElement.dataset.base || '';
+          var path = location.pathname.indexOf(base) === 0 ? location.pathname.slice(base.length) : location.pathname;
+          var rest = path.replace(/^\/(lat|en)(?=\/|$)/, '') || '/';
+          location.replace(base + (want === 'sr' ? '' : '/' + want) + rest + location.search + location.hash);
         } catch (e) {}
       })();
     </script>

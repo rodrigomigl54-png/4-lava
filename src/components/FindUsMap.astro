@@ -4,6 +4,7 @@ import path from 'node:path';
 import info from '../data/info.json';
 import OrnamentCorner from './OrnamentCorner.astro';
 import { t, type Locale } from '../lib/i18n';
+import { asset } from '../lib/base';
 interface Props { locale: Locale }
 const { locale } = Astro.props;
 const hasPhoto = fs.existsSync(path.join(process.cwd(), 'public/img/vrata.jpg'));
@@ -80,7 +81,7 @@ const hasPhoto = fs.existsSync(path.join(process.cwd(), 'public/img/vrata.jpg'))
         <OrnamentCorner position="tl" size="2rem" />
         <OrnamentCorner position="br" size="2rem" />
         {hasPhoto
-          ? <img src="/img/vrata.jpg" alt={t(locale, 'map.photoAlt')} loading="lazy" decoding="async" width="800" height="1000" />
+          ? <img src={asset('/img/vrata.jpg')} alt={t(locale, 'map.photoAlt')} loading="lazy" decoding="async" width="800" height="1000" />
           : <div class="findus__placeholder"><svg viewBox="0 0 60 80" aria-hidden="true"><path d="M8 78V30a22 22 0 0 1 44 0v48M8 78h44M22 50h2" fill="none" stroke="currentColor" stroke-width="1.5" /></svg><span>{t(locale, 'map.photoSoon')}</span></div>}
       </figure>
       <a class="btn" href={info.links.googleDirections} target="_blank" rel="noopener">{t(locale, 'map.open')} <span aria-hidden="true">↗</span></a>

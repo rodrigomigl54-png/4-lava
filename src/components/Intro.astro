@@ -7,7 +7,9 @@
  * Media come from src/data/intro.json, written by scripts/process-intro.sh.
  * Skip button always visible, Esc skips. Reduced motion: one still + „Уђи“.
  */
-import intro from '../data/intro.json';
+import introRaw from '../data/intro.json';
+import { assetDeep } from '../lib/base';
+const intro = assetDeep(introRaw);
 import FountainArt from './FountainArt.astro';
 import LionIcon from './LionIcon.astro';
 import { t, type Locale } from '../lib/i18n';

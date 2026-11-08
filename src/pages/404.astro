@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import LionIcon from '../components/LionIcon.astro';
+import OrnamentRule from '../components/OrnamentRule.astro';
+import { localePath } from '../lib/i18n';
+---
+<BaseLayout locale="sr" title="404 — Гостиона Код 4 Лава" onHome={false}>
+  <section class="section nf">
+    <div class="container">
+      <span class="nf__lion" aria-hidden="true"><LionIcon variant="half" /></span>
+      <h1>Ова врата су затворена</h1>
+      <p class="nf__en" lang="en">This door is closed — the page doesn’t exist.</p>
+      <OrnamentRule />
+      <p class="nf__links">
+        <a class="btn" href={localePath('sr', '/')}>Почетна</a>
+        <a class="btn btn--ghost" href={localePath('lat', '/')} lang="sr-Latn">Latinica</a>
+        <a class="btn btn--ghost" href={localePath('en', '/')} lang="en">English</a>
+        <a class="btn btn--ghost" href={localePath('sr', '/meni/')}>Јеловник</a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+<style>
+  .nf { text-align: center; }
+  .nf__lion { display: block; width: 4rem; margin: 0 auto 1.5rem; color: var(--ink); }
+  .nf__en { color: var(--fg-muted); font-style: italic; }
+  .nf__links { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.6rem; margin-top: 1.5rem; }
+</style>

@@ -19,7 +19,9 @@ import Gate from '../components/Gate.astro';
 import Roll from '../components/Roll.astro';
 import FountainArt from '../components/FountainArt.astro';
 import info from '../data/info.json';
-import introData from '../data/intro.json';
+import introRaw from '../data/intro.json';
+import { assetDeep } from '../lib/base';
+const introData = assetDeep(introRaw);
 import { t, formatNumber, type Locale } from '../lib/i18n';
 interface Props { locale: Locale }
 const { locale } = Astro.props;

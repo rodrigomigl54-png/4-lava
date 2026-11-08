@@ -1,6 +1,7 @@
 import info from '../data/info.json';
 import { ITEMS, CATEGORIES } from './menu';
 import { pick, localePath, HTML_LANG, type Locale } from './i18n';
+import { asset } from './base';
 
 const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
@@ -12,12 +13,12 @@ export function restaurantLD(l: Locale, site: URL) {
   return {
     '@context': 'https://schema.org',
     '@type': 'Restaurant',
-    '@id': new URL('/#restaurant', site).href,
+    '@id': new URL(localePath('sr', '/') + '#restaurant', site).href,
     name: l === 'sr' ? info.name.sr : info.name.lat,
     alternateName: [info.name.sr, info.name.lat, info.name.enAlt],
     url: new URL(localePath(l, '/'), site).href,
-    image: new URL('/og.jpg', site).href,
-    logo: new URL('/brand/logo-lion.svg', site).href,
+    image: new URL(asset('/og.jpg'), site).href,
+    logo: new URL(asset('/brand/logo-lion.svg'), site).href,
     telephone: info.phone.intlDisplay.replace(/\s/g, ' '),
     priceRange: info.priceRange,
     currenciesAccepted: 'RSD',
