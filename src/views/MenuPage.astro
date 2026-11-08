@@ -34,7 +34,10 @@ const { locale } = Astro.props;
   .qr-head__brand { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--font-display); font-weight: 600; font-size: 1.2rem; line-height: 1.1; color: var(--bordeaux); text-decoration: none; min-height: 2.75rem; }
   .qr-head__lion { width: 1.6rem; height: 2.4rem; overflow: hidden; display: block; }
   .qr-head__lion :global(svg) { width: 100%; height: 100%; }
-  .qr-head__meta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem; padding-bottom: 0.6rem; }
+  /* fixed two-column row: the live open/closed text can change length without moving anything */
+  .qr-head__meta { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 0.5rem; padding-bottom: 0.6rem; }
+  .qr-head__meta :global(.status) { max-width: 100%; justify-self: start; overflow: hidden; }
+  .qr-head__meta :global(.status__text) { overflow: hidden; text-overflow: ellipsis; }
   .qr-head__tel { color: var(--bordeaux); font-weight: 600; font-size: 0.9rem; min-height: 2.75rem; display: inline-flex; align-items: center; }
   .qr-main { padding-block: 1rem 3rem; }
   .qr-title { font-size: var(--step-4); text-align: center; margin: 0.5rem 0 0; }

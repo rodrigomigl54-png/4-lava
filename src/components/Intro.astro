@@ -1,4 +1,6 @@
 ---
+import { asset as __a } from '../lib/base';
+const LION = __a('/brand/lion-sprite.svg') + '#lion';
 /**
  * Intro „Попиј воду са чесме“ — first visit only.
  * Scene 1: the Four Lions Fountain (video → graded stills with Ken Burns → SVG fountain).
@@ -22,7 +24,7 @@ const w = ((intro as { walk?: { video: Video } }).walk?.video) ?? null;
 const f = intro.fountain as { video: Video; stills: Stills };
 const d = intro.door as { video: Video; stills: Stills };
 ---
-<div class="intro" data-intro data-walk={w ? '1' : undefined} role="dialog" aria-modal="true" aria-labelledby="intro-quote" aria-describedby="intro-hint" lang={locale === 'en' ? 'en' : locale === 'lat' ? 'sr-Latn' : 'sr-Cyrl'}>
+<div class:list={['intro', { 'is-auto': !!w }]} data-intro data-walk={w ? '1' : undefined} role="dialog" aria-modal="true" aria-labelledby="intro-quote" aria-describedby="intro-hint" lang={locale === 'en' ? 'en' : locale === 'lat' ? 'sr-Latn' : 'sr-Cyrl'}>
   <button type="button" class="intro__skip" data-intro-skip>{t(locale, 'intro.skip')}</button>
 
   <!-- Scene 1: fountain -->
@@ -82,7 +84,7 @@ const d = intro.door as { video: Video; stills: Stills };
             <circle cx="248" cy="380" r="5" fill="#B08D57" />
           </g>
           <!-- little lion above the door -->
-          <g transform="translate(184 150) scale(.03)" style="color:#2A1E17"><use href="#lion" width="1296" height="1296" /></g>
+          <g transform="translate(184 150) scale(.03)" style="color:#2A1E17"><use href={LION} width="1296" height="1296" /></g>
           <!-- lantern -->
           <path d="M322 230v-30M308 230h28l-4 36h-20z" stroke="#2A1E17" stroke-width="3" fill="#ffd38a" />
           <rect y="470" width="400" height="50" fill="#bfa982" />
@@ -169,7 +171,7 @@ const d = intro.door as { video: Video; stills: Stills };
     background: linear-gradient(transparent, rgb(20 12 8 / 0.55) 30%, rgb(20 12 8 / 0.8)); }
   .intro__lion { width: 2.4rem; color: var(--gold); opacity: 0; animation: intro-in 1.2s var(--ease-out) 0.2s forwards; }
   .intro__quote { max-width: 30rem; margin: 0; font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: clamp(1.6rem, 1.2rem + 2.2vw, 2.7rem); line-height: 1.2; text-shadow: 0 2px 18px rgb(0 0 0 / 0.6);
-    opacity: 0.01; animation: intro-in 1.6s var(--ease-out) 0.35s forwards; }
+    animation: intro-in 1.4s var(--ease-out) both; }
   .intro__sip {
     position: relative; display: grid; justify-items: center; gap: 0.5rem; padding: 0.5rem 1rem; border: 0; background: none; color: var(--gold-light); cursor: pointer;
     font-family: var(--font-body); font-size: 0.85rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; touch-action: none; user-select: none; -webkit-user-select: none;

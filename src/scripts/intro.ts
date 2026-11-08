@@ -42,8 +42,8 @@ export function initIntro() {
 
   // Filmed walk → plays automatically (no tap needed)
   const autoWalk = root.querySelector<HTMLVideoElement>('[data-walk-video]');
+  if (!autoWalk || reduce) root.classList.remove('is-auto');
   if (autoWalk && !reduce) {
-    root.classList.add('is-auto');
     let started = false;
     const go = () => { if (started || done) return; started = true; enter(); };
     if (autoWalk.readyState >= 3) go();
@@ -105,7 +105,7 @@ export function initIntro() {
       walk.play().then(() => {
         const ms = Number.isFinite(walk.duration) ? walk.duration * 1000 : 3000;
         setTimeout(glow, Math.max(0, ms - 700));          // the door glows as we arrive
-        setTimeout(finish, Math.min(ms + 150, 4200));     // safety net
+        setTimeout(finish, Math.min(ms + 150, 8000));     // safety net (video "ended" normally fires first)
       }).catch(() => {
         // autoplay refused (e.g. power-saving mode): let the visitor start it
         root!.classList.remove('is-auto', 'is-entering', 'is-walking');

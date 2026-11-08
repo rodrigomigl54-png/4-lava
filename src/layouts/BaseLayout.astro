@@ -1,6 +1,5 @@
 ---
 import '../styles/base.css';
-import LionSprite from '../components/LionSprite.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { restaurantLD, menuLD } from '../lib/schema';
@@ -26,10 +25,14 @@ const rest = stripLocale(Astro.url.pathname);
 const canonical = new URL(localePath(locale, rest), site).href;
 const alternates = LOCALES.map((l) => ({ hreflang: HTML_LANG[l], href: new URL(localePath(l, rest), site).href }));
 const sub = locale === 'sr' ? 'cyrillic' : 'latin';
+// Digits, prices and punctuation live in the latin files, so Cyrillic pages need both
+// subsets up front — otherwise the late swap shifts the layout.
 const preload = [
   `/fonts/cormorant-garamond-${sub}-600-normal.woff2`,
   `/fonts/cormorant-garamond-${sub}-500-italic.woff2`,
   `/fonts/lora-${sub}-400-normal.woff2`,
+  ...(sub === 'cyrillic' ? ['/fonts/cormorant-garamond-latin-600-normal.woff2', '/fonts/lora-latin-400-normal.woff2'] : []),
+  ...(lite ? [`/fonts/lora-${sub}-600-normal.woff2`, '/fonts/lora-latin-600-normal.woff2', '/fonts/cormorant-garamond-latin-500-italic.woff2'] : []),
 ].map(asset);
 ---
 <!doctype html>
@@ -45,9 +48,11 @@ const preload = [
     <link rel="alternate" hreflang="x-default" href={alternates[0].href} />
     <meta name="theme-color" content="#2A1E17" />
     <meta name="color-scheme" content="only light" />
-    <link rel="icon" href={asset('/favicon.svg')} type="image/svg+xml" />
+    <link rel="icon" href={asset('/favicon-32.png')} type="image/png" sizes="32x32" />
+    <link rel="icon" href={asset('/favicon.svg')} type="image/svg+xml" sizes="any" />
     <link rel="apple-touch-icon" href={asset('/apple-touch-icon.png')} />
     {preload.map((href) => <link rel="preload" href={href} as="font" type="font/woff2" crossorigin />)}
+    <link rel="preload" href={asset('/brand/lion-sprite.svg')} as="image" type="image/svg+xml" />
 
     <meta property="og:type" content="restaurant" />
     <meta property="og:title" content={title} />
@@ -111,7 +116,6 @@ const preload = [
   </head>
   <body class:list={[{ 'is-lite': lite }]}>
     <a class="skip-link" href="#main">{t(locale, 'skip')}</a>
-    <LionSprite />
     {!lite && <Header locale={locale} onHome={onHome} />}
     <slot name="header" />
     <main id="main" tabindex="-1">

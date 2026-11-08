@@ -1,4 +1,6 @@
 ---
+import { asset as __a } from '../lib/base';
+const LION = __a('/brand/lion-sprite.svg') + '#lion';
 import { ITEMS, DRINKS, PAIRING_REASONS } from '../lib/menu';
 import { themeOf, motifUri } from '../lib/drink-themes';
 import { t, pick, type Locale } from '../lib/i18n';
@@ -74,7 +76,7 @@ const data = Object.fromEntries(wheels.map((w) => [w.kind, w.drinks.map(({ id, a
         <circle cx={C} cy={C} r={R * 0.34} fill="none" stroke="#B08D57" stroke-width=".8" stroke-dasharray="2 4" />
         <circle cx={C} cy={C} r="38" fill="#2A1E17" stroke="#B08D57" stroke-width="1.5" />
         <circle cx={C} cy={C} r="31" fill="none" stroke="#B08D57" stroke-width=".6" />
-        <g transform={`translate(${C - 26} ${C - 30})`} style="color:#B08D57"><use href="#lion" width="60" height="60" /></g>
+        <g transform={`translate(${C - 26} ${C - 30})`} style="color:#B08D57"><use href={LION} width="60" height="60" /></g>
       </svg>
     ))}
   </div>

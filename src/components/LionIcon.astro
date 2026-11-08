@@ -1,4 +1,6 @@
 ---
+import { asset as __a } from '../lib/base';
+const LION = __a('/brand/lion-sprite.svg') + '#lion';
 /**
  * A crop of the stencil lion. All variants come from the same traced logo,
  * so every lion on the site shares one consistent hand: bold black shapes,
@@ -38,4 +40,4 @@ const tf = [
   aria-label={label}
   aria-hidden={label ? undefined : 'true'}
   focusable="false"
-><use href="#lion" width="1296" height="1296" transform={tf || undefined} /></svg>
+><use href={LION} width="1296" height="1296" transform={tf || undefined} /></svg>
