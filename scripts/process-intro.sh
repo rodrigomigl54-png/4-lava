@@ -7,6 +7,8 @@
 #
 # Ulaz:  raw/intro/*   (video: mp4 mov webm m4v · foto: jpg jpeg png webp heic)
 #        Ime fajla određuje scenu:
+#          *put* *walk* *setnja*              → ŠETNJA od česme do vrata (jedan kadar,
+#                                               npr. snimak ekrana Street View-a) — najbolji intro
 #          *vrata* *door* *ulaz* *entrance*   → scena 2 (mala vrata)
 #          sve ostalo (cesma, fountain, trg…) → scena 1 (česma)
 #        Više fotografija iste scene = sekvenca (abecedni red).
@@ -21,6 +23,9 @@
 #         AVIF/WebP/JPG 1920 px (desktop) i 1080×1920 (mobilni).
 #
 # Env:  CLIP_SECONDS=3.5  TRIM_START=<s> (inače automatski)  MAX_MB=2.5
+#       WALK_SECONDS=3  (šetnja se ubrza na ovu dužinu; intro ukupno ≤ ~5 s)
+#       SMOOTH=mci|blend|0 (izglađivanje skokova između Street View panorama; default mci za šetnju)
+#       AUTOCROP=1 (odseca crne ivice / trake) · CROP=w:h:x:y (ručno, npr. bez menija pregledača)
 # =============================================================================
 set -euo pipefail
 
@@ -30,6 +35,10 @@ OUT="${OUT_DIR:-$ROOT/public/intro}"
 DATA="${DATA_DIR:-$ROOT/src/data}"
 SOURCE="${SOURCE:-google-maps-demo}"
 CLIP_SECONDS="${CLIP_SECONDS:-3.5}"
+WALK_SECONDS="${WALK_SECONDS:-3}"
+SMOOTH="${SMOOTH:-mci}"
+AUTOCROP="${AUTOCROP:-1}"
+CROP="${CROP:-}"
 MAX_MB="${MAX_MB:-2.5}"
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
@@ -57,10 +66,24 @@ ESRGAN="$(command -v realesrgan-ncnn-vulkan || true)"
 
 scene_of() {
   local n; n="$(basename "$1" | tr '[:upper:]' '[:lower:]')"
-  case "$n" in *vrata*|*door*|*ulaz*|*entrance*) echo door ;; *) echo fountain ;; esac
+  case "$n" in
+    *put*|*walk*|*setnja*|*šetnja*|*fountain-to-door*) echo walk ;;
+    *vrata*|*door*|*ulaz*|*entrance*) echo door ;;
+    *) echo fountain ;;
+  esac
 }
 duration_of() { ffprobe -v error -show_entries format=duration -of csv=p=0 "$1" 2>/dev/null | cut -d. -f1-2; }
 size_mb() { python3 -c "import os,sys;print(round(os.path.getsize(sys.argv[1])/1048576,2))" "$1"; }
+
+# --- Odsecanje interfejsa / crnih traka --------------------------------------
+pre_crop() {
+  local f="$1"
+  if [ -n "$CROP" ]; then echo "crop=$CROP,"; return; fi
+  [ "$AUTOCROP" = 1 ] || { echo ""; return; }
+  local c
+  c="$(ffmpeg -hide_banner -i "$f" -t 4 -vf cropdetect=limit=24:round=2:reset=0 -f null - 2>&1 | grep -o 'crop=[0-9:]*' | sort | uniq -c | sort -nr | head -1 | awk '{print $2}')"
+  [ -n "$c" ] && echo "$c," || echo ""
+}
 
 # --- Automatski izbor najmirnijeg segmenta (najmanje rezova/trzaja) ----------
 best_start() {
@@ -90,10 +113,24 @@ PY
 
 process_video() {
   local f="$1" scene="$2" i="$3"
-  local base="$OUT/$scene-$i" dur start src="$f"
-  dur="$(duration_of "$f")"; start="$(best_start "$f" "${dur:-0}")"
-  echo "  ▸ video $(basename "$f") → $scene (start ${start}s, ${CLIP_SECONDS}s)"
-  ffmpeg -hide_banner -loglevel error -y -ss "$start" -t "$CLIP_SECONDS" -i "$f" -an -c:v libx264 -crf 12 -preset veryfast "$TMP/trim.mp4"
+  local base="$OUT/$scene-$i" dur start src="$f" pre
+  dur="$(duration_of "$f")"; pre="$(pre_crop "$f")"
+  if [ "$scene" = walk ]; then
+    # whole walk, sped up to WALK_SECONDS, panorama jumps smoothed
+    local speed smooth=""
+    speed="$(python3 -c "d=float('${dur:-0}' or 0);print(round(min(1.0, $WALK_SECONDS/d),4) if d else 1)")"
+    case "$SMOOTH" in
+      mci)   smooth=",minterpolate=fps=30:mi_mode=mci:mc_mode=aobmc:me_mode=bidir:vsbmc=1" ;;
+      blend) smooth=",minterpolate=fps=30:mi_mode=blend" ;;
+    esac
+    echo "  ▸ šetnja $(basename "$f") → ${dur}s → ${WALK_SECONDS}s (×$(python3 -c "print(round(1/$speed,2))"), izglađivanje: $SMOOTH)"
+    ffmpeg -hide_banner -loglevel error -y -i "$f" -an -vf "${pre}setpts=${speed}*PTS${smooth}" -c:v libx264 -crf 12 -preset veryfast "$TMP/trim.mp4"
+  else
+    start="$(best_start "$f" "${dur:-0}")"
+    echo "  ▸ video $(basename "$f") → $scene (start ${start}s, ${CLIP_SECONDS}s)"
+    ffmpeg -hide_banner -loglevel error -y -ss "$start" -t "$CLIP_SECONDS" -i "$f" -an -vf "${pre%,}" -c:v libx264 -crf 12 -preset veryfast "$TMP/trim.mp4" 2>/dev/null \
+      || ffmpeg -hide_banner -loglevel error -y -ss "$start" -t "$CLIP_SECONDS" -i "$f" -an -c:v libx264 -crf 12 -preset veryfast "$TMP/trim.mp4"
+  fi
   src="$TMP/trim.mp4"
   if [ "$HAS_VIDSTAB" = 1 ]; then
     ffmpeg -hide_banner -loglevel error -y -i "$src" -vf vidstabdetect=shakiness=5:accuracy=15:result="$TMP/t.trf" -f null - \
@@ -102,15 +139,15 @@ process_video() {
   fi
   for fmt in desktop mobile; do
     local crop w h crf=26 vcrf=36
-    if [ $fmt = desktop ]; then w=1600; h=900;  crop="crop='min(iw,ih*16/9)':'min(ih,iw*9/16)',scale=${w}:${h}:flags=lanczos"
+    if [ $fmt = desktop ]; then w=1920; h=1080;  crop="crop='min(iw,ih*16/9)':'min(ih,iw*9/16)',scale=${w}:${h}:flags=lanczos"
     else                      w=720;  h=1280; crop="crop='min(iw,ih*9/16)':'min(ih,iw*16/9)',scale=${w}:${h}:flags=lanczos"; fi
     local vf="$crop,$GRADE,format=yuv420p"
-    for attempt in 1 2 3; do
+    for attempt in 1 2 3 4 5; do
       ffmpeg -hide_banner -loglevel error -y -i "$src" -vf "$vf" -an -c:v libx264 -preset veryfast -crf $crf -movflags +faststart "$base-$fmt.mp4"
       [ "$(python3 -c "print(1 if $(size_mb "$base-$fmt.mp4") <= $MAX_MB else 0)")" = 1 ] && break
       crf=$((crf + 3))
     done
-    for attempt in 1 2 3; do
+    for attempt in 1 2 3 4 5; do
       ffmpeg -hide_banner -loglevel error -y -i "$src" -vf "$vf" -an -c:v libvpx-vp9 -b:v 0 -crf $vcrf -row-mt 1 -deadline good -cpu-used 4 "$base-$fmt.webm"
       [ "$(python3 -c "print(1 if $(size_mb "$base-$fmt.webm") <= $MAX_MB else 0)")" = 1 ] && break
       vcrf=$((vcrf + 4))
@@ -148,8 +185,8 @@ PY
 shopt -s nullglob nocaseglob
 files=("$RAW"/*.{mp4,mov,webm,m4v,jpg,jpeg,png,webp,heic})
 shopt -u nocaseglob
-rm -f "$OUT"/fountain-* "$OUT"/door-*
-declare -A count=([fountain]=0 [door]=0)
+rm -f "$OUT"/fountain-* "$OUT"/door-* "$OUT"/walk-*
+declare -A count=([fountain]=0 [door]=0 [walk]=0)
 processed=()
 if [ ${#files[@]} -eq 0 ]; then
   echo "• raw/intro/ je prazan — intro koristi ilustrovanu česmu (SVG)."
@@ -183,7 +220,7 @@ def scene(name):
             stills.append({k: {'avif': f'{p}-{k}.avif', 'webp': f'{p}-{k}.webp', 'jpg': f'{p}-{k}.jpg'} for k in ('desktop', 'mobile')} | {'raw': raw})
     return {'video': vids[0] if vids else None, 'stills': stills}
 manifest = {'generated': datetime.date.today().isoformat(), 'source': source if rows else None,
-            'fountain': scene('fountain'), 'door': scene('door')}
+            'walk': scene('walk'), 'fountain': scene('fountain'), 'door': scene('door')}
 json.dump(manifest, open(os.path.join(data, 'intro.json'), 'w'), ensure_ascii=False, indent=2)
 
 ad_path = os.path.join(data, 'assets-demo.json')
@@ -195,6 +232,7 @@ if source == 'google-maps-demo':
         ad['assets'].append({'file': f'raw/intro/{raw}', 'output': f'public/intro/{s}-{i}-*', 'use': f'intro – scene "{s}" ({kind})',
                              'source': 'google-maps-demo', 'replaceBeforeLaunch': True})
 json.dump(ad, open(ad_path, 'w'), ensure_ascii=False, indent=2)
+print(f"✓ šetnja: {'da' if manifest['walk']['video'] else 'ne'}")
 print(f"✓ src/data/intro.json  (česma: {len(manifest['fountain']['stills'])} foto, video: {'da' if manifest['fountain']['video'] else 'ne'} · vrata: {len(manifest['door']['stills'])} foto, video: {'da' if manifest['door']['video'] else 'ne'})")
 PY
 echo "✓ Gotovo. Pokrenite  npm run build  (ili npm run dev) da vidite intro."

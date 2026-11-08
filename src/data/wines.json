@@ -1,5 +1,5 @@
 {
-  "TODO_VERIFY": "Wine names come from the 'Vinska preporuka' notes on the printed menu. Winery, vintage and prices unknown – the second drinks page (wine list) was not photographed.",
+  "TODO_VERIFY": "Wines: names from the 'Vinska preporuka' notes on the printed menu. Rakije: only lozovača is confirmed (menu: 'čašica loze'); the other types are placeholders until the drinks list arrives. Producers and prices unknown. Optional 'image': path under public/img/pice/ (shown instead of the drawn bottle).",
   "wines": [
     {
       "id": "sila",
@@ -15,7 +15,9 @@
       },
       "priceGlass": null,
       "priceBottle": null,
-      "verify": true
+      "verify": true,
+      "kind": "wine",
+      "image": null
     },
     {
       "id": "roze",
@@ -31,7 +33,9 @@
       },
       "priceGlass": null,
       "priceBottle": null,
-      "verify": true
+      "verify": true,
+      "kind": "wine",
+      "image": null
     },
     {
       "id": "probus",
@@ -47,7 +51,9 @@
       },
       "priceGlass": null,
       "priceBottle": null,
-      "verify": true
+      "verify": true,
+      "kind": "wine",
+      "image": null
     },
     {
       "id": "portugizer",
@@ -63,7 +69,9 @@
       },
       "priceGlass": null,
       "priceBottle": null,
-      "verify": true
+      "verify": true,
+      "kind": "wine",
+      "image": null
     },
     {
       "id": "bermet",
@@ -79,7 +87,9 @@
       },
       "priceGlass": null,
       "priceBottle": null,
-      "verify": true
+      "verify": true,
+      "kind": "wine",
+      "image": null
     }
   ],
   "pairingReasons": {
@@ -102,6 +112,119 @@
     "bermet": {
       "sr": "Слатки, зачињени бермет за колаче и крај оброка.",
       "en": "Sweet, spiced bermet for cakes and the end of the meal."
+    },
+    "lozovaca": {
+      "sr": "Чашица лозе отвара апетит — као на нашем Карловачком доручку.",
+      "en": "A glass of loza opens the appetite — just like on our Karlovci breakfast."
+    },
+    "sljivovica": {
+      "sr": "Шљивовица и роштиљ — проверено друштво.",
+      "en": "Šljivovica and the grill — a proven pair."
+    },
+    "dunjevaca": {
+      "sr": "Мирис дуње лепо прати лагане колаче.",
+      "en": "Quince aroma goes beautifully with light desserts."
+    },
+    "kajsijevaca": {
+      "sr": "Воћна кајсијевача за слатки крај.",
+      "en": "Fruity apricot rakija for a sweet finish."
+    },
+    "viljamovka": {
+      "sr": "Крушка уз ванилу и чоколаду.",
+      "en": "Pear with vanilla and chocolate."
     }
-  }
+  },
+  "rakije": [
+    {
+      "id": "lozovaca",
+      "kind": "rakija",
+      "name": {
+        "sr": "Лозовача",
+        "en": "Lozovača — grape rakija"
+      },
+      "producer": null,
+      "type": "rakija",
+      "note": {
+        "sr": "Ракија од грожђа из карловачких винограда — она чашица уз Карловачки доручак.",
+        "en": "Grape rakija from the Karlovci vineyards — the little glass that comes with the Karlovci breakfast."
+      },
+      "priceGlass": null,
+      "priceBottle": null,
+      "image": null,
+      "verify": true,
+      "source": "Printed menu: Karlovački doručak includes \"čašica loze\"."
+    },
+    {
+      "id": "sljivovica",
+      "kind": "rakija",
+      "name": {
+        "sr": "Шљивовица",
+        "en": "Šljivovica — plum rakija"
+      },
+      "producer": null,
+      "type": "rakija-aged",
+      "note": {
+        "sr": "Ракија од шљиве, српска класика — пије се полако, из чокањчета.",
+        "en": "Plum rakija, the Serbian classic — sipped slowly from a small glass."
+      },
+      "priceGlass": null,
+      "priceBottle": null,
+      "image": null,
+      "verify": true
+    },
+    {
+      "id": "dunjevaca",
+      "kind": "rakija",
+      "name": {
+        "sr": "Дуњевача",
+        "en": "Dunjevača — quince rakija"
+      },
+      "producer": null,
+      "type": "rakija",
+      "note": {
+        "sr": "Мирисна ракија од дуње.",
+        "en": "A fragrant quince rakija."
+      },
+      "priceGlass": null,
+      "priceBottle": null,
+      "image": null,
+      "verify": true
+    },
+    {
+      "id": "kajsijevaca",
+      "kind": "rakija",
+      "name": {
+        "sr": "Кајсијевача",
+        "en": "Kajsijevača — apricot rakija"
+      },
+      "producer": null,
+      "type": "rakija",
+      "note": {
+        "sr": "Ракија од кајсије, мека и воћна.",
+        "en": "Apricot rakija, soft and fruity."
+      },
+      "priceGlass": null,
+      "priceBottle": null,
+      "image": null,
+      "verify": true
+    },
+    {
+      "id": "viljamovka",
+      "kind": "rakija",
+      "name": {
+        "sr": "Виљамовка",
+        "en": "Viljamovka — Williams pear rakija"
+      },
+      "producer": null,
+      "type": "rakija",
+      "note": {
+        "sr": "Ракија од крушке виљамовке.",
+        "en": "Rakija from Williams pears."
+      },
+      "priceGlass": null,
+      "priceBottle": null,
+      "image": null,
+      "verify": true
+    }
+  ]
 }

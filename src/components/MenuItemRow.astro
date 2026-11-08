@@ -32,11 +32,12 @@ const H = lite ? 'h3' : 'h4';
     )}
   </div>
   {desc && <p class="mi__desc">{desc}</p>}
-  {(i.tags.length > 0 || i.preorder || (i.pairing && !lite)) && (
+  {(i.tags.length > 0 || i.preorder || ((i.pairing || i.pairingRakija) && !lite)) && (
     <p class="mi__tags">
       {i.preorder && <span class="mi__tag mi__tag--order">{t(locale, 'menu.preorderBadge')}</span>}
       {i.tags.filter((tg) => tg !== 'breakfast').map((tg) => <span class={`mi__tag mi__tag--${tg}`}>{t(locale, `tag.${tg}`)}</span>)}
       {i.pairing && !lite && i.category !== 'pica' && <span class="mi__tag mi__tag--pair">🍷 {wineName(locale, i.pairing)}</span>}
+      {i.pairingRakija && !lite && <span class="mi__tag mi__tag--pair">🥃 {wineName(locale, i.pairingRakija)}</span>}
     </p>
   )}
   {hl && <span class="mi__rec" aria-hidden="true">{hl.split(' ').map((m) => <span data-only={m}>{t(locale, `menu.recommend.${m}`)}</span>)}</span>}

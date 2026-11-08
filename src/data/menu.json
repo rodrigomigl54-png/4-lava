@@ -372,7 +372,8 @@
       "pairing": null,
       "image": null,
       "verify": false,
-      "source": "02-dorucak.jpg"
+      "source": "02-dorucak.jpg",
+      "pairingRakija": "lozovaca"
     },
     {
       "id": "juneci-gulas",
@@ -397,7 +398,8 @@
       "image": null,
       "verify": false,
       "source": "05-rucak.jpg",
-      "note": "Printed \"1 300,00\"."
+      "note": "Printed \"1 300,00\".",
+      "pairingRakija": "sljivovica"
     },
     {
       "id": "prebranac",
@@ -424,7 +426,8 @@
       "pairing": null,
       "image": null,
       "verify": false,
-      "source": "05-rucak.jpg"
+      "source": "05-rucak.jpg",
+      "pairingRakija": "lozovaca"
     },
     {
       "id": "prebranac-kobaja",
@@ -448,7 +451,8 @@
       "pairing": null,
       "image": null,
       "verify": false,
-      "source": "05-rucak.jpg"
+      "source": "05-rucak.jpg",
+      "pairingRakija": "sljivovica"
     },
     {
       "id": "becka-snicla",
@@ -628,7 +632,8 @@
       "pairing": null,
       "image": null,
       "verify": false,
-      "source": "07-specijaliteti.jpg"
+      "source": "07-specijaliteti.jpg",
+      "pairingRakija": "lozovaca"
     },
     {
       "id": "rozin-paprikas",
@@ -761,7 +766,8 @@
       "pairing": null,
       "image": null,
       "verify": false,
-      "source": "06-rostilj.jpg"
+      "source": "06-rostilj.jpg",
+      "pairingRakija": "sljivovica"
     },
     {
       "id": "sremacka-kobaja",
@@ -785,7 +791,8 @@
       "pairing": null,
       "image": null,
       "verify": false,
-      "source": "06-rostilj.jpg"
+      "source": "06-rostilj.jpg",
+      "pairingRakija": "sljivovica"
     },
     {
       "id": "mesni-ustipci",
@@ -835,7 +842,8 @@
       "pairing": null,
       "image": null,
       "verify": false,
-      "source": "06-rostilj.jpg"
+      "source": "06-rostilj.jpg",
+      "pairingRakija": "sljivovica"
     },
     {
       "id": "pileci-batak",
@@ -886,7 +894,8 @@
       "image": null,
       "verify": false,
       "source": "06-rostilj.jpg",
-      "note": "Printed \"Vinogradarska pljeskavica\". English name matches the guest review \"wine country burger\" – verify it is the same dish."
+      "note": "Printed \"Vinogradarska pljeskavica\". English name matches the guest review \"wine country burger\" – verify it is the same dish.",
+      "pairingRakija": "sljivovica"
     },
     {
       "id": "lavlji-zalogaj",
@@ -912,7 +921,8 @@
       "pairing": null,
       "image": null,
       "verify": false,
-      "source": "06-rostilj.jpg"
+      "source": "06-rostilj.jpg",
+      "pairingRakija": "sljivovica"
     },
     {
       "id": "taljatele-spanac",
@@ -1119,7 +1129,8 @@
       "image": null,
       "verify": false,
       "source": "01-poslastice.jpg",
-      "pairingSource": "site"
+      "pairingSource": "site",
+      "pairingRakija": "viljamovka"
     },
     {
       "id": "rogac-kolac",
@@ -1169,7 +1180,8 @@
       "image": null,
       "verify": false,
       "source": "01-poslastice.jpg",
-      "pairingSource": "site"
+      "pairingSource": "site",
+      "pairingRakija": "viljamovka"
     },
     {
       "id": "komisbrot",
@@ -1218,7 +1230,8 @@
       "image": null,
       "verify": false,
       "source": "01-poslastice.jpg",
-      "pairingSource": "site"
+      "pairingSource": "site",
+      "pairingRakija": "dunjevaca"
     },
     {
       "id": "palacinke",
@@ -1243,7 +1256,8 @@
       "image": null,
       "verify": false,
       "source": "01-poslastice.jpg",
-      "note": "Two prices 290 / 360 – presumably jam vs. Eurokrem & Plazma; verify."
+      "note": "Two prices 290 / 360 – presumably jam vs. Eurokrem & Plazma; verify.",
+      "pairingRakija": "kajsijevaca"
     },
     {
       "id": "katina-strudla",
@@ -1270,7 +1284,8 @@
       "image": null,
       "verify": false,
       "source": "01-poslastice.jpg",
-      "pairingSource": "site"
+      "pairingSource": "site",
+      "pairingRakija": "kajsijevaca"
     },
     {
       "id": "katin-kuglof",

@@ -18,15 +18,20 @@ const { locale } = Astro.props;
 
 type Stills = { desktop: Record<string, string>; mobile: Record<string, string> }[];
 type Video = { desktop: Record<string, string>; mobile: Record<string, string> } | null;
+const w = ((intro as { walk?: { video: Video } }).walk?.video) ?? null;
 const f = intro.fountain as { video: Video; stills: Stills };
 const d = intro.door as { video: Video; stills: Stills };
 ---
-<div class="intro" data-intro role="dialog" aria-modal="true" aria-labelledby="intro-quote" aria-describedby="intro-hint" lang={locale === 'en' ? 'en' : locale === 'lat' ? 'sr-Latn' : 'sr-Cyrl'}>
+<div class="intro" data-intro data-walk={w ? '1' : undefined} role="dialog" aria-modal="true" aria-labelledby="intro-quote" aria-describedby="intro-hint" lang={locale === 'en' ? 'en' : locale === 'lat' ? 'sr-Latn' : 'sr-Cyrl'}>
   <button type="button" class="intro__skip" data-intro-skip>{t(locale, 'intro.skip')}</button>
 
   <!-- Scene 1: fountain -->
   <div class="intro__scene intro__scene--fountain is-active" data-scene="fountain">
-    {f.video ? (
+    {w ? (
+      <video class="intro__media intro__walk" muted playsinline preload="auto" aria-hidden="true" data-walk-video
+        poster={w.mobile.poster} data-poster-desktop={w.desktop.poster}
+        data-src={JSON.stringify({ desktop: w.desktop, mobile: w.mobile })}></video>
+    ) : f.video ? (
       <video class="intro__media" muted playsinline loop preload="none" aria-hidden="true"
         poster={f.video.mobile.poster} data-poster-desktop={f.video.desktop.poster}
         data-src={JSON.stringify({ desktop: f.video.desktop, mobile: f.video.mobile })}></video>
@@ -47,7 +52,7 @@ const d = intro.door as { video: Video; stills: Stills };
 
   <!-- Scene 2: the small door -->
   <div class="intro__scene intro__scene--door" data-scene="door" aria-hidden="true">
-    {d.video ? (
+    {w ? null : d.video ? (
       <video class="intro__media" muted playsinline preload="none" data-src={JSON.stringify({ desktop: d.video.desktop, mobile: d.video.mobile })} poster={d.video.mobile.poster}></video>
     ) : d.stills.length ? (
       <picture class="intro__media intro__still is-on">
@@ -119,7 +124,7 @@ const d = intro.door as { video: Video; stills: Stills };
     background: var(--wood); color: var(--cream);
   }
   :global(html[data-intro-mode='on'] body) { overflow: hidden; }
-  .intro.is-leaving { opacity: 0; transition: opacity 0.9s var(--ease); pointer-events: none; }
+  .intro.is-leaving { opacity: 0; transition: opacity 0.75s var(--ease); pointer-events: none; }
 
   .intro__scene { position: absolute; inset: 0; opacity: 0; transition: opacity 1.2s var(--ease), transform 1.6s var(--ease-out); }
   .intro__scene.is-active { opacity: 1; }
@@ -134,6 +139,11 @@ const d = intro.door as { video: Video; stills: Stills };
   .intro__still.is-on img { animation: kenburns 9s var(--ease) both; }
   @keyframes kenburns { from { transform: scale(1.02) translate(0, 0); } to { transform: scale(1.14) translate(-2%, -1.5%); } }
   video.intro__media { filter: brightness(0.92); }
+  /* Walk (fountain → door, one shot): slow push-in while waiting, then it plays */
+  .intro__walk { animation: kenburns 12s var(--ease) both; }
+  .is-walking .intro__walk { animation-play-state: paused; }
+  [data-walk] .intro__scene--door { background: none; transform: none; }
+  [data-walk] .intro__doorglow { background: radial-gradient(30% 45% at 50% 55%, rgb(255 196 110 / 0.6), rgb(229 138 58 / 0.2) 55%, transparent 78%); }
 
   .intro__svg { display: grid; justify-items: center; align-items: start; padding-top: max(5rem, 9vh); background: radial-gradient(70% 60% at 50% 35%, #3d2a1e, var(--wood)); }
   .intro__svg :global(.fountain) { width: min(78vw, 46vh); }

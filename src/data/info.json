@@ -10,38 +10,103 @@
     "postalCode": "21205",
     "city": "Сремски Карловци",
     "country": "RS",
-    "en": { "street": "Trg Branka Radičevića 3", "city": "Sremski Karlovci", "country": "Serbia" }
+    "en": {
+      "street": "Trg Branka Radičevića 3",
+      "city": "Sremski Karlovci",
+      "country": "Serbia"
+    }
   },
-  "geo": { "lat": 45.2027, "lng": 19.9339, "TODO_VERIFY": "Approximate coordinates of the main square – confirm the exact pin." },
-  "phone": { "display": "060 5210606", "intl": "+381605210606", "intlDisplay": "+381 60 5210606", "whatsapp": "381605210606" },
+  "geo": {
+    "lat": 45.2026848,
+    "lng": 19.9336557,
+    "source": "Google Maps place link from the user (Nov 2026)"
+  },
+  "phone": {
+    "display": "060 5210606",
+    "intl": "+381605210606",
+    "intlDisplay": "+381 60 5210606",
+    "whatsapp": "381605210606"
+  },
   "hours": {
     "TODO_VERIFY": "Only the closing time (23:00) is confirmed. Opening time and days are assumed: every day 08:00–23:00.",
     "week": {
-      "1": [["08:00", "23:00"]],
-      "2": [["08:00", "23:00"]],
-      "3": [["08:00", "23:00"]],
-      "4": [["08:00", "23:00"]],
-      "5": [["08:00", "23:00"]],
-      "6": [["08:00", "23:00"]],
-      "7": [["08:00", "23:00"]]
+      "1": [
+        [
+          "08:00",
+          "23:00"
+        ]
+      ],
+      "2": [
+        [
+          "08:00",
+          "23:00"
+        ]
+      ],
+      "3": [
+        [
+          "08:00",
+          "23:00"
+        ]
+      ],
+      "4": [
+        [
+          "08:00",
+          "23:00"
+        ]
+      ],
+      "5": [
+        [
+          "08:00",
+          "23:00"
+        ]
+      ],
+      "6": [
+        [
+          "08:00",
+          "23:00"
+        ]
+      ],
+      "7": [
+        [
+          "08:00",
+          "23:00"
+        ]
+      ]
     }
   },
   "priceRange": "1000–1500 RSD",
-  "priceRangeText": { "sr": "1.000–1.500 дин. по особи", "en": "1,000–1,500 RSD per person" },
-  "rating": { "value": 4.5, "count": 1233, "source": "Google", "TODO_VERIFY": "Update from the Google Business profile before launch." },
-  "services": ["dineIn", "takeaway", "delivery"],
+  "priceRangeText": {
+    "sr": "1.000–1.500 дин. по особи",
+    "en": "1,000–1,500 RSD per person"
+  },
+  "rating": {
+    "value": 4.5,
+    "count": 1233,
+    "source": "Google",
+    "TODO_VERIFY": "Update from the Google Business profile before launch."
+  },
+  "services": [
+    "dineIn",
+    "takeaway",
+    "delivery"
+  ],
   "links": {
-    "googleMaps": "https://www.google.com/maps/search/?api=1&query=Gostiona+Kod+4+Lava%2C+Trg+Branka+Radi%C4%8Devi%C4%87a+3%2C+Sremski+Karlovci",
-    "googleDirections": "https://www.google.com/maps/dir/?api=1&destination=Trg+Branka+Radi%C4%8Devi%C4%87a+3%2C+21205+Sremski+Karlovci",
+    "googleMaps": "https://www.google.com/maps/place/%D0%93%D0%BE%D1%81%D1%82%D0%B8%D0%BE%D0%BD%D0%B0+%D0%9A%D0%BE%D0%B4+4+%D0%9B%D0%B0%D0%B2%D0%B0/@45.2026848,19.9336557,17z/data=!3m1!4b1!4m6!3m5!1s0x475b04af8dccc6d3:0xc2a9c3457d87da06!8m2!3d45.2026848!4d19.9336557!16s%2Fg%2F1hc7c0r8n",
+    "googleDirections": "https://www.google.com/maps/dir/?api=1&destination=45.2026848%2C19.9336557",
     "googleReview": "",
     "googleReviewTODO_VERIFY": "Paste the 'Ask for reviews' link from the Google Business profile.",
-    "instagram": "",
-    "facebook": ""
+    "instagram": "https://www.instagram.com/gostionakod4lava/",
+    "facebook": "https://www.facebook.com/kod4lava/",
+    "mapEmbedQuery": "Гостиона Код 4 Лава, Трг Бранка Радичевића 3, Сремски Карловци"
   },
   "dailySheetCsv": "",
   "seasonalBanner": {
     "active": null,
-    "options": ["berba", "bozic", "uskrs"]
+    "options": [
+      "berba",
+      "bozic",
+      "uskrs"
+    ]
   },
   "TODO_VERIFY": {
     "owner": "Owner name(s) unknown – do not publish until provided.",

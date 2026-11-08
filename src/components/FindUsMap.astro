@@ -8,67 +8,30 @@ import { asset } from '../lib/base';
 interface Props { locale: Locale }
 const { locale } = Astro.props;
 const hasPhoto = fs.existsSync(path.join(process.cwd(), 'public/img/vrata.jpg'));
+// Keyless Google Maps embed, pinned on the restaurant (name + exact coordinates)
+const q = encodeURIComponent(locale === 'en' ? 'Gostiona Kod 4 Lava, Trg Branka Radičevića 3, Sremski Karlovci' : info.links.mapEmbedQuery);
+const embed = `https://maps.google.com/maps?q=${q}&ll=${info.geo.lat},${info.geo.lng}&z=18&hl=${locale === 'en' ? 'en' : 'sr'}&output=embed`;
 ---
 <div class="findus">
   <h3 class="findus__title">{t(locale, 'map.title')}</h3>
   <div class="findus__grid">
-    <figure class="findus__map" data-findus>
-      <svg viewBox="0 0 600 420" role="img" aria-label={`${t(locale, 'map.title')} — ${t(locale, 'map.callout')}`}>
-        <defs>
-          <pattern id="paving" width="14" height="14" patternUnits="userSpaceOnUse">
-            <path d="M0 14h14M14 0v14" stroke="#cbbca3" stroke-width=".6" />
-          </pattern>
-        </defs>
-        <rect width="600" height="420" fill="#efe5d3" />
-        <!-- streets -->
-        <g fill="none" stroke="#d9cbb3" stroke-width="34" stroke-linecap="round">
-          <path d="M-20 330 C 120 300 220 300 320 320 S 520 360 640 340" />
-          <path d="M300 -20 C 290 80 300 160 300 230" />
-        </g>
-        <!-- square -->
-        <path d="M120 70h360v220H120z" fill="url(#paving)" stroke="#B08D57" stroke-width="1" />
-        <rect x="120" y="70" width="360" height="220" fill="#f6efe2" opacity=".55" />
-        <!-- cathedral -->
-        <g transform="translate(140 175)" stroke="#5E1A1F" stroke-width="1.4" fill="#e4d6c0">
-          <path d="M0 0h70v90H0z" />
-          <circle cx="35" cy="45" r="16" />
-          <path d="M35 22v-12M30 15h10" fill="none" />
-          <path d="M8 -16h18v16H8zM44 -16h18v16H44z" />
-        </g>
-        <text x="175" y="290" text-anchor="middle" class="m-label">{t(locale, 'map.church')}</text>
-        <!-- fountain -->
-        <g transform="translate(300 180)">
-          <circle r="30" fill="#8E2A2A" stroke="#B08D57" stroke-width="2" />
-          <circle r="20" fill="#1f3a3c" stroke="#B08D57" stroke-width="1" />
-          <circle r="6" fill="#B08D57" />
-          {[0, 90, 180, 270].map((a) => <circle cx={Math.cos((a * Math.PI) / 180) * 30} cy={Math.sin((a * Math.PI) / 180) * 30} r="5" fill="#2A1E17" stroke="#B08D57" />)}
-        </g>
-        <text x="300" y="232" text-anchor="middle" class="m-label">{t(locale, 'map.fountain')}</text>
-        <!-- our house with terrace, across from the fountain -->
-        <g transform="translate(380 90)">
-          <path d="M0 0h90v60H0z" fill="#d8c6a8" stroke="#5E1A1F" stroke-width="1.4" />
-          <path d="M-4 0l49-22 49 22" fill="#8E2A2A" stroke="#5E1A1F" stroke-width="1.4" />
-          <rect x="18" y="62" width="58" height="34" fill="none" stroke="#B08D57" stroke-dasharray="3 3" />
-          {[0, 1, 2].map((i) => <g><circle cx={30 + i * 17} cy="79" r="5" fill="#B08D57" opacity=".6" /></g>)}
-          <rect x="4" y="36" width="10" height="24" fill="#2A1E17" />
-        </g>
-        <!-- pulsing gold dot on the door -->
-        <g transform="translate(389 140)">
-          <circle r="16" fill="#B08D57" class="m-pulse" />
-          <circle r="7" fill="#B08D57" stroke="#2A1E17" stroke-width="2" />
-        </g>
-        <!-- dotted path fountain → door -->
-        <path class="m-path" d="M318 158 C 340 150 352 150 366 146 S 382 142 389 140" fill="none" stroke="#5E1A1F" stroke-width="2.4" stroke-dasharray="2 7" stroke-linecap="round" />
-        <!-- callout -->
-        <g transform="translate(250 30)">
-          <rect width="200" height="34" rx="2" fill="#2A1E17" stroke="#B08D57" />
-          <text x="100" y="22" text-anchor="middle" class="m-callout">{t(locale, 'map.callout')}</text>
-          <path d="M150 34 L139 104" stroke="#B08D57" stroke-width="1" />
-        </g>
-        <text x="300" y="400" text-anchor="middle" class="m-label m-street">{t(locale, 'map.square')}</text>
-        <!-- compass -->
-        <g transform="translate(560 380)" class="m-label"><path d="M0-16l5 14H-5z" fill="#5E1A1F" /><text y="12" text-anchor="middle">N</text></g>
-      </svg>
+    <figure class="findus__map">
+      <OrnamentCorner position="tl" size="2.2rem" />
+      <OrnamentCorner position="br" size="2.2rem" />
+      <div class="findus__frame">
+        <iframe
+          src={embed}
+          title={t(locale, 'map.embedTitle')}
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          allowfullscreen
+        ></iframe>
+        <noscript><a href={info.links.googleMaps}>{t(locale, 'map.view')}</a></noscript>
+      </div>
+      <figcaption class="findus__caption">
+        <span class="findus__pin" aria-hidden="true"></span>
+        {t(locale, 'map.callout')} · {locale === 'en' ? info.address.en.street : t(locale, 'map.square')} 3
+      </figcaption>
     </figure>
 
     <div class="findus__side">
@@ -84,44 +47,36 @@ const hasPhoto = fs.existsSync(path.join(process.cwd(), 'public/img/vrata.jpg'))
           ? <img src={asset('/img/vrata.jpg')} alt={t(locale, 'map.photoAlt')} loading="lazy" decoding="async" width="800" height="1000" />
           : <div class="findus__placeholder"><svg viewBox="0 0 60 80" aria-hidden="true"><path d="M8 78V30a22 22 0 0 1 44 0v48M8 78h44M22 50h2" fill="none" stroke="currentColor" stroke-width="1.5" /></svg><span>{t(locale, 'map.photoSoon')}</span></div>}
       </figure>
-      <a class="btn" href={info.links.googleDirections} target="_blank" rel="noopener">{t(locale, 'map.open')} <span aria-hidden="true">↗</span></a>
+      <div class="findus__btns">
+        <a class="btn" href={info.links.googleDirections} target="_blank" rel="noopener">{t(locale, 'map.open')} <span aria-hidden="true">↗</span></a>
+        <a class="btn btn--ghost" href={info.links.googleMaps} target="_blank" rel="noopener">{t(locale, 'map.view')} <span aria-hidden="true">↗</span></a>
+      </div>
     </div>
   </div>
 </div>
 
-<script>
-  // The dotted path walks from the fountain to the door when the map scrolls into view
-  const el = document.querySelector<SVGPathElement>('[data-findus] .m-path');
-  if (el && !matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
-    el.classList.add('is-waiting');
-    new IntersectionObserver((es, io) => {
-      if (es[0].isIntersecting) { el.classList.remove('is-waiting'); el.classList.add('is-walking'); io.disconnect(); }
-    }, { threshold: 0.5 }).observe(el.closest('svg')!);
-  }
-</script>
-
 <style>
   .findus__title { text-align: center; margin-bottom: var(--space-6); }
   .findus__grid { display: grid; gap: 2rem; align-items: start; }
-  .findus__map { margin: 0; border: 1px solid var(--line); box-shadow: var(--shadow-soft); background: #efe5d3; }
-  .findus__map svg { width: 100%; height: auto; }
-  .m-label { font-family: var(--font-body); font-size: 13px; fill: #5a4a3c; letter-spacing: .04em; }
-  .m-street { font-style: italic; }
-  .m-callout { font-family: var(--font-display); font-style: italic; font-size: 17px; fill: #F3EBDD; }
-  .m-pulse { transform-box: fill-box; transform-origin: center; animation: m-pulse 2.2s var(--ease) infinite; opacity: .35; }
-  @keyframes m-pulse { 0% { transform: scale(.4); opacity: .6; } 100% { transform: scale(1.8); opacity: 0; } }
-  .m-path.is-waiting { clip-path: inset(0 100% 0 0); }
-  .m-path.is-walking { animation: m-walk 2.4s var(--ease) forwards; }
-  @keyframes m-walk { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+  .findus__map { position: relative; margin: 0; padding: 0.7rem; border: 1px solid color-mix(in srgb, var(--gold) 55%, transparent); background: color-mix(in srgb, var(--wood) 55%, transparent); box-shadow: 0 25px 45px -30px rgb(0 0 0 / 0.8); }
+  .findus__frame { position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: #e9e1d2; }
+  .findus__frame iframe {
+    position: absolute; inset: 0; width: 100%; height: 100%; border: 0;
+    /* tone the map toward the site's warm palette, full colour on hover/focus */
+    filter: sepia(0.18) saturate(0.85) contrast(1.02);
+    transition: filter var(--dur-2) var(--ease);
+  }
+  .findus__frame:hover iframe, .findus__frame:focus-within iframe { filter: none; }
+  .findus__caption { display: flex; align-items: center; gap: 0.6rem; margin-top: 0.7rem; font-family: var(--font-display); font-style: italic; font-size: var(--step-1); color: var(--gold-light); }
+  .findus__pin { width: 0.8rem; height: 0.8rem; border-radius: 50%; background: var(--gold); box-shadow: 0 0 0 0 color-mix(in srgb, var(--gold) 60%, transparent); animation: pin-pulse 2.2s var(--ease) infinite; flex: none; }
+  @keyframes pin-pulse { 0% { box-shadow: 0 0 0 0 rgb(176 141 87 / 0.6); } 100% { box-shadow: 0 0 0 12px rgb(176 141 87 / 0); } }
   .findus__steps { margin: 0 0 1.5rem; padding: 0; list-style: none; counter-reset: s; display: grid; gap: 0.9rem; }
   .findus__steps li { counter-increment: s; display: grid; grid-template-columns: 2.2rem 1fr; gap: 0.75rem; align-items: baseline; }
-  .findus__steps li::before {
-    content: counter(s); font-family: var(--font-display); font-size: 1.6rem; font-weight: 600; color: var(--gold-light);
-    border-bottom: 1px solid var(--gold); text-align: center; line-height: 1.1;
-  }
+  .findus__steps li::before { content: counter(s); font-family: var(--font-display); font-size: 1.6rem; font-weight: 600; color: var(--gold-light); border-bottom: 1px solid var(--gold); text-align: center; line-height: 1.1; }
   .findus__photo { position: relative; margin: 0 0 1.5rem; aspect-ratio: 4 / 3; border: 1px solid color-mix(in srgb, var(--gold) 50%, transparent); padding: 0.6rem; }
   .findus__photo img { width: 100%; height: 100%; object-fit: cover; }
   .findus__placeholder { height: 100%; display: grid; place-content: center; justify-items: center; gap: 0.6rem; color: var(--gold-light); font-style: italic; font-size: 0.9rem; text-align: center; background: color-mix(in srgb, var(--wood) 50%, transparent); }
   .findus__placeholder svg { width: 3rem; }
+  .findus__btns { display: flex; flex-wrap: wrap; gap: 0.6rem; }
   @media (min-width: 56rem) { .findus__grid { grid-template-columns: 1.5fr 1fr; } }
 </style>
