@@ -185,7 +185,9 @@ PY
 shopt -s nullglob nocaseglob
 files=("$RAW"/*.{mp4,mov,webm,m4v,jpg,jpeg,png,webp,heic})
 shopt -u nocaseglob
-rm -f "$OUT"/fountain-* "$OUT"/door-* "$OUT"/walk-*
+rm -f "$OUT"/fountain-* "$OUT"/door-*
+# keep a walk made by scripts/edit-intro-walk.py unless raw/intro/ has a new walk file
+if printf '%s\n' "${files[@]+"${files[@]}"}" | grep -qiE '/[^/]*(put|walk|setnja|šetnja)[^/]*$'; then rm -f "$OUT"/walk-*; fi
 declare -A count=([fountain]=0 [door]=0 [walk]=0)
 processed=()
 if [ ${#files[@]} -eq 0 ]; then
@@ -221,6 +223,15 @@ def scene(name):
     return {'video': vids[0] if vids else None, 'stills': stills}
 manifest = {'generated': datetime.date.today().isoformat(), 'source': source if rows else None,
             'walk': scene('walk'), 'fountain': scene('fountain'), 'door': scene('door')}
+# an edited walk (scripts/edit-intro-walk.py) survives re-runs that don't bring a new walk
+try:
+    prev = json.load(open(os.path.join(data, 'intro.json')))
+    pw = (prev.get('walk') or {}).get('video')
+    if not manifest['walk']['video'] and pw and pw.get('editor'):
+        manifest['walk'] = prev['walk']
+        manifest['source'] = manifest['source'] or prev.get('source')
+except Exception:
+    pass
 json.dump(manifest, open(os.path.join(data, 'intro.json'), 'w'), ensure_ascii=False, indent=2)
 
 ad_path = os.path.join(data, 'assets-demo.json')
